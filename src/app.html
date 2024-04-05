@@ -1,140 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1 viewport-fit=cover" />
-
-		<title>Darius Cepulis</title>
-
-		<script>
-			// Initialize viewport height variable
-			(function () {
-				var root = window.document.documentElement;
-				var loadVh = window.innerHeight / 100;
-				root.style.setProperty('--load-vh', loadVh + 'px');
-			})();
-
-			// Initialize theming variables
-			(function () {
-				// an action to send state back down to svelte
-				window.__onThemeStateChange = function () {};
-
-				// figure out what the system wants
-				var darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-				// Store some variables
-				window.__systemTheme = darkQuery.matches ? 'dark' : 'light';
-				window.__darkModePreference = localStorage.getItem('darkModePreference');
-				window.__altModePreference = localStorage.getItem('altModePreference');
-
-				// Set some defaults
-				if (window.__darkModePreference === null) {
-					window.__darkModePreference = 'system';
-					localStorage.setItem('darkModePreference', 'system');
-				}
-				if (window.__altModePreference === null) {
-					window.__altModePreference = 'primary';
-					localStorage.setItem('altModePreference', 'primary');
-				}
-
-				// Set Visuals & Send State to Svelte
-				var root = window.document.documentElement;
-				function updateThemeState() {
-					window.__darkMode =
-						window.__darkModePreference === 'system'
-							? window.__systemTheme
-							: window.__darkModePreference;
-					window.__altMode = window.__altModePreference;
-
-					if (window.__darkMode === 'light') {
-						root.style.setProperty('--bg', 'var(--light)');
-						root.style.setProperty('--text', 'var(--dark)');
-						root.style.setProperty('--intensity-c', '1');
-					} else {
-						root.style.setProperty('--bg', 'var(--dark)');
-						root.style.setProperty('--text', 'var(--light)');
-						root.style.setProperty('--intensity-c', '0.75');
-					}
-
-					if (window.__altMode === 'primary') {
-						root.style.setProperty('--c1', 'var(--peach)');
-						root.style.setProperty('--c2', 'var(--pink)');
-						root.style.setProperty('--c3', 'var(--red)');
-						root.style.setProperty('--c4', 'var(--gold)');
-						root.style.setProperty('--c5', 'var(--orange)');
-					} else {
-						root.style.setProperty('--c1', 'var(--yellow)');
-						root.style.setProperty('--c2', 'var(--gold)');
-						root.style.setProperty('--c3', 'var(--orange)');
-						root.style.setProperty('--c4', 'var(--green)');
-						root.style.setProperty('--c5', 'var(--blue)');
-					}
-
-					window.__onThemeStateChange();
-				}
-				// run this function on window load
-				updateThemeState();
-
-				// Respond to input
-				window.__setDarkModePreference = function (newDarkModePreference) {
-					localStorage.setItem('darkModePreference', newDarkModePreference);
-					(window.__darkModePreference = newDarkModePreference), updateThemeState();
-				};
-				window.__setAltModePreference = function (newAltModePreference) {
-					localStorage.setItem('altModePreference', newAltModePreference);
-					(window.__altModePreference = newAltModePreference), updateThemeState();
-				};
-				if (typeof darkQuery !== 'undefined' && typeof darkQuery.addEventListener === 'function') {
-					darkQuery.addEventListener('change', function (e) {
-						window.__systemTheme = e.matches ? 'dark' : 'light';
-						updateThemeState();
-					});
-				}
-			})();
-		</script>
-		<style>
-			:root {
-				--main-padding: 1rem;
-				--section-padding: 3rem;
-				--break-width: 42rem;
-				--container-width: 63rem;
-				--content-width: 65ch;
-				--container-margin-width: 0rem;
-
-				--border-width: 0.1rem;
-
-				--light: 250, 247, 234;
-				--dark: 29, 27, 27;
-				--intensity-bg-c: 0.8;
-
-				--red: 213, 47, 34;
-				--orange: 236, 101, 55;
-				--pink: 223, 118, 146;
-				--peach: 237, 192, 190;
-				--gold: 243, 171, 81;
-				--yellow: 231, 218, 106;
-				--blue: 148, 194, 188;
-				--green: 174, 198, 110;
-
-				--transition-speed-short: 0.15s;
-				--transition-speed-medium: 0.25s;
-			}
-			@media (min-width: 63rem) {
-				:root {
-					--container-margin-width: calc((100vw - var(--container-width)) / 2);
-				}
-			}
-			body {
-				background-color: rgb(var(--bg));
-				color: rgb(var(--text));
-				transition: background-color var(--transition-speed-medium),
-					color var(--transition-speed-medium);
-			}
-		</style>
-
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+			rel="stylesheet"
+		/>
 		%sveltekit.head%
 	</head>
-	<body>
-		<div id="svelte">%sveltekit.body%</div>
+	<body data-sveltekit-preload-data="hover" class="antialiased">
+		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
