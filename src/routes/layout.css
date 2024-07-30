@@ -1,10 +1,25 @@
 @import 'tailwindcss';
 
 @theme {
-	--font-family-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-		'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-	--font-family-serif: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', Times,
-		serif;
-	--font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-		'Liberation Mono', 'Courier New', monospace;
+	--font-family-serif: 'Times New Roman', Times, ui-serif, serif;
+
+	--color-*: initial;
+
+	--color-white: white;
+	--color-silver: silver;
+	--color-gray: gray;
+	--color-black: black;
+
+	--color-red: red;
+	--color-maroon: maroon;
+	--color-yellow: yellow;
+	--color-olive: olive;
+	--color-lime: lime;
+	--color-green: green;
+	--color-aqua: aqua;
+	--color-teal: teal;
+	--color-blue: blue;
+	--color-navy: navy;
+	--color-fuchsia: fuchsia;
+	--color-purple: purple;
 }
