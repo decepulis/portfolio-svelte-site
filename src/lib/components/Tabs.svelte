@@ -102,11 +102,9 @@
 			tabindex={isActive ? undefined : -1}
 			onclick={() => setIndex(idx)}
 			onkeydown={onTabKeydown}
-			class="cursor-pointer border py-2 px-4 -outline-offset-4 focus:outline-2"
+			class="cursor-pointer border py-2 px-4 -outline-offset-4 hover:bg-white focus:outline-2"
 			class:border-[silver_silver_white_silver]={isActive}
 			class:border-silver={!isActive}
-			class:hover:border-[black_black_silver_black]={!isActive}
-			class:hover:border-dashed={!isActive}
 			class:bg-silver={!isActive}
 		>
 			{label}

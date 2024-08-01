@@ -1,11 +1,7 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { SvelteHTMLElements } from 'svelte/elements';
 
-	type Props = {
-		children: Snippet;
-		id: string;
-	};
-	const { children, id }: Props = $props();
+	const { children, ...rest }: SvelteHTMLElements['section'] = $props();
 </script>
 
-<section class="px-4" {id}>{@render children()}</section>
+<section {...rest} class="px-4">{@render children?.()}</section>

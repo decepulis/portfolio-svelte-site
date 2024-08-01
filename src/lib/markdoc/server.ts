@@ -16,14 +16,15 @@ function stripTags(content: RenderableTreeNode): RenderableTreeNode {
 }
 
 function getFrontmatter(filename: string, ast: Node): Frontmatter {
-	const [dateString, dateSlug] = filename.split('.');
+	const [year, month, date, ...rest] = filename.split('-');
+	const [dateSlug] = rest.join('-').split('.');
 	const astFrontmatter = parse(ast.attributes.frontmatter);
 	try {
 		const validatedAstFrontmatter = frontmatter.parse(astFrontmatter);
 		return {
 			...validatedAstFrontmatter,
-			date: new Date(dateString),
-			slug: `${dateString}/${dateSlug}`
+			date: new Date(`${year}-${month}-${date}`),
+			slug: `${year}-${month}-${date}-${dateSlug}`
 		};
 	} catch (e) {
 		throw new Error(`Error parsing frontmatter in ${filename}: ${e}`);

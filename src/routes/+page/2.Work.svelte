@@ -29,6 +29,7 @@
 				class="grid border p-4 hover:border-dashed"
 				class:col-span-2={priority && priority >= 2}
 				class:row-span-2={priority && priority >= 3}
+				style:view-transition-name="body-{slug}"
 				style:border-color={type === 'build'
 					? 'green'
 					: type === 'post'
@@ -40,7 +41,7 @@
 								: 'silver'}
 			>
 				<a href={url ?? `/posts/${slug}`} class="flex flex-col gap-2">
-					<h3 class="font-bold">{title}</h3>
+					<h3 class="font-bold" style:view-transition-name="title-{slug}">{title}</h3>
 					{#if previewText}
 						<p class="text-sm">{previewText}</p>
 					{/if}

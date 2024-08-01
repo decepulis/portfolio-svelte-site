@@ -72,7 +72,7 @@
 	};
 
 	// == let's use our springs to animate the svg ==
-	const speed = 100;
+	const speed = 66;
 	const headX = $derived.by(() => {
 		const headXMax = svgWidth / (speed * 6);
 		return percentX * headXMax;
@@ -132,7 +132,11 @@
 	});
 </script>
 
-<svelte:window onpointermove={throttledOnWindowPointerUpdate} onresize={throttledOnWindowResize} />
+<svelte:window
+	onpointermove={throttledOnWindowPointerUpdate}
+	onpointerdown={throttledOnWindowPointerUpdate}
+	onresize={throttledOnWindowResize}
+/>
 <svg
 	viewBox="0 0 64 64"
 	class="h-auto w-full max-w-64"

@@ -4,7 +4,7 @@
 
 <section
 	id="hero"
-	class="flex min-h-screen flex-col items-center justify-center px-2 text-center text-lg"
+	class="flex min-h-svh flex-col items-center justify-center overflow-hidden px-2 text-center text-lg"
 >
 	<p class="mb-2">Hello there! My name is</p>
 	<h1 class="font-serif text-6xl font-bold">
