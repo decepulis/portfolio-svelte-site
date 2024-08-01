@@ -3,6 +3,6 @@
 	import Section from '$lib/components/Section.svelte';
 </script>
 
-<Section id="credit">
+<Section id="credits">
 	<H2>Credit where credit is due</H2>
 </Section>

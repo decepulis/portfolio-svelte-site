@@ -31,11 +31,13 @@
 		maxDistanceY = innerHeight;
 	};
 	$effect(onWindowResize);
+	const throttledOnWindowResize = throttle(onWindowResize, 100);
 	const onWindowPointerUpdate = (e: MouseEvent | PointerEvent) => {
 		const { x: mouseX, y: mouseY } = e;
 		distanceX = mouseX - svgCenterX;
 		distanceY = mouseY - svgCenterY;
 	};
+	const throttledOnWindowPointerUpdate = throttle(onWindowPointerUpdate, 100);
 
 	// In practice, we'll be using these percentages
 	// instead of absolute distances in pixels
@@ -130,10 +132,7 @@
 	});
 </script>
 
-<svelte:window
-	onpointermove={throttle(onWindowPointerUpdate, 100)}
-	onresize={throttle(onWindowResize, 100)}
-/>
+<svelte:window onpointermove={throttledOnWindowPointerUpdate} onresize={throttledOnWindowResize} />
 <svg
 	viewBox="0 0 64 64"
 	class="h-auto w-full max-w-64"
