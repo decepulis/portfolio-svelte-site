@@ -1,5 +1,6 @@
 <!-- https://www.w3.org/WAI/ARIA/apg/patterns/tabs/ -->
 <script lang="ts">
+	import ui from '$lib/stores/ui.svelte';
 	import type { Snippet } from 'svelte';
 
 	type Tab = {
@@ -13,6 +14,36 @@
 	};
 	const { tabs, initialIndex = 0 }: Props = $props();
 
+	// == transition management ==
+	let isTransitioning = $state(false);
+	let tabPanelContainer: HTMLDivElement;
+
+	const onTransitionStart = () => {
+		if (ui.shouldReduceMotion) return;
+		isTransitioning = true;
+		// get some measurements
+		const currentTabPanelOffsetHeight = tabPanelContainer.offsetHeight;
+		const currentTabPanelClientHeight = tabPanelContainer.clientHeight;
+		const paddingAndBorderHeight = currentTabPanelOffsetHeight - currentTabPanelClientHeight;
+		const nextTabPanelHeight = document.getElementById(activeId)?.offsetHeight;
+		// immediately set the height from auto to the height outgoing element
+		// (if the height is currently auto, of course)
+		if (isNaN(parseInt(tabPanelContainer.style.height))) {
+			tabPanelContainer.style.height = `${currentTabPanelOffsetHeight}px`;
+			tabPanelContainer.offsetHeight; // flush to render
+		}
+		// and then set it to the height of the incoming element for a transition
+		tabPanelContainer.style.height = nextTabPanelHeight
+			? `${nextTabPanelHeight + paddingAndBorderHeight}px`
+			: 'auto';
+	};
+	const onTransitionEnd = (e: TransitionEvent) => {
+		if (e.target !== tabPanelContainer) return; // if the event target is not the tabPanelContainer, ignore it
+		isTransitioning = false;
+		tabPanelContainer.style.height = 'auto'; // when the transition is done, set it to auto to handle window resizing and stuff
+	};
+
+	// == tab management ==
 	let activeIndex = $state(initialIndex);
 	const activeId = $derived(tabs[activeIndex]?.id);
 
@@ -20,6 +51,7 @@
 		activeIndex = index;
 		const tab = document.getElementById(`${tabs[index].id}-tab`);
 		if (tab) tab.focus();
+		onTransitionStart();
 	};
 	const setNextActiveIndex = () => {
 		setIndex((activeIndex + 1) % tabs.length);
@@ -58,7 +90,7 @@
 	};
 </script>
 
-<div role="tablist" aria-orientation="horizontal" class="inline-flex gap-2">
+<div role="tablist" aria-orientation="horizontal" class="relative z-10 inline-flex gap-2">
 	{#each tabs as { id, label }, idx}
 		{@const isActive = activeId === id}
 		<button
@@ -68,25 +100,40 @@
 			aria-selected={isActive}
 			aria-controls={id}
 			tabindex={isActive ? undefined : -1}
-			onclick={() => (activeIndex = idx)}
+			onclick={() => setIndex(idx)}
 			onkeydown={onTabKeydown}
-			class="outline-blue cursor-pointer border border-b py-2 px-4 -outline-offset-4 focus:outline"
+			class="cursor-pointer border py-2 px-4 -outline-offset-4 focus:outline-2"
+			class:border-[silver_silver_white_silver]={isActive}
+			class:border-silver={!isActive}
+			class:hover:border-[black_black_silver_black]={!isActive}
+			class:hover:border-dashed={!isActive}
 			class:bg-silver={!isActive}
-			style:border-color={isActive ? 'silver silver white silver' : 'silver'}
 		>
 			{label}
 		</button>
 	{/each}
 </div>
-{#each tabs as { id, panel }}
-	<div
-		{id}
-		role="tabpanel"
-		tabindex="0"
-		aria-labelledby={`${id}-tab`}
-		hidden={activeId !== id}
-		class="outline-blue border-silver -mt-[1px] border py-2 px-4 -outline-offset-4 focus:outline"
-	>
-		{@render panel()}
-	</div>
-{/each}
+<div
+	class="border-silver relative -mt-[1px] w-full max-w-prose overflow-hidden border transition-[height] duration-300 motion-reduce:duration-0"
+	ontransitionend={onTransitionEnd}
+	bind:this={tabPanelContainer}
+>
+	{#each tabs as { id, panel }, idx}
+		{@const isActive = activeId === id}
+		{@const isNext = idx > activeIndex}
+		<div
+			{id}
+			role="tabpanel"
+			tabindex="0"
+			inert={!isActive}
+			aria-labelledby={`${id}-tab`}
+			class="top-0 transform-gpu py-2 px-4 -outline-offset-4 transition duration-300 focus:outline-2 motion-reduce:duration-0"
+			style:position={isActive && !isTransitioning ? 'relative' : 'absolute'}
+			style:pointer-events={isActive ? 'auto' : 'none'}
+			style:opacity={isActive ? 1 : 0}
+			style:transform={isActive ? 'translateX(0)' : isNext ? 'translateX(25%)' : 'translateX(-25%)'}
+		>
+			{@render panel()}
+		</div>
+	{/each}
+</div>

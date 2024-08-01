@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { spring } from 'svelte/motion';
-	import uiStore from '$lib/stores/ui.svelte';
+	import ui from '$lib/stores/ui.svelte';
 	import type { Snippet } from 'svelte';
 
 	type Props = {
 		children: Snippet;
 	};
 	let { children }: Props = $props();
+
+	const { shouldReduceMotion } = $derived(ui);
 
 	let scrollY = $state(0);
 	let isSpringing = $state(false);
@@ -18,6 +20,7 @@
 	const scrollSpring4 = spring({ scrollY: 0 }, { stiffness: 0.2, damping: 1 });
 
 	$effect(() => {
+		if (shouldReduceMotion) return;
 		isSpringing = true;
 		scrollSpring0.set({ scrollY }).then(() => (isSpringing = false));
 		scrollSpring1.set({ scrollY });
@@ -29,48 +32,58 @@
 
 <svelte:window bind:scrollY />
 
-<span class="wrapper relative" class:reduce-motion={uiStore.shouldReduceMotion}>
+<span class="wrapper relative block">
 	<span
-		class="text-red pointer-events-none absolute whitespace-nowrap transition-opacity duration-100 ease-in-out will-change-transform"
+		class="text-red pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
-		style:transform="translateY({scrollY - $scrollSpring0.scrollY}px)"
-		style:opacity={isSpringing ? 1 : 0}
+		style:transform={shouldReduceMotion
+			? 'translate3d(5px,5px,0)'
+			: `translateY(${scrollY - $scrollSpring0.scrollY}px)`}
+		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
 	>
 		{@render children()}
 	</span>
 	<span
-		class="text-yellow pointer-events-none absolute whitespace-nowrap transition-opacity duration-100 ease-in-out will-change-transform"
+		class="text-yellow pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
-		style:transform="translateY({scrollY - $scrollSpring1.scrollY}px)"
-		style:opacity={isSpringing ? 1 : 0}
+		style:transform={shouldReduceMotion
+			? 'translate3d(4px,4px,0)'
+			: `translateY(${scrollY - $scrollSpring1.scrollY}px)`}
+		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
 	>
 		{@render children()}
 	</span>
 	<span
-		class="text-lime pointer-events-none absolute whitespace-nowrap transition-opacity duration-100 ease-in-out will-change-transform"
+		class="text-lime pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
-		style:transform="translateY({scrollY - $scrollSpring2.scrollY}px)"
-		style:opacity={isSpringing ? 1 : 0}
+		style:transform={shouldReduceMotion
+			? 'translate3d(3px,3px,0)'
+			: `translateY(${scrollY - $scrollSpring2.scrollY}px)`}
+		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
 	>
 		{@render children()}
 	</span>
 	<span
-		class="text-green pointer-events-none absolute whitespace-nowrap transition-opacity duration-100 ease-in-out will-change-transform"
+		class="text-green pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
-		style:transform="translateY({scrollY - $scrollSpring3.scrollY}px)"
-		style:opacity={isSpringing ? 1 : 0}
+		style:transform={shouldReduceMotion
+			? 'translate3d(2px,2px,0)'
+			: `translateY(${scrollY - $scrollSpring3.scrollY}px)`}
+		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
 	>
 		{@render children()}
 	</span>
 	<span
-		class="text-blue pointer-events-none absolute whitespace-nowrap transition-opacity duration-100 ease-in-out will-change-transform"
+		class="text-blue pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
-		style:transform="translateY({scrollY - $scrollSpring4.scrollY}px)"
-		style:opacity={isSpringing ? 1 : 0}
+		style:transform={shouldReduceMotion
+			? 'translate3d(1px,1px,0)'
+			: `translateY(${scrollY - $scrollSpring4.scrollY}px)`}
+		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
 	>
 		{@render children()}
 	</span>
-	<span class="relative whitespace-nowrap">
+	<span class="relative">
 		{@render children()}
 	</span>
 </span>

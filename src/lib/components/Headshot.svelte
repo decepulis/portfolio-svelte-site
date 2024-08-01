@@ -136,8 +136,8 @@
 />
 <svg
 	viewBox="0 0 64 64"
+	class="h-auto w-full max-w-64"
 	xmlns="http://www.w3.org/2000/svg"
-	class="h-auto w-full"
 	bind:this={svgElement}
 	onpointerdown={onSvgClick}
 >
@@ -201,7 +201,7 @@
 		style="transform:translate3d({browsX}px,{browsY}px,0);"
 	/>
 	<!-- eyes -->
-	<g fill="darkgreen" style="transform:translate3d({eyesX}px,{eyesY}px,0);">
+	<g fill="darkgreen" style="transform:translate3d({eyesX}px,{eyesY + 0.25}px,0);">
 		{#if isBlinking || isPoked}
 			<path d="M40 30h-4v-1h4v1zm0 0h1v1h-1v-1zM23 30v-1h4v1h-4zm0 0v1h-1v-1h1z" />
 		{:else}
