@@ -8,8 +8,6 @@
 	// Rectangular coordinates of mouse relative to center of svg
 	let svgWidth: number = $state(0);
 	let svgHeight: number = $state(0);
-	let svgCenterX: number = $state(0);
-	let svgCenterY: number = $state(0);
 
 	let distanceX = $state(0);
 	let distanceY = $state(0);
@@ -19,20 +17,22 @@
 
 	// This function runs when the user moves their mouse or clicks somewhere on the window
 	const onWindowResize = () => {
-		const { width, height, x, y } = svgElement.getBoundingClientRect();
-
-		svgWidth = width;
-		svgHeight = height;
-		svgCenterX = x + width / 2;
-		svgCenterY = y + height / 2;
+		const { clientWidth, clientHeight } = svgElement;
+		svgWidth = clientWidth;
+		svgHeight = clientHeight;
 
 		const { innerWidth, innerHeight } = window;
 		maxDistanceX = innerWidth;
 		maxDistanceY = innerHeight;
 	};
-	$effect(onWindowResize);
-	const throttledOnWindowResize = throttle(onWindowResize, 100);
+	$effect(onWindowResize); // run once on load
+	const throttledOnWindowResize = throttle(onWindowResize, 250);
+
 	const onWindowPointerUpdate = (e: MouseEvent | PointerEvent) => {
+		const { x: svgX, y: svgY } = svgElement.getBoundingClientRect();
+		const svgCenterX = svgX + svgWidth / 2;
+		const svgCenterY = svgY + svgHeight / 2;
+
 		const { x: mouseX, y: mouseY } = e;
 		distanceX = mouseX - svgCenterX;
 		distanceY = mouseY - svgCenterY;
@@ -204,7 +204,7 @@
 		style="transform:translate3d({browsX}px,{browsY}px,0);"
 	/>
 	<!-- eyes -->
-	<g fill="darkgreen" style="transform:translate3d({eyesX}px,{eyesY + 0.25}px,0);">
+	<g fill="darkgreen" style="transform:translate3d({eyesX}px,{eyesY}px,0);">
 		{#if isBlinking || isPoked}
 			<path d="M40 30h-4v-1h4v1zm0 0h1v1h-1v-1zM23 30v-1h4v1h-4zm0 0v1h-1v-1h1z" />
 		{:else}
