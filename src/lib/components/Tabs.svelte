@@ -125,7 +125,7 @@
 			tabindex="0"
 			inert={!isActive}
 			aria-labelledby={`${id}-tab`}
-			class="top-0 transform-gpu py-2 px-4 -outline-offset-4 transition duration-300 focus:outline-2 motion-reduce:duration-0"
+			class="top-0 transform-gpu py-6 px-4 -outline-offset-4 transition duration-300 focus:outline-2 motion-reduce:duration-0"
 			style:position={isActive && !isTransitioning ? 'relative' : 'absolute'}
 			style:pointer-events={isActive ? 'auto' : 'none'}
 			style:opacity={isActive ? 1 : 0}
