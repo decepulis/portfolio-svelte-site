@@ -1,7 +1,7 @@
 <script lang="ts">
 	import H2 from '$lib/components/typography/H2.svelte';
 	import Section from '$lib/components/typography/Section.svelte';
-	import type { frontmatter, Frontmatter } from '$lib/markdoc/types';
+	import type { Frontmatter } from '$lib/markdoc/types';
 
 	type Post = {
 		frontmatter: Frontmatter;

@@ -24,19 +24,31 @@ function getImages(content: RenderableTreeNode): string[] {
 	}
 	return [];
 }
-function getFrontmatter(filename: string, ast: Node): Frontmatter {
-	const [year, month, date, ...rest] = filename.split('-');
-	const [dateSlug] = rest.join('-').split('.');
+function getDateFromSlug(slug: string) {
+	// the slug is in one of the following three formats:
+	// yyyy-mm-dd-rest OR yyyy-mm-rest OR yyyy-rest
+
+	const [year, string2, string3] = slug.split('-');
+	const hasMonth = !isNaN(parseInt(string2));
+	const hasDay = !isNaN(parseInt(string3));
+	let dateString = year;
+	if (hasMonth) dateString += `-${string2}`;
+	if (hasDay) dateString += `-${string3}`;
+	const date = new Date(dateString);
+	return { date, hasMonth, hasDay };
+}
+function getFrontmatter(slug: string, ast: Node): Frontmatter {
 	try {
 		const astFrontmatter = parse(ast.attributes.frontmatter);
 		const validatedAstFrontmatter = frontmatter.parse(astFrontmatter);
+		const date = getDateFromSlug(slug);
 		return {
 			...validatedAstFrontmatter,
-			date: new Date(`${year}-${month}-${date}`),
-			slug: `${year}-${month}-${date}-${dateSlug}`
+			...date,
+			slug: slug
 		};
 	} catch (e) {
-		throw new Error(`Error parsing frontmatter in ${filename}: ${e}`);
+		throw new Error(`Error parsing frontmatter in ${slug}: ${e}`);
 	}
 }
 const paragraph: Schema = {
@@ -68,17 +80,18 @@ export async function getPosts() {
 		mdocFiles.map(async (file) => {
 			const post = await fs.readFile(`src/posts/${file}`, 'utf-8');
 			const ast = Markdoc.parse(post);
-			const frontmatter = getFrontmatter(file, ast);
+			const slug = file.replace('.mdoc', '');
+			const frontmatter = getFrontmatter(slug, ast);
 			return { frontmatter };
 		})
 	);
 	return posts;
 }
-export async function getPost(filename: string) {
-	const file = path.resolve(`src/posts/${filename}.mdoc`);
+export async function getPost(slug: string) {
+	const file = path.resolve(`src/posts/${slug}.mdoc`);
 	const post = await fs.readFile(file, 'utf-8');
 	const ast = Markdoc.parse(post);
-	const frontmatter = getFrontmatter(filename, ast);
+	const frontmatter = getFrontmatter(slug, ast);
 	const content = Markdoc.transform(ast, {
 		nodes: { paragraph },
 		tags: {

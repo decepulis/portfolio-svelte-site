@@ -5,7 +5,7 @@
 
 	const { data }: { data: PageData } = $props();
 	const {
-		frontmatter: { slug, title, date, pageUrl, githubUrl, formatMonth, formatDay },
+		frontmatter: { slug, title, date, hasMonth, hasDay, pageUrl, githubUrl, ...rest },
 		enhancedImages,
 		content
 	} = $derived(data);
@@ -13,8 +13,9 @@
 	const formatter = $derived(
 		new Intl.DateTimeFormat('en-US', {
 			year: 'numeric',
-			month: typeof formatMonth === 'boolean' && !formatMonth ? undefined : 'long',
-			day: typeof formatDay === 'boolean' && !formatDay ? undefined : 'numeric'
+			month: hasMonth ? 'long' : undefined,
+			day: hasDay ? 'numeric' : undefined,
+			timeZone: 'UTC'
 		})
 	);
 </script>

@@ -2,22 +2,20 @@
 title: Sensor analytics platform
 type: build
 previewText: How I (accidentally) got into web development
-formatMonth: false
-formatDay: false
 ---
 
 During my time as a co-op at Bosch, I wrote a stack of applications providing sensor data storage, real-time monitoring, and historical analysis.
 
 On the back-end, a Node.js script read sensor data from various interfaces, stored it to a time-series DB ([InfluxDB](https://www.influxdata.com)), and forwarded it over a websocket. The script had a modular API for adding new sensor types.
 
-![Images](/src/posts/2017-01-01-bosch/piread.png "Node.js reading sensor data")
+![Images](/src/posts/2017-bosch/piread.png "Node.js reading sensor data")
 
 Two front-ends, written with jQuery, were used for displaying the data. One for viewing live data, and one for building queries and viewing historical reports.
 
 {% grid %}
-![Images](/src/posts/2017-01-01-bosch/piview.png "Live sensor data")
+![Images](/src/posts/2017-bosch/piview.png "Live sensor data")
 
-![Images](/src/posts/2017-01-01-bosch/pichart.png "Historical sensor data")
+![Images](/src/posts/2017-bosch/pichart.png "Historical sensor data")
 {% /grid %}
 
 This is how I started in hardware and accidentally ended up a web developer! I thought that co-op would be spent laying out PCBs and characterizing sensors and circuits. Instead, I stumbled into this. What a fortunate mistake.

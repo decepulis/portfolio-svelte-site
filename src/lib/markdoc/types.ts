@@ -14,11 +14,11 @@ export const frontmatter = z.object({
 	githubUrl: z.string().optional(),
 	priority: z.number().optional(),
 	previewTitle: z.string().optional(),
-	previewText: z.string().optional(),
-	formatMonth: z.boolean().optional(),
-	formatDay: z.boolean().optional()
+	previewText: z.string().optional()
 });
 export interface Frontmatter extends z.infer<typeof frontmatter> {
 	date: Date;
+	hasMonth: boolean;
+	hasDay: boolean;
 	slug: string;
 }
