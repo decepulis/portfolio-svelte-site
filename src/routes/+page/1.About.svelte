@@ -1,9 +1,9 @@
 <script lang="ts">
-	import H2 from '$lib/components/H2.svelte';
-	import P from '$lib/components/P.svelte';
-	import A from '$lib/components/A.svelte';
+	import H2 from '$lib/components/typography/H2.svelte';
+	import P from '$lib/components/typography/P.svelte';
+	import A from '$lib/components/typography/A.svelte';
 	import Tabs from '$lib/components/Tabs.svelte';
-	import Section from '$lib/components/Section.svelte';
+	import Section from '$lib/components/typography/Section.svelte';
 	import Headshot from '$lib/components/Headshot.svelte';
 </script>
 

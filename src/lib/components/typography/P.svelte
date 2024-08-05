@@ -7,4 +7,4 @@
 	const { children }: Props = $props();
 </script>
 
-<p class="my-4">{@render children()}</p>
+<p class="my-4 text-pretty last:mb-0">{@render children()}</p>

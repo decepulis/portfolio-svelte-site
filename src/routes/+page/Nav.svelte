@@ -1,4 +1,5 @@
 <script>
+	import A from '$lib/components/typography/A.svelte';
 	import ui from '$lib/stores/ui.svelte';
 </script>
 
@@ -7,24 +8,16 @@
 >
 	<ul class="flex gap-4">
 		<li>
-			<a class="group text-linkText" href="#about">
-				👨‍💻 <span class="underline group-hover:decoration-wavy">about</span>
-			</a>
+			<A decoration="👨‍💻" href="#about">about</A>
 		</li>
 		<li>
-			<a class="group text-linkText" href="#work">
-				💼 <span class="underline group-hover:decoration-wavy">work</span>
-			</a>
+			<A decoration="💼" href="#work">work</A>
 		</li>
 		<li>
-			<a class="group text-linkText" href="#contact">
-				☎️ <span class="underline group-hover:decoration-wavy">contact</span>
-			</a>
+			<A decoration="☎️" href="#contact">contact</A>
 		</li>
 		<li>
-			<a class="group text-linkText" href="#credits">
-				🎬 <span class="underline group-hover:decoration-wavy">credits</span>
-			</a>
+			<A decoration="🎬" href="#credits">credits</A>
 		</li>
 	</ul>
 

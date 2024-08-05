@@ -1,6 +1,6 @@
 <script lang="ts">
-	import H2 from '$lib/components/H2.svelte';
-	import Section from '$lib/components/Section.svelte';
+	import H2 from '$lib/components/typography/H2.svelte';
+	import Section from '$lib/components/typography/Section.svelte';
 </script>
 
 <Section id="credits">

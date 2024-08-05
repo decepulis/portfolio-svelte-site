@@ -1,6 +1,6 @@
 <script lang="ts">
-	import H2 from '$lib/components/H2.svelte';
-	import Section from '$lib/components/Section.svelte';
+	import H2 from '$lib/components/typography/H2.svelte';
+	import Section from '$lib/components/typography/Section.svelte';
 	import type { frontmatter, Frontmatter } from '$lib/markdoc/types';
 
 	type Post = {
@@ -23,13 +23,13 @@
 	>
 		{#each postsReversed as post}
 			{@const {
-				frontmatter: { type, title, url, slug, priority, previewText }
+				frontmatter: { type, title, directUrl, slug, priority, previewTitle, previewText }
 			} = post}
 			<li
 				class="grid border p-4 hover:border-dashed"
 				class:col-span-2={priority && priority >= 2}
 				class:row-span-2={priority && priority >= 3}
-				style:view-transition-name="body-{slug}"
+				style:view-transition-name="container-{slug}"
 				style:border-color={type === 'build'
 					? 'green'
 					: type === 'post'
@@ -40,10 +40,12 @@
 								? 'red'
 								: 'silver'}
 			>
-				<a href={url ?? `/posts/${slug}`} class="flex flex-col gap-2">
-					<h3 class="font-bold" style:view-transition-name="title-{slug}">{title}</h3>
+				<a href={directUrl ?? `/posts/${slug}`} class="flex flex-col gap-2">
+					<h3 class="font-bold" style:view-transition-name="title-{slug}">
+						{previewTitle ?? title}
+					</h3>
 					{#if previewText}
-						<p class="text-sm">{previewText}</p>
+						<p class="text-sm" style:view-transition-name="content-{slug}">{previewText}</p>
 					{/if}
 					<div class="mt-auto">
 						{#if type === 'build'}
@@ -55,7 +57,7 @@
 						{:else if type === 'talk'}
 							🗣️
 						{/if}
-						{#if url}
+						{#if directUrl}
 							🔗
 						{/if}
 					</div>

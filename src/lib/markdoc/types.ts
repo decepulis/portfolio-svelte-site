@@ -9,9 +9,14 @@ export const isTag = (tag: any): tag is Tag => {
 export const frontmatter = z.object({
 	title: z.string(),
 	type: z.enum(['post', 'talk', 'build', 'video']),
-	url: z.string().optional(),
+	directUrl: z.string().optional(),
+	pageUrl: z.string().optional(),
+	githubUrl: z.string().optional(),
 	priority: z.number().optional(),
-	previewText: z.string().optional()
+	previewTitle: z.string().optional(),
+	previewText: z.string().optional(),
+	formatMonth: z.boolean().optional(),
+	formatDay: z.boolean().optional()
 });
 export interface Frontmatter extends z.infer<typeof frontmatter> {
 	date: Date;
