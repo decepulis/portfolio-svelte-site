@@ -1,0 +1,79 @@
+@import 'tailwindcss';
+
+@theme {
+	--font-family-serif: Times, 'Times New Roman', serif;
+	--font-family-sans: Helvetica, Arial, sans-serif;
+	--color-*: initial;
+
+	/* https://en.wikipedia.org/wiki/Web_colors */
+	--color-white: white;
+	--color-gainsboro: gainsboro;
+	--color-silver: silver;
+	--color-gray: gray;
+	--color-black: black;
+
+	--color-red: red;
+	--color-maroon: maroon;
+	--color-yellow: yellow;
+	--color-olive: olive;
+	--color-lime: lime;
+	--color-green: green;
+	--color-aqua: aqua;
+	--color-teal: teal;
+	--color-blue: blue;
+	--color-navy: navy;
+	--color-fuchsia: fuchsia;
+	--color-purple: purple;
+
+	--color-linkText: linkText;
+	--color-visitedText: visitedText;
+
+	--font-size-xl: 1.25rem;
+	--font-size-xl: clamp(1.25rem, 0.625vw + 1rem, 1.5rem);
+	--font-size-xl--line-height: 1.75rem;
+	--font-size-xl--line-height: clamp(1.75rem, 0.625vw + 1.5rem, 2rem);
+
+	--font-size-2xl: 1.5rem;
+	--font-size-2xl: clamp(1.5rem, 0.938vw + 1.125rem, 1.875rem);
+	--font-size-2xl--line-height: 2rem;
+	--font-size-2xl--line-height: clamp(2rem, 0.625vw + 1.75rem, 2.25rem);
+
+	--font-size-3xl: 1.875rem;
+	--font-size-3xl: clamp(1.875rem, 0.938vw + 1.5rem, 2.25rem);
+	--font-size-3xl--line-height: 2.25rem;
+	--font-size-3xl--line-height: clamp(2.25rem, 0.625vw + 2rem, 2.5rem);
+
+	--font-size-4xl: 2.25rem;
+	--font-size-4xl: clamp(2.25rem, 1.875vw + 1.5rem, 3rem);
+	--font-size-4xl--line-height: 2.5rem;
+	--font-size-4xl--line-height: clamp(2.5rem, 1.25vw + 2rem, 3rem);
+
+	--font-size-5xl: 3rem;
+	--font-size-5xl: clamp(3rem, 1.875vw + 2.25rem, 3.75rem);
+	--font-size-5xl--line-height: 1;
+
+	--font-size-6xl: 3.75rem;
+	--font-size-6xl: clamp(3.75rem, 1.875vw + 3rem, 4.5rem);
+	--font-size-6xl--line-height: 1;
+
+	--font-size-7xl: 4.5rem;
+	--font-size-7xl: clamp(4.5rem, 3.75vw + 3rem, 6rem);
+	--font-size-7xl--line-height: 1;
+
+	--font-size-8xl: 6rem;
+	--font-size-8xl: clamp(6rem, 5vw + 4rem, 8rem);
+	--font-size-8xl--line-height: 1;
+
+	--font-size-9xl: 8rem;
+	--font-size-9xl: clamp(8rem, 7.5vw + 5rem, 11rem);
+	--font-size-9xl--line-height: 1;
+
+	--width-prose: 40em;
+}
+
+* {
+	outline-color: var(--color-blue);
+}
+[id] {
+	scroll-margin-top: 4rem;
+}

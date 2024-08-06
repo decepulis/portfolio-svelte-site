@@ -1,33 +1,18 @@
 <script lang="ts">
-	import Hero from './+page/Hero.svelte';
+	import type { PageData } from './$types';
+	import Hero from './+page/0.Hero.svelte';
+	import About from './+page/1.About.svelte';
+	import Work from './+page/2.Work.svelte';
+	import Contact from './+page/3.Contact.svelte';
 	import Nav from './+page/Nav.svelte';
-	import About from './+page/About/index.svelte';
-	import Work from './+page/Work/index.svelte';
-	import Projects from './+page/Projects/index.svelte';
-	import Contact from './+page/Contact/index.svelte';
-	import Credits from './+page/Credits.svelte';
+
+	const { data }: { data: PageData } = $props();
 </script>
 
-<Hero />
-<Nav />
-<main>
+<main class="pb-8">
+	<Hero />
+	<Nav />
 	<About />
-	<Work />
-	<Projects />
+	<Work posts={data.posts} />
 	<Contact />
-	<Credits />
 </main>
-
-<style>
-	main {
-		overflow-x: hidden;
-	}
-	main :global(h2) {
-		text-align: center;
-	}
-	@media (min-width: 42rem) {
-		main :global(h2) {
-			text-align: unset;
-		}
-	}
-</style>
