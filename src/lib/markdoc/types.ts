@@ -12,9 +12,12 @@ export const frontmatter = z.object({
 	directUrl: z.string().optional(),
 	pageUrl: z.string().optional(),
 	githubUrl: z.string().optional(),
+	documentUrl: z.string().optional(),
 	priority: z.number().optional(),
 	previewTitle: z.string().optional(),
-	previewText: z.string().optional()
+	previewText: z.string().optional(),
+	previewImage: z.string().optional(),
+	underConstruction: z.boolean().optional()
 });
 export interface Frontmatter extends z.infer<typeof frontmatter> {
 	date: Date;

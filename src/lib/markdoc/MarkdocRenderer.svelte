@@ -5,8 +5,15 @@
 	import P from '$lib/components/typography/P.svelte';
 	import A from '$lib/components/typography/A.svelte';
 	import H2 from '$lib/components/typography/H2.svelte';
-	import Grid from '$lib/components/typography/Grid.svelte';
-	import MarkdocImage from './MarkdocImage.svelte';
+	import H3 from '$lib/components/typography/H3.svelte';
+	import H4 from '$lib/components/typography/H4.svelte';
+	import H5 from '$lib/components/typography/H5.svelte';
+	import H6 from '$lib/components/typography/H6.svelte';
+	import Image from './components/Image.svelte';
+	import Grid from './components/Grid.svelte';
+	import Video from './components/Video.svelte';
+	import UL from '$lib/components/typography/UL.svelte';
+	import OL from '$lib/components/typography/OL.svelte';
 
 	type Props = {
 		node: RenderableTreeNode;
@@ -18,8 +25,15 @@
 		p: P,
 		a: A,
 		h2: H2,
-		img: MarkdocImage,
-		Grid
+		h3: H3,
+		h4: H4,
+		h5: H5,
+		h6: H6,
+		ul: UL,
+		ol: OL,
+		img: Image,
+		Grid,
+		Video
 	};
 </script>
 
@@ -34,7 +48,7 @@
 	<svelte:self node={node.children} {enhancedImages} />
 {:else if node.name === 'img'}
 	<!-- special case: images! -->
-	<MarkdocImage attributes={node.attributes} {enhancedImages} />
+	<Image attributes={node.attributes} {enhancedImages} />
 {:else if node.name in components}
 	<!-- known component -->
 	<svelte:component this={components[node.name as keyof typeof components]} {...node.attributes}>

@@ -98,6 +98,33 @@ export async function getPost(slug: string) {
 			grid: {
 				render: 'Grid',
 				attributes: {}
+			},
+			video: {
+				render: 'Video',
+				attributes: {
+					playbackId: {
+						type: String,
+						required: true,
+						errorLevel: 'critical'
+					},
+					title: {
+						type: String,
+						required: true,
+						errorLevel: 'warning'
+					},
+					width: {
+						type: Number,
+						required: true
+					},
+					height: {
+						type: Number,
+						required: true
+					},
+					caption: {
+						type: String,
+						required: false
+					}
+				}
 			}
 		},
 		variables: {

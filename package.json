@@ -41,6 +41,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@mux/mux-player": "^2.9.0",
     "just-throttle": "^4.2.0"
   }
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import H2 from '$lib/components/typography/H2.svelte';
+	import H1 from '$lib/components/typography/H1.svelte';
 	import Section from '$lib/components/typography/Section.svelte';
 	import type { Frontmatter } from '$lib/markdoc/types';
 
@@ -15,9 +15,10 @@
 </script>
 
 <Section id="work">
-	<H2>What I&apos;m up to</H2>
+	<H1 as="h2">Some things I&apos;ve been up to</H1>
 	<ul
-		class="grid grid-flow-dense grid-cols-[--grid-cols] gap-0.5 text-base sm:grid-cols-[--sm-grid-cols]"
+		role="list"
+		class="grid grid-flow-dense grid-cols-[--grid-cols] sm:grid-cols-[--sm-grid-cols]"
 		style:--grid-cols="repeat(auto-fill, minmax(170px, 1fr))"
 		style:--sm-grid-cols="repeat(auto-fill, minmax(288px, 1fr))"
 	>
@@ -26,26 +27,31 @@
 				frontmatter: { type, title, directUrl, slug, priority, previewTitle, previewText }
 			} = post}
 			<li
-				class="grid border p-4 hover:border-dashed"
+				class="border-silver -m-[0.5px] border"
 				class:col-span-2={priority && priority >= 2}
 				class:row-span-2={priority && priority >= 3}
 				style:view-transition-name="container-{slug}"
-				style:border-color={type === 'build'
-					? 'green'
-					: type === 'post'
-						? 'blue'
-						: type === 'video'
-							? 'purple'
-							: type === 'talk'
-								? 'red'
-								: 'silver'}
 			>
-				<a href={directUrl ?? `/posts/${slug}`} class="flex flex-col gap-2">
-					<h3 class="font-bold" style:view-transition-name="title-{slug}">
+				<a
+					href={directUrl ?? `/posts/${slug}`}
+					class="flex h-full flex-col gap-4 p-4 hover:bg-[--bg-hover] focus:bg-[--bg-hover]"
+					style:--bg-hover={type === 'build'
+						? 'yellow'
+						: type === 'post'
+							? 'aqua'
+							: type === 'video'
+								? 'fuchsia'
+								: type === 'talk'
+									? 'lime'
+									: 'silver'}
+				>
+					<h3 class="text-balance" style:view-transition-name="title-{slug}">
 						{previewTitle ?? title}
 					</h3>
 					{#if previewText}
-						<p class="text-sm" style:view-transition-name="content-{slug}">{previewText}</p>
+						<p class="text-pretty text-sm" style:view-transition-name="content-{slug}">
+							{previewText}
+						</p>
 					{/if}
 					<div class="mt-auto">
 						{#if type === 'build'}
@@ -64,5 +70,17 @@
 				</a>
 			</li>
 		{/each}
+		<li class="hover:border-silver -m-[0.5px] grid border border-transparent">
+			<a
+				href="https://github.com/decepulis"
+				class="hover:bg-silver focus:bg-silver flex h-full flex-col gap-4 p-4"
+			>
+				<h3 class="text-balance">More&hellip;</h3>
+				<p class="text-pretty text-sm">
+					See more, including my graveyard of half-finished projects, on GitHub.
+				</p>
+				<div class="mt-auto">🔗</div>
+			</a>
+		</li>
 	</ul>
 </Section>

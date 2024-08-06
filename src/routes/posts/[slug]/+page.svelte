@@ -1,11 +1,22 @@
 <script lang="ts">
 	import A from '$lib/components/typography/A.svelte';
+	import P from '$lib/components/typography/P.svelte';
 	import MarkdocRenderer from '$lib/markdoc/MarkdocRenderer.svelte';
 	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
 	const {
-		frontmatter: { slug, title, date, hasMonth, hasDay, pageUrl, githubUrl, ...rest },
+		frontmatter: {
+			slug,
+			title,
+			date,
+			hasMonth,
+			hasDay,
+			pageUrl,
+			githubUrl,
+			documentUrl,
+			underConstruction
+		},
 		enhancedImages,
 		content
 	} = $derived(data);
@@ -40,8 +51,17 @@
 				<A decoration="🐙" href={githubUrl}>View on GitHub</A>
 			</p>
 		{/if}
+		{#if documentUrl}
+			<p>
+				<A decoration="📄" href={documentUrl}>View document</A>
+			</p>
+		{/if}
 	</header>
-	<div style:view-transition-name="content-{slug}" class="max-w-prose text-lg">
+	<div style:view-transition-name="content-{slug}" class="max-w-prose">
+		{#if underConstruction}
+			<P><i>This post is under construction</i></P>
+			<img src="/under-construction.gif" alt="Under construction" class="my-4" />
+		{/if}
 		<MarkdocRenderer node={content} {enhancedImages} />
 	</div>
 	<p class="mt-8">

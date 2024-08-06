@@ -1,11 +1,13 @@
 @import 'tailwindcss';
 
 @theme {
-	--font-family-serif: Times, ui-serif, serif;
-
+	--font-family-serif: Times, 'Times New Roman', serif;
+	--font-family-sans: Helvetica, Arial, sans-serif;
 	--color-*: initial;
 
+	/* https://en.wikipedia.org/wiki/Web_colors */
 	--color-white: white;
+	--color-gainsboro: gainsboro;
 	--color-silver: silver;
 	--color-gray: gray;
 	--color-black: black;
@@ -51,7 +53,7 @@
 	--font-size-5xl--line-height: 1;
 
 	--font-size-6xl: 3.75rem;
-	--font-size-6xl: clamp(3.5rem, 1.875vw + 3rem, 4.5rem);
+	--font-size-6xl: clamp(3.75rem, 1.875vw + 3rem, 4.5rem);
 	--font-size-6xl--line-height: 1;
 
 	--font-size-7xl: 4.5rem;

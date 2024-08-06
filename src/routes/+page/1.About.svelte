@@ -1,5 +1,5 @@
 <script lang="ts">
-	import H2 from '$lib/components/typography/H2.svelte';
+	import H1 from '$lib/components/typography/H1.svelte';
 	import P from '$lib/components/typography/P.svelte';
 	import A from '$lib/components/typography/A.svelte';
 	import Tabs from '$lib/components/Tabs.svelte';
@@ -19,9 +19,8 @@
 		a great developer experience with great
 		<A href="https://www.mux.com">code</A>, great
 		<A href="https://docs.mux.com">docs</A>, great
-		<A href="https://tmi.mux.com">microsites</A>, great
-		<A href="https://www.mux.com/team/darius-cepulis">blog posts</A>, and great
-		<A href="https://www.reactmiami.com/speakers/cepulis">conference talks</A>
+		<A href="https://www.mux.com/team/darius-cepulis">posts</A>, and great
+		<A href="https://www.reactmiami.com/speakers/cepulis">talks</A>
 	</P>
 	<P>
 		Fun fact about me, I actually <i>like</i> writing CSS. Weird, huh?
@@ -54,10 +53,12 @@
 {/snippet}
 
 <Section id="about">
-	<H2>About me</H2>
+	<H1 as="h2">About me</H1>
 	<div class="flex flex-col items-start gap-4 md:flex-row">
+		{@html `<!-- Thank you, Cassie Evans, for this great idea! https://www.cassie.codes/ -->`}
 		<Headshot />
 		<div class="w-full">
+			{@html `<!-- Thank you, Chris Coyier, for this great idea! https://web.archive.org/web/20220102202624/https://chriscoyier.net/ -->`}
 			<Tabs
 				initialIndex={1}
 				tabs={[

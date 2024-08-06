@@ -139,14 +139,14 @@
 />
 <svg
 	viewBox="0 0 64 64"
-	class="h-auto w-full max-w-64"
+	class="border-silver h-auto w-full max-w-64 border"
 	xmlns="http://www.w3.org/2000/svg"
 	bind:this={svgElement}
 	onpointerdown={onSvgClick}
 >
 	<title>Darius Cepulis</title>
 	<!-- background -->
-	<path fill="silver" d="M0 0h64v64H0z" />
+	<path fill="gainsboro" d="M0 0h64v64H0z" />
 	<!-- shirt + neck -->
 	<g>
 		<path fill="wheat" d="M25 49h14v9H25z" />

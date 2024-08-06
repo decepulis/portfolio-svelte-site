@@ -8,6 +8,6 @@
 	const { children, as }: Props = $props();
 </script>
 
-<svelte:element this={as || 'h2'} class="mt-16 mb-8 text-balance text-3xl font-bold">
+<svelte:element this={as || 'h4'} class="my-8 text-pretty italic">
 	{@render children()}
 </svelte:element>

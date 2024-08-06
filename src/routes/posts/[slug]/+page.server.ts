@@ -1,4 +1,5 @@
 import { getPost } from '$lib/markdoc/server';
+import { redirect } from '@sveltejs/kit';
 import type { Picture } from 'vite-imagetools';
 import type { PageServerLoad } from './$types';
 
@@ -24,6 +25,10 @@ export const load = (async ({ params }) => {
 	const { slug } = params;
 
 	const { content, images, frontmatter } = await getPost(slug);
+	if (frontmatter.directUrl) {
+		throw redirect(307, frontmatter.directUrl);
+	}
+
 	const enhancedImages = getEnhancedImages(images);
 
 	return { content, enhancedImages, frontmatter };
