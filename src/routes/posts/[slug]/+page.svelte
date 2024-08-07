@@ -3,6 +3,7 @@
 	import P from '$lib/components/typography/P.svelte';
 	import MarkdocRenderer from '$lib/markdoc/MarkdocRenderer.svelte';
 	import type { PageData } from './$types';
+	import { afterNavigate } from '$app/navigation';
 
 	const { data }: { data: PageData } = $props();
 	const {
@@ -29,6 +30,11 @@
 			timeZone: 'UTC'
 		})
 	);
+
+	let isInternalNavigation = $state(false);
+	afterNavigate((navigation) => {
+		isInternalNavigation = navigation.type !== 'enter';
+	});
 </script>
 
 <!-- todo: metadata -->
@@ -65,6 +71,16 @@
 		<MarkdocRenderer node={content} {enhancedImages} />
 	</div>
 	<p class="mt-8">
-		<A decoration="←" href="/#work">back</A>
+		{#snippet back()}
+			←
+			<span class="underline group-hover:decoration-wavy group-focus:decoration-wavy">back</span>
+		{/snippet}
+		{#if isInternalNavigation}
+			<button class="text-linkText group cursor-pointer" onclick={() => history.back()}
+				>{@render back()}</button
+			>
+		{:else}
+			<a class="text-linkText group" href="/#work">{@render back()}</a>
+		{/if}
 	</p>
 </article>
