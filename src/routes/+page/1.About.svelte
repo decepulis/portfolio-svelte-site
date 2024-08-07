@@ -4,7 +4,7 @@
 	import A from '$lib/components/typography/A.svelte';
 	import Tabs from '$lib/components/Tabs.svelte';
 	import Section from '$lib/components/typography/Section.svelte';
-	import Headshot from '$lib/components/Headshot.svelte';
+	import Headshot from '$lib/components/Headshot/Headshot.svelte';
 </script>
 
 {#snippet short()}
