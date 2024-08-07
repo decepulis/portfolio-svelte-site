@@ -32,14 +32,22 @@
 
 <svelte:window bind:scrollY />
 
-<span class="wrapper relative block">
+<span
+	class="wrapper relative block"
+	style:--translate0={scrollY - $scrollSpring0.scrollY}
+	style:--translate1={scrollY - $scrollSpring1.scrollY}
+	style:--translate2={scrollY - $scrollSpring2.scrollY}
+	style:--translate3={scrollY - $scrollSpring3.scrollY}
+	style:--translate4={scrollY - $scrollSpring4.scrollY}
+	style:--opacity={isSpringing || shouldReduceMotion ? 1 : 0}
+>
 	<span
 		class="text-red pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(5px,5px,0)'
-			: `translateY(${scrollY - $scrollSpring0.scrollY}px)`}
-		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
+			: `translateY(calc(1px * var(--translate0)))`}
+		style:opacity="var(--opacity)"
 	>
 		{@render children()}
 	</span>
@@ -48,8 +56,8 @@
 		aria-hidden="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(4px,4px,0)'
-			: `translateY(${scrollY - $scrollSpring1.scrollY}px)`}
-		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
+			: `translateY(calc(1px * var(--translate1)))`}
+		style:opacity="var(--opacity)"
 	>
 		{@render children()}
 	</span>
@@ -58,8 +66,8 @@
 		aria-hidden="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(3px,3px,0)'
-			: `translateY(${scrollY - $scrollSpring2.scrollY}px)`}
-		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
+			: `translateY(calc(1px * var(--translate2)))`}
+		style:opacity="var(--opacity)"
 	>
 		{@render children()}
 	</span>
@@ -68,8 +76,8 @@
 		aria-hidden="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(2px,2px,0)'
-			: `translateY(${scrollY - $scrollSpring3.scrollY}px)`}
-		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
+			: `translateY(calc(1px * var(--translate3)))`}
+		style:opacity="var(--opacity)"
 	>
 		{@render children()}
 	</span>
@@ -78,8 +86,8 @@
 		aria-hidden="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(1px,1px,0)'
-			: `translateY(${scrollY - $scrollSpring4.scrollY}px)`}
-		style:opacity={isSpringing || shouldReduceMotion ? 1 : 1}
+			: `translateY(calc(1px * var(--translate4)))`}
+		style:opacity="var(--opacity)"
 	>
 		{@render children()}
 	</span>
