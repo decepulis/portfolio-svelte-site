@@ -28,6 +28,38 @@
 	--color-linkText: linkText;
 	--color-visitedText: visitedText;
 
+	--color-wheat: wheat;
+	--color-burlywood: burlywood;
+	--color-darkgoldenrod: darkgoldenrod;
+	--color-darkgreen: darkgreen;
+
+	--color-white: color(display-p3 1 1 1);
+	--color-gainsboro: color(display-p3 0.8627 0.8627 0.8627);
+	--color-silver: color(display-p3 0.75 0.75 0.75);
+	--color-gray: color(display-p3 0.5 0.5 0.5);
+	--color-black: color(display-p3 0 0 0);
+
+	--color-red: color(display-p3 1 0 0);
+	--color-maroon: color(display-p3 0.5 0 0);
+	--color-yellow: color(display-p3 1 1 0);
+	--color-olive: color(display-p3 0.5 0.5 0);
+	--color-lime: color(display-p3 0 1 0);
+	--color-green: color(display-p3 0 0.5 0);
+	--color-aqua: color(display-p3 0 1 1);
+	--color-teal: color(display-p3 0 0.5 0.5);
+	--color-blue: color(display-p3 0 0 1);
+	--color-navy: color(display-p3 0 0 0.5);
+	--color-fuchsia: color(display-p3 1 0 1);
+	--color-purple: color(display-p3 0.5 0 0.5);
+
+	--color-linkText: color(display-p3 0 0 0.9333);
+	--color-visitedText: color(display-p3 0.3333 0.102 0.5451);
+
+	--color-wheat: color(display-p3 0.9608 0.8706 0.702);
+	--color-burlywood: color(display-p3 0.8706 0.7216 0.5294);
+	--color-darkgoldenrod: color(display-p3 0.7216 0.5255 0.0431);
+	--color-darkgreen: color(display-p3 0 0.3922 0);
+
 	--font-size-xl: 1.25rem;
 	--font-size-xl: clamp(1.25rem, 0.625vw + 1rem, 1.5rem);
 	--font-size-xl--line-height: 1.75rem;

@@ -36,14 +36,14 @@
 					href={directUrl ?? `/posts/${slug}`}
 					class="flex h-full flex-col gap-4 p-4 hover:bg-[--bg-hover] focus:bg-[--bg-hover]"
 					style:--bg-hover={type === 'build'
-						? 'yellow'
+						? 'var(--color-yellow)'
 						: type === 'post'
-							? 'aqua'
+							? 'var(--color-aqua)'
 							: type === 'video'
-								? 'fuchsia'
+								? 'var(--color-fuchsia)'
 								: type === 'talk'
-									? 'lime'
-									: 'silver'}
+									? 'var(--color-lime)'
+									: 'var(--color-silver)'}
 				>
 					<h3 class="text-balance" style:view-transition-name="title-{slug}">
 						{previewTitle ?? title}
