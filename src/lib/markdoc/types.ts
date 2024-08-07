@@ -17,6 +17,7 @@ export const frontmatter = z.object({
 	previewTitle: z.string().optional(),
 	previewText: z.string().optional(),
 	previewImage: z.string().optional(),
+	previewImageAlt: z.string().optional(),
 	underConstruction: z.boolean().optional()
 });
 export interface Frontmatter extends z.infer<typeof frontmatter> {

@@ -44,6 +44,7 @@
 	<span
 		class="text-red pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
+		data-nosnippet="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(5px,5px,0)'
 			: `translateY(calc(1px * var(--translate0)))`}
@@ -54,6 +55,7 @@
 	<span
 		class="text-yellow pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
+		data-nosnippet="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(4px,4px,0)'
 			: `translateY(calc(1px * var(--translate1)))`}
@@ -64,6 +66,7 @@
 	<span
 		class="text-lime pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
+		data-nosnippet="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(3px,3px,0)'
 			: `translateY(calc(1px * var(--translate2)))`}
@@ -74,6 +77,7 @@
 	<span
 		class="text-green pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
+		data-nosnippet="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(2px,2px,0)'
 			: `translateY(calc(1px * var(--translate3)))`}
@@ -84,6 +88,7 @@
 	<span
 		class="text-blue pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
 		aria-hidden="true"
+		data-nosnippet="true"
 		style:transform={shouldReduceMotion
 			? 'translate3d(1px,1px,0)'
 			: `translateY(calc(1px * var(--translate4)))`}
