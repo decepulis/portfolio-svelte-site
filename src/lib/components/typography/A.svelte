@@ -3,19 +3,28 @@
 
 	type Props = {
 		decoration?: string;
+		withVisitedStyles?: boolean;
 	};
-	const { children, decoration, ...rest }: Props & SvelteHTMLElements['a'] = $props();
+	const {
+		children,
+		decoration,
+		withVisitedStyles = true,
+		...rest
+	}: Props & SvelteHTMLElements['a'] = $props();
 </script>
 
 <a
-	class="text-linkText {decoration
-		? 'group'
-		: 'underline hover:decoration-wavy focus:decoration-wavy'}"
+	class="text-link dark:text-link-dark"
+	class:visited:text-visited={withVisitedStyles}
+	class:dark:visited:text-visited-dark={withVisitedStyles}
+	class:group={decoration}
+	class:hocus:decoration-wavy={!decoration}
+	class:underline={!decoration}
 	{...rest}
 >
 	{#if decoration}
 		{decoration}
-		<span class="underline group-hover:decoration-wavy group-focus:decoration-wavy">
+		<span class="group-hocus:decoration-wavy underline">
 			{@render children?.()}
 		</span>
 	{:else}

@@ -3,7 +3,7 @@
 	import throttle from 'just-throttle';
 
 	let svgElement: SVGElement;
-	let shirtColor: string | null = $state('var(--color-linkText)');
+	let shirtColor: string | null = $state('var(--color-blue)');
 	const showProfilePicture = $derived(shirtColor === null);
 	let showShirtColorControls = $state(false);
 
@@ -165,14 +165,14 @@
 	<div class="relative">
 		<svg
 			viewBox="0 0 64 64"
-			class="border-silver h-auto w-full border"
+			class="border-silver dark:border-darkgray h-auto w-full border"
 			xmlns="http://www.w3.org/2000/svg"
 			bind:this={svgElement}
 			onpointerdown={poke}
 		>
 			<title>Darius Cepulis</title>
 			<!-- background -->
-			<path fill="var(--color-gainsboro)" d="M0 0h64v64H0z" />
+			<path class="fill-gainsboro dark:fill-gray" d="M0 0h64v64H0z" />
 			<!-- shirt + neck -->
 			<g>
 				<path fill="var(--color-wheat)" d="M25 49h14v9H25z" />
@@ -266,7 +266,7 @@
 		/>
 		<button
 			type="button"
-			class="text-silver absolute top-2 right-2 -m-2 flex h-8 w-8 cursor-pointer items-center justify-center bg-clip-content p-2 text-sm hover:bg-white hover:text-black"
+			class="text-silver dark:text-darkgray hocus:bg-white hocus:text-black absolute top-2 right-2 -m-2 flex h-8 w-8 cursor-pointer items-center justify-center bg-clip-content p-2 text-sm"
 			style:background-color={showShirtColorControls ? 'var(--color-white)' : undefined}
 			style:color={showShirtColorControls ? 'var(--color-black)' : undefined}
 			aria-controls="shirt-color-controls"
@@ -287,7 +287,7 @@
 	<div
 		style:grid-template-columns="repeat(14, minmax(0, 1fr))"
 		style:transform="scaleY({showShirtColorControls ? 1 : 0})"
-		class="border-silver grid origin-top transform-gpu border-x border-b transition-transform duration-200"
+		class="border-silver dark:border-darkgray grid origin-top transform-gpu border-x border-b transition-transform duration-200"
 		aria-expanded={showShirtColorControls}
 		id="shirt-color-controls"
 	>

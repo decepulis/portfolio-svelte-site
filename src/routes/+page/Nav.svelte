@@ -68,7 +68,6 @@
 		const topOfPageBottom = document.documentElement.scrollHeight - window.innerHeight;
 		const scrollStart = window.scrollY;
 		const scrollElement = document.querySelector(`#${id}`) as HTMLElement;
-		const isLastElement = id === sections[sections.length - 1].id;
 		if (typeof scrollElement !== 'undefined') {
 			// we set the target either to the top of the element,
 			// or the bottom of the page, depending on which comes first
@@ -97,12 +96,13 @@
 </script>
 
 <nav
-	class="border-silver sticky top-[-1px] z-50 flex flex-col items-center justify-between border-y bg-white py-2 px-4 md:flex-row"
+	class="border-silver dark:border-darkgray sticky top-[-1px] z-50 flex flex-col items-center justify-between border-y bg-white py-2 px-4 md:flex-row dark:bg-black"
 >
 	<ul class="text-ceter flex gap-4">
 		{#each sections as { id, label, decoration }}
 			<li>
 				<A
+					withVisitedStyles={false}
 					decoration={currentSection === id ? '👉' : decoration}
 					href={`#${id}`}
 					onclick={(e) => {
@@ -116,9 +116,7 @@
 		{/each}
 	</ul>
 
-	<div class="">
-		{#if ui.shouldReduceMotion}
-			<span>motion reduced</span>
-		{/if}
+	<div class="text-sm">
+		<!-- {JSON.stringify(ui)} -->
 	</div>
 </nav>

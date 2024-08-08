@@ -11,8 +11,7 @@
 		<li class="col-span-2 row-span-2">
 			<a
 				href="mailto:darius@cepulis.net"
-				class="bg-gainsboro hover:bg-silver focus:bg-silver block flex h-full w-full items-center justify-center p-8 text-center font-sans text-lg"
-				style:border-color="silver gray gray silver"
+				class="bg-gainsboro hocus:bg-silver dark:bg-gray dark:hocus:bg-darkgray block flex h-full w-full items-center justify-center border-[silver_gray_gray_silver] p-8 text-center font-sans text-lg text-black dark:border-[darkgray_gray_gray_darkgray]"
 				style:border-width="0.1em"
 			>
 				email
@@ -21,8 +20,7 @@
 		<li class="row-span-2">
 			<a
 				href="https://www.linkedin.com/in/decepulis/"
-				class="bg-gainsboro hover:bg-silver focus:bg-silver block flex h-full w-full items-center justify-center p-8 text-center font-sans text-lg"
-				style:border-color="silver gray gray silver"
+				class="bg-gainsboro hocus:bg-silver dark:bg-gray dark:hocus:bg-darkgray block flex h-full w-full items-center justify-center border-[silver_gray_gray_silver] p-8 text-center font-sans text-lg text-black dark:border-[darkgray_gray_gray_darkgray]"
 				style:border-width="0.1em"
 			>
 				linkedin
@@ -31,8 +29,7 @@
 		<li class="row-span-2">
 			<a
 				href="https://github.com/decepulis"
-				class="bg-gainsboro hover:bg-silver focus:bg-silver block flex h-full w-full items-center justify-center p-8 text-center font-sans text-lg"
-				style:border-color="silver gray gray silver"
+				class="bg-gainsboro hocus:bg-silver dark:bg-gray dark:hocus:bg-darkgray block flex h-full w-full items-center justify-center border-[silver_gray_gray_silver] p-8 text-center font-sans text-lg text-black dark:border-[darkgray_gray_gray_darkgray]"
 				style:border-width="0.1em"
 			>
 				github
@@ -41,8 +38,7 @@
 		<li>
 			<a
 				href="https://www.instagram.com/darius_cepulis/"
-				class="bg-gainsboro hover:bg-silver focus:bg-silver block flex h-full w-full items-center justify-center p-8 text-center font-sans text-lg"
-				style:border-color="silver gray gray silver"
+				class="bg-gainsboro hocus:bg-silver dark:bg-gray dark:hocus:bg-darkgray block flex h-full w-full items-center justify-center border-[silver_gray_gray_silver] p-8 text-center font-sans text-lg text-black dark:border-[darkgray_gray_gray_darkgray]"
 				style:border-width="0.1em"
 			>
 				insta
@@ -51,8 +47,7 @@
 		<li>
 			<a
 				href="https://x.com/darius_cepulis"
-				class="bg-gainsboro hover:bg-silver focus:bg-silver block flex h-full w-full items-center justify-center p-8 text-center font-sans text-lg"
-				style:border-color="silver gray gray silver"
+				class="bg-gainsboro hocus:bg-silver dark:bg-gray dark:hocus:bg-darkgray block flex h-full w-full items-center justify-center border-[silver_gray_gray_silver] p-8 text-center font-sans text-lg text-black dark:border-[darkgray_gray_gray_darkgray]"
 				style:border-width="0.1em"
 			>
 				twitter

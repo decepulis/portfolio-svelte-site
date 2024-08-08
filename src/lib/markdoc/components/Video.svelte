@@ -6,7 +6,7 @@
 </script>
 
 <figure class="row-span-2 my-8 grid w-full max-w-lg grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
-	<div style:aspect-ratio="{width}/{height}" class="dark:bg-gray relative w-full bg-black">
+	<div style:aspect-ratio="{width}/{height}" class="bg-gray relative w-full">
 		<mux-player
 			playback-id={playbackId}
 			metadata-video-title={title}

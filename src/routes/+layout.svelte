@@ -1,9 +1,9 @@
 <script lang="ts">
 	import './layout.css';
-	import ShouldReduceMotionManager from '$lib/components/ShouldReduceMotionManager.svelte';
 	import Metadata from '$lib/components/Metadata.svelte';
 	import type { Snippet } from 'svelte';
 	import { onNavigate } from '$app/navigation';
+	import UIManager from '$lib/stores/UIManager.svelte';
 
 	type Props = {
 		children?: Snippet;
@@ -23,6 +23,6 @@
 </script>
 
 <Metadata>
-	<ShouldReduceMotionManager />
+	<UIManager />
 	{@render children?.()}
 </Metadata>

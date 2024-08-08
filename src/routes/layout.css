@@ -1,41 +1,18 @@
 @import 'tailwindcss';
 
+@variant dark (&:is([data-theme='dark'] *));
+@variant hocus (&:hover, &:focus);
+@variant hocus-within (&:hover, &:focus-within);
 @theme {
 	--font-family-serif: Times, 'Times New Roman', serif;
 	--font-family-sans: Helvetica, Arial, sans-serif;
 	--color-*: initial;
 
 	/* https://en.wikipedia.org/wiki/Web_colors */
-	--color-white: white;
-	--color-gainsboro: gainsboro;
-	--color-silver: silver;
-	--color-gray: gray;
-	--color-black: black;
-
-	--color-red: red;
-	--color-maroon: maroon;
-	--color-yellow: yellow;
-	--color-olive: olive;
-	--color-lime: lime;
-	--color-green: green;
-	--color-aqua: aqua;
-	--color-teal: teal;
-	--color-blue: blue;
-	--color-navy: navy;
-	--color-fuchsia: fuchsia;
-	--color-purple: purple;
-
-	--color-linkText: linkText;
-	--color-visitedText: visitedText;
-
-	--color-wheat: wheat;
-	--color-burlywood: burlywood;
-	--color-darkgoldenrod: darkgoldenrod;
-	--color-darkgreen: darkgreen;
-
 	--color-white: color(display-p3 1 1 1);
 	--color-gainsboro: color(display-p3 0.8627 0.8627 0.8627);
 	--color-silver: color(display-p3 0.75 0.75 0.75);
+	--color-darkgray: color(display-p3 0.6627 0.6627 0.6627);
 	--color-gray: color(display-p3 0.5 0.5 0.5);
 	--color-black: color(display-p3 0 0 0);
 
@@ -52,8 +29,10 @@
 	--color-fuchsia: color(display-p3 1 0 1);
 	--color-purple: color(display-p3 0.5 0 0.5);
 
-	--color-linkText: color(display-p3 0 0 0.9333);
-	--color-visitedText: color(display-p3 0.3333 0.102 0.5451);
+	--color-link: color(display-p3 0 0 0.9333);
+	--color-visited: color(display-p3 0.3333 0.102 0.5451);
+	--color-link-dark: var(--color-aqua);
+	--color-visited-dark: color-mix(in srgb, var(--color-fuchsia), var(--color-white));
 
 	--color-wheat: color(display-p3 0.9608 0.8706 0.702);
 	--color-burlywood: color(display-p3 0.8706 0.7216 0.5294);

@@ -3,14 +3,54 @@
 	lang="en"
 	class="min-w-[20rem] antialiased"
 	style="font-family: Times, 'Times New Roman', serif; font-size: 18px"
+	data-theme="loading"
 >
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script>
+			(function () {
+				const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+				window.__theme = null;
+				window.__systemTheme = darkQuery.matches ? 'dark' : 'light';
+				window.__themePreference = localStorage.getItem('themePreference');
+				window.__onThemeChange = function () {};
+				window.__setThemePreference = function () {};
+
+				if (window.__themePreference === null) {
+					window.__themePreference = '__system';
+					localStorage.setItem('themePreference', '__system');
+				}
+
+				function setTheme() {
+					window.__theme =
+						window.__themePreference === '__system'
+							? window.__systemTheme
+							: window.__themePreference;
+					window.document.documentElement.setAttribute('data-theme', window.__theme);
+					window.__onThemeChange();
+				}
+
+				setTheme();
+
+				window.__setThemePreference = function (newThemePreference) {
+					localStorage.setItem('themePreference', newThemePreference);
+					window.__themePreference = newThemePreference;
+					setTheme();
+				};
+				darkQuery.addEventListener('change', function (e) {
+					window.__systemTheme = e.matches ? 'dark' : 'light';
+					setTheme();
+				});
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover">
+	<body
+		data-sveltekit-preload-data="hover"
+		class="bg-white text-black dark:bg-black dark:text-white"
+	>
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

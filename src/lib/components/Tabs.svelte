@@ -102,17 +102,22 @@
 			tabindex={isActive ? undefined : -1}
 			onclick={() => setIndex(idx)}
 			onkeydown={onTabKeydown}
-			class="cursor-pointer border py-2 px-4 font-sans text-sm -outline-offset-4 hover:bg-white focus:outline-2"
+			class="hocus:bg-white dark:hocus:bg-black cursor-pointer border py-2 px-4 font-sans text-sm -outline-offset-4 focus:outline-2"
 			class:border-[silver_silver_white_silver]={isActive}
+			class:dark:border-[darkgray_darkgray_black_darkgray]={isActive}
 			class:border-silver={!isActive}
+			class:dark:border-darkgray={!isActive}
 			class:bg-gainsboro={!isActive}
+			class:dark:bg-gray={!isActive}
+			class:dark:text-black={!isActive}
+			class:dark:hover:text-white={!isActive}
 		>
 			{label}
 		</button>
 	{/each}
 </div>
 <div
-	class="border-silver relative -mt-[1px] w-full max-w-prose overflow-hidden border transition-[height] duration-300 motion-reduce:duration-0"
+	class="border-silver dark:border-darkgray relative -mt-[1px] w-full max-w-prose overflow-hidden border transition-[height] duration-300 motion-reduce:duration-0"
 	ontransitionend={onTransitionEnd}
 	bind:this={tabPanelContainer}
 >

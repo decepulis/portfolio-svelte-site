@@ -60,16 +60,17 @@
 		<MarkdocRenderer node={content} {enhancedImages} />
 	</div>
 	<p class="mt-8">
-		{#snippet back()}
-			←
-			<span class="underline group-hover:decoration-wavy group-focus:decoration-wavy">back</span>
-		{/snippet}
 		{#if isInternalNavigation}
-			<button class="text-linkText group cursor-pointer" onclick={() => history.back()}
-				>{@render back()}</button
+			<button
+				class="text-link dark:text-link-dark group cursor-pointer"
+				onclick={() => history.back()}
 			>
+				← <span class="group-hocus:decoration-wavy underline">back</span>
+			</button>
 		{:else}
-			<a class="text-linkText group" href="/#work">{@render back()}</a>
+			<a class="text-link dark:text-link-dark group" href="/#work">
+				← <span class="group-hocus:decoration-wavy underline">back</span>
+			</a>
 		{/if}
 	</p>
 </article>

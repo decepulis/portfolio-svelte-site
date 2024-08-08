@@ -19,7 +19,7 @@
 		<enhanced:img
 			{...rest}
 			src={enhancedImage}
-			class="border-silver border"
+			class="border-silver dark:border-darkgray border"
 			class:w-full={block}
 			class:h-auto={block}
 			title={// if block we use title for caption
@@ -29,7 +29,7 @@
 		<img
 			{...rest}
 			{src}
-			class="border-silver border"
+			class="border-silver dark:border-darkgray border"
 			class:w-full={block}
 			class:h-auto={block}
 			title={// if block we use title for caption
