@@ -7,17 +7,7 @@
 
 	const { data }: { data: PageData } = $props();
 	const {
-		frontmatter: {
-			slug,
-			title,
-			date,
-			hasMonth,
-			hasDay,
-			pageUrl,
-			githubUrl,
-			documentUrl,
-			underConstruction
-		},
+		frontmatter: { slug, title, date, hasMonth, hasDay, pageUrl, githubUrl, documentUrl, todo },
 		enhancedImages,
 		content
 	} = $derived(data);
@@ -37,7 +27,6 @@
 	});
 </script>
 
-<!-- todo: metadata -->
 <article class="mx-4 py-8" style:view-transition-name="container-{slug}">
 	<header class="mb-8">
 		<h1
@@ -64,7 +53,7 @@
 		{/if}
 	</header>
 	<div style:view-transition-name="content-{slug}" class="max-w-prose">
-		{#if underConstruction}
+		{#if todo}
 			<P><i>This post is under construction</i></P>
 			<img src="/under-construction.gif" alt="Under construction" class="my-4" />
 		{/if}

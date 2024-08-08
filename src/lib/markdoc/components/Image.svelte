@@ -15,6 +15,7 @@
 <!-- this snippet uses enhanced:img if it can find an enhancedImage, otherwise, just img -->
 {#snippet image()}
 	{#if enhancedImage}
+		<!-- todo: optimize -->
 		<enhanced:img
 			{...rest}
 			src={enhancedImage}

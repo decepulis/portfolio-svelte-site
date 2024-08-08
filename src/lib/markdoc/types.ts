@@ -18,7 +18,7 @@ export const frontmatter = z.object({
 	previewText: z.string().optional(),
 	previewImage: z.string().optional(),
 	previewImageAlt: z.string().optional(),
-	underConstruction: z.boolean().optional()
+	todo: z.boolean().optional()
 });
 export interface Frontmatter extends z.infer<typeof frontmatter> {
 	date: Date;
