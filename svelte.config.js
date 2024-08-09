@@ -10,10 +10,7 @@ const config = {
 	kit: {
 		// leave this blank for zero-config on vercel
 		// https://kit.svelte.dev/docs/adapter-static#zero-config-support
-		adapter: adapter(),
-		env: {
-			publicPrefix: 'VITE_'
-		}
+		adapter: adapter()
 	}
 };
 
