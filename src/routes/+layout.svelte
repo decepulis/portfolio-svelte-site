@@ -4,6 +4,7 @@
 	import type { Snippet } from 'svelte';
 	import { onNavigate } from '$app/navigation';
 	import UIManager from '$lib/stores/UIManager.svelte';
+	import Favicons from '$lib/components/Favicons.svelte';
 
 	type Props = {
 		children?: Snippet;
@@ -23,6 +24,7 @@
 </script>
 
 <Metadata>
+	<Favicons />
 	<UIManager />
 	{@render children?.()}
 </Metadata>

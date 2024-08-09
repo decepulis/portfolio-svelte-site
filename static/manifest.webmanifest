@@ -1,0 +1,16 @@
+{
+	"icons": [
+		{
+			"src": "favicons/dynamic.svg",
+			"sizes": "192x192",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		},
+		{
+			"src": "favicons/dynamic-maskable.svg",
+			"sizes": "192x192",
+			"type": "image/svg+xml",
+			"purpose": "maskable"
+		}
+	]
+}
