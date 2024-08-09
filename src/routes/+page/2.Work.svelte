@@ -4,7 +4,10 @@
 	import type { Frontmatter } from '$lib/markdoc/types';
 
 	type Post = {
-		frontmatter: Frontmatter;
+		frontmatter: Pick<
+			Frontmatter,
+			'type' | 'title' | 'directUrl' | 'slug' | 'priority' | 'previewTitle' | 'previewText'
+		>;
 	};
 	type Props = {
 		posts: Post[];
