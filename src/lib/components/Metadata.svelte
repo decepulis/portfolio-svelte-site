@@ -49,24 +49,24 @@
 
 <svelte:head>
 	<meta property="og:site_name" content="Darius Cepulis" />
-	<meta property="twitter:site" content="@darius_cepulis" />
+	<meta name="twitter:site" content="@darius_cepulis" />
 	{#if metadata}
 		{@const { pathname, fullTitle, title, description, image, article, profile } = metadata}
 		{#if pathname}
 			<link rel="canonical" href={`${baseUrl}${metadata.pathname}`} />
 			<meta property="og:url" content={`${baseUrl}${metadata.pathname}`} />
-			<meta property="twitter:url" content={`${baseUrl}${metadata.pathname}`} />
+			<meta name="twitter:url" content={`${baseUrl}${metadata.pathname}`} />
 		{/if}
 		{#if fullTitle || title}
 			{@const displayTitle = metadata.fullTitle || `${metadata.title} | Darius Cepulis`}
 			<title>{displayTitle}</title>
 			<meta property="og:title" content={displayTitle} />
-			<meta property="twitter:title" content={displayTitle} />
+			<meta name="twitter:title" content={displayTitle} />
 		{/if}
 		{#if description}
-			<meta property="description" content={description} />
+			<meta name="description" content={description} />
 			<meta property="og:description" content={description} />
-			<meta property="twitter:description" content={description} />
+			<meta name="twitter:description" content={description} />
 		{/if}
 		{#if image}
 			{@const { url, width, height, alt } = image}
@@ -75,10 +75,10 @@
 			<meta property="og:image:height" content={height.toString()} />
 			<meta property="og:image:alt" content={alt} />
 			<meta name="twitter:card" content="summary_large_image" />
-			<meta property="twitter:image" content={url} />
-			<meta property="twitter:image:width" content={width.toString()} />
-			<meta property="twitter:image:height" content={height.toString()} />
-			<meta property="twitter:image:alt" content={alt} />
+			<meta name="twitter:image" content={url} />
+			<meta name="twitter:image:width" content={width.toString()} />
+			<meta name="twitter:image:height" content={height.toString()} />
+			<meta name="twitter:image:alt" content={alt} />
 		{/if}
 		{#if article}
 			{@const { publishedTime, modifiedTime, section, tags } = article}
