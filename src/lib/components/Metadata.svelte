@@ -57,10 +57,11 @@
 			<meta property="og:url" content={`${baseUrl}${metadata.pathname}`} />
 			<meta property="twitter:url" content={`${baseUrl}${metadata.pathname}`} />
 		{/if}
-		{#if title}
-			<title>{title} | Darius Cepulis</title>
-			<meta property="og:title" content="{title} | Darius Cepulis" />
-			<meta property="twitter:title" content="{title} | Darius Cepulis" />
+		{#if fullTitle || title}
+			{@const displayTitle = metadata.fullTitle || `${metadata.title} | Darius Cepulis`}
+			<title>{displayTitle}</title>
+			<meta property="og:title" content={displayTitle} />
+			<meta property="twitter:title" content={displayTitle} />
 		{/if}
 		{#if description}
 			<meta property="description" content={description} />
