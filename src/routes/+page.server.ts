@@ -10,6 +10,7 @@ export const load = (async () => {
 			title: frontmatter.title,
 			slug: frontmatter.slug,
 			type: frontmatter.type,
+			priority: frontmatter.priority,
 			directUrl: frontmatter.directUrl,
 			previewTitle: frontmatter.previewTitle,
 			previewText: frontmatter.previewText
