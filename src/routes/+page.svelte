@@ -7,7 +7,6 @@
 	import Nav from './+page/Nav.svelte';
 
 	const { data }: { data: PageData } = $props();
-	console.log('client', import.meta.env);
 </script>
 
 <main class="pb-8">

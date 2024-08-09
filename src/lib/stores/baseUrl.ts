@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.PUBLIC_VERCEL_URL
-	? `https://${import.meta.env.PUBLIC_VERCEL_URL}`
-	: 'http://localhost:5173';
+import { dev } from '$app/environment';
+
+const baseUrl = dev ? 'http://localhost:5173' : 'https://darius.place';
 export default baseUrl;

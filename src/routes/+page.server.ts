@@ -3,7 +3,6 @@ import type { Metadata } from '$lib/types/metadata';
 import type { PageServerLoad } from './$types';
 
 export const load = (async () => {
-	console.log('server', import.meta.env);
 	const fullPosts = await getPosts();
 	const posts = fullPosts.map(({ frontmatter }) => ({
 		// only pick the frontmatter that we're going to use
