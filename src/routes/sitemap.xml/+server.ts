@@ -16,6 +16,7 @@ type SitemapUrl = {
 	priority: number;
 };
 
+export const prerender = true;
 export async function GET() {
 	const urls: SitemapUrl[] = [];
 

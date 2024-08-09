@@ -1,5 +1,6 @@
 import baseUrl from '$lib/stores/baseUrl';
 
+export const prerender = true;
 export async function GET() {
 	return new Response(
 		`
