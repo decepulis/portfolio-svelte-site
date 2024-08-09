@@ -3,8 +3,8 @@
 	import throttle from 'just-throttle';
 
 	let svgElement: SVGElement;
-	let shirtColor: string | null = $state('var(--color-blue)');
-	const showProfilePicture = $derived(shirtColor === null);
+	let shirtColor: string = $state('var(--color-blue)');
+	const showProfilePicture = $derived(shirtColor === '');
 	let showShirtColorControls = $state(false);
 
 	// == what happens on mouse move? ==
@@ -261,7 +261,7 @@
 			src="./dithering.jpg"
 			id="dithered"
 			alt="Darius, dithered"
-			class="absolute inset-0"
+			class="border-silver dark:border-darkgray absolute inset-0"
 			hidden={!showProfilePicture}
 		/>
 		<button
@@ -270,6 +270,7 @@
 			style:background-color={showShirtColorControls ? 'var(--color-white)' : undefined}
 			style:color={showShirtColorControls ? 'var(--color-black)' : undefined}
 			aria-controls="shirt-color-controls"
+			aria-expanded={showShirtColorControls}
 			aria-label="Toggle shirt color controls"
 			onclick={() => {
 				showShirtColorControls = !showShirtColorControls;
@@ -284,113 +285,224 @@
 			</span>
 		</button>
 	</div>
-	<div
-		style:grid-template-columns="repeat(14, minmax(0, 1fr))"
+	<fieldset
+		style:grid-template-columns="repeat(15, minmax(0, 1fr))"
 		style:transform="scaleY({showShirtColorControls ? 1 : 0})"
-		class="border-silver dark:border-darkgray grid origin-top transform-gpu border-x border-b transition-transform duration-200"
-		aria-expanded={showShirtColorControls}
+		class="border-silver dark:border-darkgray relative grid origin-top transform-gpu border-x border-b transition-transform duration-200"
+		inert={!showShirtColorControls}
 		id="shirt-color-controls"
 	>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-red)')}
+		<label
+			class="bg-red aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="red"
 			aria-label="Set shirt color to red"
-			class="bg-red aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-maroon)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-red)"
+				checked={shirtColor === 'var(--color-red)'}
+			/>
+		</label>
+		<label
+			class="bg-maroon aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="maroon"
 			aria-label="Set shirt color to maroon"
-			class="bg-maroon aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-yellow)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-maroon)"
+				checked={shirtColor === 'var(--color-maroon)'}
+			/>
+		</label>
+		<label
+			class="bg-yellow aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="yellow"
 			aria-label="Set shirt color to yellow"
-			class="bg-yellow aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-olive)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-yellow)"
+				checked={shirtColor === 'var(--color-yellow)'}
+			/>
+		</label>
+		<label
+			class="bg-olive aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="olive"
 			aria-label="Set shirt color to olive"
-			class="bg-olive aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-lime)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-olive)"
+				checked={shirtColor === 'var(--color-olive)'}
+			/>
+		</label>
+		<label
+			class="bg-lime aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="lime"
 			aria-label="Set shirt color to lime"
-			class="bg-lime aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-green)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-lime)"
+				checked={shirtColor === 'var(--color-lime)'}
+			/>
+		</label>
+		<label
+			class="bg-green aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="green"
 			aria-label="Set shirt color to green"
-			class="bg-green aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-aqua)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-green)"
+				checked={shirtColor === 'var(--color-green)'}
+			/>
+		</label>
+		<label
+			class="bg-aqua aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="aqua"
 			aria-label="Set shirt color to aqua"
-			class="bg-aqua aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-teal)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-aqua)"
+				checked={shirtColor === 'var(--color-aqua)'}
+			/>
+		</label>
+		<label
+			class="bg-teal aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="teal"
 			aria-label="Set shirt color to teal"
-			class="bg-teal aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-blue)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-teal)"
+				checked={shirtColor === 'var(--color-teal)'}
+			/>
+		</label>
+		<label
+			class="bg-blue aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="blue"
 			aria-label="Set shirt color to blue"
-			class="bg-blue aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-navy)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-blue)"
+				checked={shirtColor === 'var(--color-blue)'}
+			/>
+		</label>
+		<label
+			class="bg-navy aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="navy"
 			aria-label="Set shirt color to navy"
-			class="bg-navy aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-fuchsia)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-navy)"
+				checked={shirtColor === 'var(--color-navy)'}
+			/>
+		</label>
+		<label
+			class="bg-fuchsia aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="fuchsia"
 			aria-label="Set shirt color to fuchsia"
-			class="bg-fuchsia aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-purple)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-fuchsia)"
+				checked={shirtColor === 'var(--color-fuchsia)'}
+			/>
+		</label>
+		<label
+			class="bg-purple aspect-square cursor-pointer focus-within:scale-105 focus-within:outline-2"
 			title="purple"
 			aria-label="Set shirt color to purple"
-			class="bg-purple aspect-square cursor-pointer"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = 'var(--color-white)')}
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-purple)"
+				checked={shirtColor === 'var(--color-purple)'}
+			/>
+		</label>
+		<label
+			class="aspect-square cursor-pointer bg-white focus-within:scale-105 focus-within:outline-2"
 			title="white"
 			aria-label="Set shirt color to white"
-			class="aspect-square cursor-pointer bg-white"
-		></button>
-		<button
-			type="button"
-			onclick={() => (shirtColor = null)}
-			title="dithered"
-			aria-controls="dithered"
-			aria-label="Show real profile picture"
-			class="aspect-square cursor-pointer bg-white"
 		>
-			<enhanced:img src="./dithering-button.svg" alt="" class="h-full w-full" />
-		</button>
-	</div>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-white)"
+				checked={shirtColor === 'var(--color-white)'}
+			/>
+		</label>
+		<label
+			class="aspect-square cursor-pointer bg-black focus-within:scale-105 focus-within:outline-2"
+			title="white"
+			aria-label="Set shirt color to black"
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value="var(--color-black)"
+				checked={shirtColor === 'var(--color-black)'}
+			/>
+		</label>
+		<label
+			class="relative aspect-square cursor-pointer bg-white focus-within:scale-105 focus-within:outline-2"
+			title="dithered"
+			aria-label="Show dithered profile picture"
+			aria-controls="dithered"
+		>
+			<input
+				type="radio"
+				class="sr-only"
+				name="shirtColor"
+				bind:group={shirtColor}
+				value=""
+				checked={shirtColor === ''}
+			/>
+			<enhanced:img src="./dithering-button.svg" alt="" class="absolute inset-0" />
+		</label>
+	</fieldset>
 </div>
