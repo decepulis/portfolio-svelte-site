@@ -55,7 +55,7 @@
 	<div style:view-transition-name="content-{slug}" class="max-w-prose">
 		{#if todo}
 			<P><i>This post is under construction</i></P>
-			<img src="/under-construction.gif" alt="Under construction" class="my-4" />
+			<img src="/under-construction.gif" alt="Under construction" class="my-4" loading="lazy" />
 		{/if}
 		<MarkdocRenderer node={content} {enhancedImages} />
 	</div>

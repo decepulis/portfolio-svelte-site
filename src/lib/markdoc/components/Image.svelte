@@ -24,6 +24,7 @@
 			class:h-auto={block}
 			title={// if block we use title for caption
 			block ? undefined : title}
+			loading="lazy"
 		/>
 	{:else}
 		<img
@@ -34,6 +35,7 @@
 			class:h-auto={block}
 			title={// if block we use title for caption
 			block ? undefined : title}
+			loading="lazy"
 		/>
 	{/if}
 {/snippet}

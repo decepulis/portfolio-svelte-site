@@ -224,6 +224,6 @@
 			value=""
 			checked={shirtColor === ''}
 		/>
-		<enhanced:img src="./dithering-button.svg" alt="" class="absolute inset-0" />
+		<enhanced:img src="./dithering-button.svg" alt="" class="absolute inset-0" loading="lazy" />
 	</label>
 </fieldset>
