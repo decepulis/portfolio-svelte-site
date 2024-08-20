@@ -1,0 +1,34 @@
+{
+	"cSpell.enableFiletypes": ["markdoc"],
+	"[markdoc]": {
+		"editor.wordWrap": "on"
+	},
+	"cSpell.words": [
+		"blurhash",
+		"DDNS",
+		"Firewatch",
+		"gamification",
+		"Lengstorf",
+		"Microbio",
+		"microsensor",
+		"Microsensor",
+		"Moneyballing",
+		"nother",
+		"Owntracks",
+		"pichart",
+		"piread",
+		"piview",
+		"Prismic",
+		"rstg",
+		"RSTG",
+		"Sanibit",
+		"Scrollytelling",
+		"socio",
+		"swipable",
+		"Vercel",
+		"weasley",
+		"Weasley",
+		"websockets",
+		"woltapp"
+	]
+}
