@@ -14,6 +14,7 @@
 			class="absolute inset-0"
 			style:--media-font-family="var(--font-family-sans)"
 			accent-color="blue"
+			thumbnail-time="0"
 			{...rest}
 		></mux-player>
 	</div>

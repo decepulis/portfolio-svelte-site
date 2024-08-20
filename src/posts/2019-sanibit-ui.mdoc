@@ -4,5 +4,16 @@ type: build
 priority: 2
 pageUrl: https://www.microsensorlabs.com/sanibit/
 previewText: Gamifying hand hygiene to improve hand hygiene, fight infections, and save lives
-todo: true
+previewImage: https://image.mux.com/6LFQh005S8VQgZ1C8oJMpxaKGGq1eolVbl025GBCCbX02Q/thumbnail.jpg?time=0
+previewImageAlt: The Sanibit web app showing some pretty gnarly queries
 ---
+
+Turns out that healthcare providers need some help with their hand hygiene to reduce hospital-acquired infections. That's where Sanibit came in. Each healthcare provider would wear a wristband, created by our awesome hardware team, that kept track of their hand hygiene whenever they enter or exit a room. Then, those providers and their supervisors could check in on their performance using the Sanibit web app. (That's where I came in.)
+
+{% video playbackId="6LFQh005S8VQgZ1C8oJMpxaKGGq1eolVbl025GBCCbX02Q" title="The Sanibit web app showing some pretty gnarly queries" width=1080 height=778 muted="true" loop="true" /%}
+
+The Sanibit web app was a React [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA) [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (create-react-app) that used vanilla state management (hooks and context), [Recharts](https://recharts.org/en-US/), [React Router](https://reactrouter.com/en/main), [Styled Components](https://styled-components.com/), and [Axios](https://axios-http.com/). You know, the usual suspects for 2019. I inhereted a modest Django-driven jQuery app and wrote and learned new tech and rewrote as the project's demands grew. ([The Django API stuck around](/posts/2019-sanibit-server) even after the React rewrite.) By the end, the app had all sorts of features. Simple charts for individual healthcare providers, advanced ICU-wide and hospital-wide charts and maps for supervisors, settings, websocket-driven configuration for wristbands, and I don't even remember what else.
+
+But it wasn't just a neat stack or a complete set of features that made this project fun to work on. I ended up the designer for the UI, too. (And the [whole company](/posts/2020-microsensor-site), kinda.) As a designer, I got to take on the a super-interesting challenge: how do you make people care about hand hygiene? Our primary driving principle was gamification. I started with the Apple Watch model of "close your rings", visualizing providers' hand hygiene compliance as a satisfying ring swirling closed, firing confetti when the compliance threshold is met. Providers could also view anonymized peer data to see how they ranked. I added fun, swipable cards that showed hand hygiene compliance tips and summaries. Along the way, trying my darndest to keep the app navigable and approachable. I did maintain a [modest user guide](https://learn.sanibit.com/)... though, healthcare providers barely make time to wash their hands -- you think they're going to make time to learn how to use a wristband their supervisor handed them? So I wanted the app to orient the user as much as possible on its own, using every design tool I had at my disposal.
+
+Like with the [back-end](/posts/2019-sanibit-server) and the [marketing site](/posts/2020-microsensor-site), I barely knew what I was doing when I started this job. And somehow, what we ended up with was pretty great. I'm proud of that.

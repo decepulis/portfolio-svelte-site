@@ -4,5 +4,18 @@ type: build
 priority: 2
 pageUrl: https://www.microsensorlabs.com/sanibit/
 previewText: Crunching millions of data points to improve hand hygiene, fight infections, and save lives
-todo: true
+previewImage: https://image.mux.com/6LFQh005S8VQgZ1C8oJMpxaKGGq1eolVbl025GBCCbX02Q/thumbnail.jpg?time=0
+previewImageAlt: The Sanibit web app showing some pretty gnarly queries
 ---
+
+Turns out that healthcare providers need some help with their hand hygiene to reduce hospital-acquired infections. That's where Sanibit came in. Each healthcare provider would wear a wristband, created by our awesome hardware team, that kept track of their hand hygiene whenever they enter or exit a room. Then, those providers and their supervisors could check in on their performance using the [Sanibit web app](/posts/2019-sanibit-ui). (That's where I came in.)
+
+{% video playbackId="6LFQh005S8VQgZ1C8oJMpxaKGGq1eolVbl025GBCCbX02Q" title="The Sanibit web app showing some pretty gnarly queries" width=1080 height=778 muted="true" loop="true" /%}
+
+For each hand hygiene opportunity, the wristband would record hand hygiene complicance (including not just how long a provider washed their hands, but even whether they donned/doffed the correct PPE!) That compliance data would be periodically uploaded to base stations, which would in turn periodically upload it to the Sanibit server. 
+
+The Sanibit server was a headless Django back-end hooked up to a Postgres DB. It was able to efficiently serve the millions of compliance datapoints to a web app via API in all sorts of formats: average compliance, opportunity count, by hour, by day, by provider, by room, pick your query. It also periodically ran and cached heavier meta-analyses to serve more advanced reports. And finally, it facilitated communication between a front-end and a wristband being set up, via websockets. (Goodness gracious those websockets were the biggest pain in in prod.)
+
+It was deployed -- via GitHub Actions -- to AWS infrastructure which used all of your favorite three-letter acronyms for load balancing, caching, and backups and whatever.
+
+Honestly though? The thing I'm most proud of? Just like with the [front-end](/posts/2019-sanibit-ui) and the [marketing site](/posts/2020-microsensor-site), I didn't know a thing about this all when I started this job. And by the end? I was building and maintaining all that infrastructure and those wild queries. All pretty darn cool.

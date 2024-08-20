@@ -5,8 +5,8 @@ interface BaseMetadata {
 	description?: string;
 	image?: {
 		url: string;
-		width: number;
-		height: number;
+		width?: number;
+		height?: number;
 		alt?: string;
 	};
 	profile?: boolean;

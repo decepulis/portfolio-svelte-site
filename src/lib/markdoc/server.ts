@@ -2,6 +2,7 @@ import Markdoc, { type Node, type RenderableTreeNode, type Schema } from '@markd
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parse } from 'yaml';
+import { color, grid, video } from './tags';
 import { frontmatter, isTag, type Frontmatter } from './types';
 
 function stripTags(content: RenderableTreeNode): RenderableTreeNode {
@@ -95,37 +96,9 @@ export async function getPost(slug: string) {
 	const content = Markdoc.transform(ast, {
 		nodes: { paragraph },
 		tags: {
-			grid: {
-				render: 'Grid',
-				attributes: {}
-			},
-			video: {
-				render: 'Video',
-				attributes: {
-					playbackId: {
-						type: String,
-						required: true,
-						errorLevel: 'critical'
-					},
-					title: {
-						type: String,
-						required: true,
-						errorLevel: 'warning'
-					},
-					width: {
-						type: Number,
-						required: true
-					},
-					height: {
-						type: Number,
-						required: true
-					},
-					caption: {
-						type: String,
-						required: false
-					}
-				}
-			}
+			grid,
+			color,
+			video
 		},
 		variables: {
 			frontmatter

@@ -14,6 +14,7 @@
 	import Video from './components/Video.svelte';
 	import UL from '$lib/components/typography/UL.svelte';
 	import OL from '$lib/components/typography/OL.svelte';
+	import Color from './components/Color.svelte';
 
 	type Props = {
 		node: RenderableTreeNode;
@@ -33,7 +34,8 @@
 		ol: OL,
 		img: Image,
 		Grid,
-		Video
+		Video,
+		Color
 	};
 </script>
 

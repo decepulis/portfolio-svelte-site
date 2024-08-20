@@ -32,7 +32,9 @@ export const load = (async ({ params }) => {
 	}
 
 	const enhancedImages = getEnhancedImages(images);
-	const previewImage = frontmatter.previewImage ? enhancedImages[frontmatter.previewImage] : null;
+	const enhancedPreviewImage = frontmatter.previewImage
+		? enhancedImages[frontmatter.previewImage]
+		: null;
 
 	return {
 		content,
@@ -42,13 +44,18 @@ export const load = (async ({ params }) => {
 			pathname: `/posts/${slug}`,
 			title: frontmatter.previewTitle ?? frontmatter.title,
 			description: frontmatter.previewText,
-			image: previewImage
-				? {
-						url: baseUrl + previewImage.img.src,
-						width: previewImage.img.w,
-						height: previewImage.img.h,
-						alt: frontmatter.previewImageAlt
-					}
+			image: frontmatter.previewImage
+				? enhancedPreviewImage
+					? {
+							url: baseUrl + enhancedPreviewImage.img.src,
+							width: enhancedPreviewImage.img.w,
+							height: enhancedPreviewImage.img.h,
+							alt: frontmatter.previewImageAlt
+						}
+					: {
+							url: frontmatter.previewImage,
+							alt: frontmatter.previewImageAlt
+						}
 				: undefined,
 			article: {
 				publishedTime: frontmatter.date,

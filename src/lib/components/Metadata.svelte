@@ -71,14 +71,14 @@
 		{#if image}
 			{@const { url, width, height, alt } = image}
 			<meta property="og:image" content={url} />
-			<meta property="og:image:width" content={width.toString()} />
-			<meta property="og:image:height" content={height.toString()} />
-			<meta property="og:image:alt" content={alt} />
+			{#if width}<meta property="og:image:width" content={width.toString()} />{/if}
+			{#if height}<meta property="og:image:height" content={height.toString()} />{/if}
+			{#if alt}<meta property="og:image:alt" content={alt} />{/if}
 			<meta name="twitter:card" content="summary_large_image" />
 			<meta name="twitter:image" content={url} />
-			<meta name="twitter:image:width" content={width.toString()} />
-			<meta name="twitter:image:height" content={height.toString()} />
-			<meta name="twitter:image:alt" content={alt} />
+			{#if width}<meta name="twitter:image:width" content={width.toString()} />{/if}
+			{#if height}<meta name="twitter:image:height" content={height.toString()} />{/if}
+			{#if alt}<meta name="twitter:image:alt" content={alt} />{/if}
 		{/if}
 		{#if article}
 			{@const { publishedTime, modifiedTime, section, tags } = article}
