@@ -37,7 +37,7 @@
 			>
 				<a
 					href={directUrl ?? `/posts/${slug}`}
-					class="hocus:bg-[--bg-hocus] dark:hocus:text-black flex h-full flex-col gap-4 p-4"
+					class="hocus:bg-[--bg-hocus] dark:hocus:text-black flex h-full flex-col gap-4 p-4 md:gap-6 p-6"
 					style:--bg-hocus={type === 'build'
 						? 'var(--color-yellow)'
 						: type === 'post'
@@ -48,7 +48,7 @@
 									? 'var(--color-lime)'
 									: 'var(--color-silver)'}
 				>
-					<h3 class="text-balance" style:view-transition-name="title-{slug}">
+					<h3 class="text-balance font-bold text-lg leading-snug" style:view-transition-name="title-{slug}">
 						{previewTitle ?? title}
 					</h3>
 					{#if previewText}
@@ -78,9 +78,9 @@
 		>
 			<a
 				href="https://github.com/decepulis"
-				class="hocus:bg-silver dark:hocus:bg-darkgray dark:hocus:text-black flex h-full flex-col gap-4 p-4"
+				class="hocus:bg-silver dark:hocus:bg-darkgray dark:hocus:text-black flex h-full flex-col gap-4 p-4 md:gap-6 p-6"
 			>
-				<h3 class="text-balance">More&hellip;</h3>
+				<h3 class="text-balance font-bold text-lg leading-snug">More&hellip;</h3>
 				<p class="text-pretty text-sm">
 					See more, including my graveyard of half-finished projects, on GitHub.
 				</p>
