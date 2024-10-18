@@ -6,7 +6,7 @@
 	type Post = {
 		frontmatter: Pick<
 			Frontmatter,
-			'type' | 'title' | 'directUrl' | 'slug' | 'priority' | 'previewTitle' | 'previewText'
+			'type' | 'title' | 'directUrl' | 'todo' | 'slug' | 'priority' | 'previewTitle' | 'previewText'
 		>;
 	};
 	type Props = {
@@ -27,7 +27,7 @@
 	>
 		{#each postsReversed as post}
 			{@const {
-				frontmatter: { type, title, directUrl, slug, priority, previewTitle, previewText }
+				frontmatter: { type, title, directUrl, todo, slug, priority, previewTitle, previewText }
 			} = post}
 			<li
 				class="border-silver dark:border-darkgray -m-[0.5px] border"
@@ -65,6 +65,9 @@
 							🎥
 						{:else if type === 'talk'}
 							🗣️
+						{/if}
+						{#if todo}
+							🚧
 						{/if}
 						{#if directUrl}
 							🔗
