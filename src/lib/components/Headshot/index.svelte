@@ -18,7 +18,6 @@
 			alt="Darius, dithered"
 			class="border-silver dark:border-darkgray absolute inset-0"
 			hidden={!showProfilePicture}
-			loading="lazy"
 		/>
 		<button
 			type="button"

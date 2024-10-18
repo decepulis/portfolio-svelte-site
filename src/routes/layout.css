@@ -4,7 +4,7 @@
 @variant hocus (&:hover, &:focus);
 @variant hocus-within (&:hover, &:focus-within);
 @theme {
-	--font-family-serif: Times, 'Times New Roman', serif;
+	--font-family-serif: Times, serif;
 	--font-family-sans: Helvetica, Arial, sans-serif;
 	--color-*: initial;
 
