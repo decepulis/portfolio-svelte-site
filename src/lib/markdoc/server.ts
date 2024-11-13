@@ -2,8 +2,9 @@ import Markdoc, { type Node, type RenderableTreeNode, type Schema } from '@markd
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parse } from 'yaml';
+
 import { color, grid, video } from './tags';
-import { frontmatter, isTag, type Frontmatter } from './types';
+import { type Frontmatter, frontmatter, isTag } from './types';
 
 function stripTags(content: RenderableTreeNode): RenderableTreeNode {
 	if (content === null) return content;

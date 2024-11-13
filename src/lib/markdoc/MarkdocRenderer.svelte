@@ -1,4 +1,5 @@
 <script lang="ts">
+	import MarkdocRenderer from './MarkdocRenderer.svelte';
 	import type { RenderableTreeNode } from '@markdoc/markdoc';
 	import { isTag } from './types';
 	import type { Picture } from 'vite-imagetools';
@@ -17,7 +18,7 @@
 	import Color from './components/Color.svelte';
 
 	type Props = {
-		node: RenderableTreeNode;
+		node: RenderableTreeNode | RenderableTreeNode[];
 		enhancedImages?: Record<string, string | Picture>;
 	};
 	let { node, enhancedImages }: Props = $props();
@@ -41,24 +42,25 @@
 
 {#if Array.isArray(node)}
 	{#each node as child}
-		<svelte:self node={child} {enhancedImages} />
+		<MarkdocRenderer node={child} {enhancedImages} />
 	{/each}
 {:else if node === null || typeof node !== 'object' || !isTag(node)}
 	{node}
 {:else if node.name === 'article'}
 	<!-- special case: we ignore the <article> tag wrapping this whole affair -->
-	<svelte:self node={node.children} {enhancedImages} />
+	<MarkdocRenderer node={node.children} {enhancedImages} />
 {:else if node.name === 'img'}
 	<!-- special case: images! -->
 	<Image attributes={node.attributes} {enhancedImages} />
 {:else if node.name in components}
 	<!-- known component -->
-	<svelte:component this={components[node.name as keyof typeof components]} {...node.attributes}>
-		<svelte:self node={node.children} {enhancedImages} />
-	</svelte:component>
+	{@const Component = components[node.name as keyof typeof components]}
+	<Component {...node.attributes}>
+		<MarkdocRenderer node={node.children} {enhancedImages} />
+	</Component>
 {:else}
 	<!-- element not defined in components -->
 	<svelte:element this={node.name} {...node.attributes}>
-		<svelte:self node={node.children} {enhancedImages} />
+		<MarkdocRenderer node={node.children} {enhancedImages} />
 	</svelte:element>
 {/if}

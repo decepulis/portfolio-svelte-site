@@ -1,5 +1,6 @@
 import { getPosts } from '$lib/markdoc/server';
 import type { Metadata } from '$lib/types/metadata';
+
 import type { PageServerLoad } from './$types';
 
 export const load = (async () => {

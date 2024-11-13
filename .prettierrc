@@ -5,8 +5,27 @@
 	"printWidth": 100,
 	"plugins": [
 		"prettier-plugin-svelte",
-		"prettier-plugin-organize-imports",
+		"@trivago/prettier-plugin-sort-imports",
 		"prettier-plugin-tailwindcss"
 	],
-	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }]
+	"importOrder": [
+		"^svelte",
+		"^@sveltejs/",
+		"<THIRD_PARTY_MODULES>",
+		"^\\$lib/",
+		"^\\$app/",
+		"^\\./\\$types",
+		"^[./]",
+		"// this doesn't work yet in svelte, but hoping that changes soon"
+	],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true,
+	"overrides": [
+		{
+			"files": "*.svelte",
+			"options": {
+				"parser": "svelte"
+			}
+		}
+	]
 }

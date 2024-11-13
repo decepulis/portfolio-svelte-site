@@ -7,5 +7,8 @@
 
 <span class="inline-flex items-center">
 	{@render children()}
-	<span style:background-color={color} class="w-2 h-2 ml-1 border border-current rounded-full inline-block"></span>
+	<span
+		style:background-color={color}
+		class="ml-1 inline-block h-2 w-2 rounded-full border border-current"
+	></span>
 </span>

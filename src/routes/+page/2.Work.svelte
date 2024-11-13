@@ -37,7 +37,7 @@
 			>
 				<a
 					href={directUrl ?? `/posts/${slug}`}
-					class="hocus:bg-[--bg-hocus] dark:hocus:text-black flex h-full flex-col gap-4 p-4 md:gap-6 p-6"
+					class="hocus:bg-[--bg-hocus] dark:hocus:text-black flex h-full flex-col gap-4 p-4 p-6 md:gap-6"
 					style:--bg-hocus={type === 'build'
 						? 'var(--color-yellow)'
 						: type === 'post'
@@ -48,11 +48,14 @@
 									? 'var(--color-lime)'
 									: 'var(--color-silver)'}
 				>
-					<h3 class="text-balance font-bold text-lg leading-snug max-w-96" style:view-transition-name="title-{slug}">
+					<h3
+						class="max-w-96 text-balance text-lg font-bold leading-snug"
+						style:view-transition-name="title-{slug}"
+					>
 						{previewTitle ?? title}
 					</h3>
 					{#if previewText}
-						<p class="text-pretty text-sm max-w-96" style:view-transition-name="content-{slug}">
+						<p class="max-w-96 text-pretty text-sm" style:view-transition-name="content-{slug}">
 							{previewText}
 						</p>
 					{/if}
@@ -81,10 +84,10 @@
 		>
 			<a
 				href="https://github.com/decepulis"
-				class="hocus:bg-silver dark:hocus:bg-darkgray dark:hocus:text-black flex h-full flex-col gap-4 p-4 md:gap-6 p-6"
+				class="hocus:bg-silver dark:hocus:bg-darkgray dark:hocus:text-black flex h-full flex-col gap-4 p-4 p-6 md:gap-6"
 			>
-				<h3 class="text-balance font-bold text-lg leading-snug max-w-96">More&hellip;</h3>
-				<p class="text-pretty text-sm max-w-96">
+				<h3 class="max-w-96 text-balance text-lg font-bold leading-snug">More&hellip;</h3>
+				<p class="max-w-96 text-pretty text-sm">
 					See more, including my graveyard of half-finished projects, on GitHub.
 				</p>
 				<div class="mt-auto">🔗</div>

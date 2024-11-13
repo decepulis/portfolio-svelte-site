@@ -1,6 +1,7 @@
+import SimpleGit from 'simple-git';
+
 import { getPosts } from '$lib/markdoc/server';
 import baseUrl from '$lib/stores/baseUrl';
-import SimpleGit from 'simple-git';
 
 const simpleGit = SimpleGit();
 

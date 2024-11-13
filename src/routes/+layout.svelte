@@ -30,4 +30,7 @@
 </Metadata>
 
 <!-- due to a bug in tailwind v4, app.html isn't being scanned, so we declare its classes here -->
-<div data-fix-tailwind-v4-bug class="min-w-[20rem] antialiased bg-white text-black dark:bg-black dark:text-white sr-only"></div>
+<div
+	data-fix-tailwind-v4-bug
+	class="sr-only min-w-[20rem] bg-white text-black antialiased dark:bg-black dark:text-white"
+></div>

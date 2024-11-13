@@ -1,8 +1,11 @@
+import { redirect } from '@sveltejs/kit';
+
+import type { Picture } from 'vite-imagetools';
+
 import { getPost } from '$lib/markdoc/server';
 import baseUrl from '$lib/stores/baseUrl';
 import type { Metadata } from '$lib/types/metadata';
-import { redirect } from '@sveltejs/kit';
-import type { Picture } from 'vite-imagetools';
+
 import type { PageServerLoad } from './$types';
 
 const allEnhancedImages: { [key: string]: { default: Picture } } = import.meta.glob(
