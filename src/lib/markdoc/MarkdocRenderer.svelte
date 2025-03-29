@@ -43,7 +43,7 @@
 </script>
 
 {#if Array.isArray(node)}
-	{#each node as child}
+	{#each node as child, idx (idx)}
 		<MarkdocRenderer node={child} {enhancedImages} />
 	{/each}
 {:else if node === null || typeof node !== 'object' || !isTag(node)}

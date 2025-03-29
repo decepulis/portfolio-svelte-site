@@ -25,7 +25,7 @@
 		style:--grid-cols="repeat(auto-fill, minmax(170px, 1fr))"
 		style:--sm-grid-cols="repeat(auto-fill, minmax(288px, 1fr))"
 	>
-		{#each postsReversed as post}
+		{#each postsReversed as post (post.frontmatter.slug)}
 			{@const {
 				frontmatter: { type, title, directUrl, todo, slug, priority, previewTitle, previewText }
 			} = post}

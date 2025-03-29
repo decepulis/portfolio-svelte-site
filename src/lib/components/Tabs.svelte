@@ -30,6 +30,7 @@
 		// (if the height is currently auto, of course)
 		if (isNaN(parseInt(tabPanelContainer.style.height))) {
 			tabPanelContainer.style.height = `${currentTabPanelOffsetHeight}px`;
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			tabPanelContainer.offsetHeight; // flush to render
 		}
 		// and then set it to the height of the incoming element for a transition
@@ -91,7 +92,7 @@
 </script>
 
 <div role="tablist" aria-orientation="horizontal" class="relative z-10 inline-flex gap-2">
-	{#each tabs as { id, label }, idx}
+	{#each tabs as { id, label }, idx (id)}
 		{@const isActive = activeId === id}
 		<button
 			id={`${id}-tab`}
@@ -121,7 +122,7 @@
 	ontransitionend={onTransitionEnd}
 	bind:this={tabPanelContainer}
 >
-	{#each tabs as { id, panel }, idx}
+	{#each tabs as { id, panel }, idx (id)}
 		{@const isActive = activeId === id}
 		{@const isNext = idx > activeIndex}
 		<div

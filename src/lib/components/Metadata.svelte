@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
 	import type { Metadata } from '$lib/types/metadata';
 	import baseUrl from '$lib/stores/baseUrl';
@@ -9,7 +9,7 @@
 		children?: Snippet;
 	};
 	const { children }: Props = $props();
-	const { metadata } = $derived($page.data) as { metadata: Metadata };
+	const { metadata } = $derived(page.data) as { metadata: Metadata };
 
 	const darius: Person = {
 		'@type': 'Person',
@@ -91,7 +91,7 @@
 				<meta property="article:modified_time" content={modifiedTime.toISOString()} />
 			{/if}
 			{#if section}<meta property="article:section" content={section} />{/if}
-			{#if tags}{#each tags as tag}<meta property="article:tag" content={tag} />{/each}{/if}
+			{#if tags}{#each tags as tag (tag)}<meta property="article:tag" content={tag} />{/each}{/if}
 		{/if}
 		{#if profile}
 			<meta property="og:type" content="profile" />
@@ -104,5 +104,6 @@
 {@render children?.()}
 
 {#if jsonLd}
-	{@html `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`}
+	<!-- eslint-disable-next-line @typescript-eslint/no-unused-expressions -->
+	{@html '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>'}
 {/if}

@@ -99,7 +99,7 @@
 	class="border-silver dark:border-darkgray sticky top-[-1px] z-50 flex flex-col items-center justify-between border-y bg-white px-4 py-2 md:flex-row dark:bg-black"
 >
 	<ul class="text-ceter flex gap-4">
-		{#each sections as { id, label, decoration }}
+		{#each sections as { id, label, decoration } (id)}
 			<li>
 				<A
 					withVisitedStyles={false}
