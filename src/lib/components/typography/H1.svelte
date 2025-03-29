@@ -10,7 +10,7 @@
 
 <svelte:element
 	this={as || 'h1'}
-	class="mt-16 mb-8 text-balance text-4xl font-bold md:mt-24 md:mb-12"
+	class="mt-16 mb-8 text-4xl font-bold text-balance md:mt-24 md:mb-12"
 >
 	{@render children()}
 </svelte:element>

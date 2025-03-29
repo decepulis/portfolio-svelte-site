@@ -30,12 +30,12 @@
 <article class="mx-4 py-8" style:view-transition-name="container-{slug}">
 	<header class="mb-8">
 		<h1
-			class="mb-4 inline-block max-w-prose text-balance text-4xl font-bold"
+			class="mb-4 inline-block max-w-prose text-4xl font-bold text-balance"
 			style:view-transition-name="title-{slug}"
 		>
 			{title}
 		</h1>
-		<p class="italic">{formatter.format(date)}</p>
+		<p>🗓️ {formatter.format(date)}</p>
 		{#if pageUrl}
 			<p>
 				<A decoration="🔗" href={pageUrl}>View page</A>

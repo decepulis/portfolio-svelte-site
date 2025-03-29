@@ -49,13 +49,13 @@
 									: 'var(--color-silver)'}
 				>
 					<h3
-						class="max-w-96 text-balance text-lg font-bold leading-snug"
+						class="max-w-96 text-lg leading-snug font-bold text-balance"
 						style:view-transition-name="title-{slug}"
 					>
 						{previewTitle ?? title}
 					</h3>
 					{#if previewText}
-						<p class="max-w-96 text-pretty text-sm" style:view-transition-name="content-{slug}">
+						<p class="max-w-96 text-sm text-pretty" style:view-transition-name="content-{slug}">
 							{previewText}
 						</p>
 					{/if}
@@ -86,8 +86,8 @@
 				href="https://github.com/decepulis"
 				class="hocus:bg-silver dark:hocus:bg-darkgray dark:hocus:text-black flex h-full flex-col gap-4 p-4 p-6 md:gap-6"
 			>
-				<h3 class="max-w-96 text-balance text-lg font-bold leading-snug">More&hellip;</h3>
-				<p class="max-w-96 text-pretty text-sm">
+				<h3 class="max-w-96 text-lg leading-snug font-bold text-balance">More&hellip;</h3>
+				<p class="max-w-96 text-sm text-pretty">
 					See more, including my graveyard of half-finished projects, on GitHub.
 				</p>
 				<div class="mt-auto">🔗</div>

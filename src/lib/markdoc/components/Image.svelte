@@ -43,7 +43,7 @@
 <!-- if the image is block-level, we wrap it with a figure and add a caption -->
 <!-- if the image is inline, we treat the caption like a title up above -->
 {#if block}
-	<figure class="row-span-2 my-8 grid w-full max-w-lg grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
+	<figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
 		{@render image()}
 		{#if title}
 			<figcaption class="mt-2 text-sm italic">{title}</figcaption>
