@@ -6,6 +6,9 @@ const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
+	compilerOptions: {
+		runes: true // this also enables runes mode for node_modules, so...
+	},
 
 	kit: {
 		// leave this blank for zero-config on vercel

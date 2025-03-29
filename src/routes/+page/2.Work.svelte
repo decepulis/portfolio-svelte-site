@@ -21,7 +21,7 @@
 	<H1 as="h2">Some things I&apos;ve been up to</H1>
 	<ul
 		role="list"
-		class="grid grid-flow-dense grid-cols-[--grid-cols] sm:grid-cols-[--sm-grid-cols]"
+		class="grid grid-flow-dense grid-cols-(--grid-cols) sm:grid-cols-(--sm-grid-cols)"
 		style:--grid-cols="repeat(auto-fill, minmax(170px, 1fr))"
 		style:--sm-grid-cols="repeat(auto-fill, minmax(288px, 1fr))"
 	>
@@ -37,7 +37,7 @@
 			>
 				<a
 					href={directUrl ?? `/posts/${slug}`}
-					class="hocus:bg-[--bg-hocus] dark:hocus:text-black flex h-full flex-col gap-4 p-4 p-6 md:gap-6"
+					class="hocus:bg-(--bg-hocus) dark:hocus:text-black flex h-full flex-col gap-4 p-6 md:gap-6"
 					style:--bg-hocus={type === 'build'
 						? 'var(--color-yellow)'
 						: type === 'post'

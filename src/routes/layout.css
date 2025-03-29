@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
-@variant dark (&:is([data-theme='dark'] *));
-@variant hocus (&:hover, &:focus);
-@variant hocus-within (&:hover, &:focus-within);
+@custom-variant dark (&:is([data-theme='dark'] *));
+@custom-variant hocus (&:hover, &:focus);
+@custom-variant hocus-within (&:hover, &:focus-within);
 @theme {
 	--font-family-serif: Times, serif;
 	--font-family-sans: Helvetica, Arial, sans-serif;
