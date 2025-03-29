@@ -166,14 +166,14 @@
 />
 <svg
 	viewBox="0 0 64 64"
-	class="border-silver dark:border-darkgray h-auto w-full border"
+	class="border-silver dark:border-gray h-auto w-full border"
 	xmlns="http://www.w3.org/2000/svg"
 	bind:this={svgElement}
 	onpointerdown={poke}
 >
 	<title>Darius Cepulis</title>
 	<!-- background -->
-	<path class="fill-gainsboro dark:fill-gray" d="M0 0h64v64H0z" />
+	<path class="fill-gainsboro dark:fill-silver" d="M0 0h64v64H0z" />
 	<!-- shirt + neck -->
 	<g>
 		<path fill="var(--color-wheat)" d="M25 49h14v9H25z" />

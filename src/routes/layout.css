@@ -1,15 +1,5 @@
 @import 'tailwindcss';
 
-*:is([data-theme='dark']) .shiki,
-*:is([data-theme='dark']) .shiki span {
-	color: var(--shiki-dark) !important;
-	background-color: var(--shiki-dark-bg) !important;
-	/* Optional, if you also want font styles */
-	font-style: var(--shiki-dark-font-style) !important;
-	font-weight: var(--shiki-dark-font-weight) !important;
-	text-decoration: var(--shiki-dark-text-decoration) !important;
-}
-
 @custom-variant dark (&:is([data-theme='dark'] *));
 @custom-variant hocus (&:hover, &:focus);
 @custom-variant hocus-within (&:hover, &:focus-within);
@@ -42,8 +32,6 @@
 
 	--color-link: color(display-p3 0 0 0.9333);
 	--color-visited: color(display-p3 0.3333 0.102 0.5451);
-	--color-link-dark: var(--color-aqua);
-	--color-visited-dark: color-mix(in srgb, var(--color-fuchsia), var(--color-white));
 
 	--color-wheat: color(display-p3 0.9608 0.8706 0.702);
 	--color-burlywood: color(display-p3 0.8706 0.7216 0.5294);

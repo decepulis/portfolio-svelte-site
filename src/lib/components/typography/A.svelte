@@ -14,9 +14,8 @@
 </script>
 
 <a
-	class="text-link dark:text-link-dark"
+	class="text-link"
 	class:visited:text-visited={withVisitedStyles}
-	class:dark:visited:text-visited-dark={withVisitedStyles}
 	class:group={decoration}
 	class:hocus:decoration-wavy={!decoration}
 	class:underline={!decoration}

@@ -30,14 +30,14 @@
 				frontmatter: { type, title, directUrl, todo, slug, priority, previewTitle, previewText }
 			} = post}
 			<li
-				class="border-silver dark:border-darkgray -m-[0.5px] border"
+				class="border-silver dark:border-gray -m-[0.5px] border"
 				class:col-span-2={priority && priority >= 2}
 				class:row-span-2={priority && priority >= 3}
 				style:view-transition-name="container-{slug}"
 			>
 				<a
 					href={directUrl ?? `/posts/${slug}`}
-					class="hocus:bg-(--bg-hocus) dark:hocus:text-black flex h-full flex-col gap-4 p-6 md:gap-6"
+					class="hocus:bg-(--bg-hocus) flex h-full flex-col gap-4 p-6 md:gap-6"
 					style:--bg-hocus={type === 'build'
 						? 'var(--color-yellow)'
 						: type === 'post'
@@ -80,11 +80,11 @@
 			</li>
 		{/each}
 		<li
-			class="hocus-within:border-silver dark:hocus-within:border-darkgray -m-[0.5px] grid border border-transparent"
+			class="hocus-within:border-silver dark:hocus-within:border-silver -m-[0.5px] grid border border-transparent"
 		>
 			<a
 				href="https://github.com/decepulis"
-				class="hocus:bg-silver dark:hocus:bg-darkgray dark:hocus:text-black flex h-full flex-col gap-4 p-4 p-6 md:gap-6"
+				class="hocus:bg-gainsboro dark:hocus:bg-silver flex h-full flex-col gap-4 p-6 md:gap-6"
 			>
 				<h3 class="max-w-96 text-lg leading-snug font-bold text-balance">More&hellip;</h3>
 				<p class="max-w-96 text-sm text-pretty">

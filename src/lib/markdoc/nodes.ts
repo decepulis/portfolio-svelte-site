@@ -10,7 +10,7 @@ import { bundledLanguages, createHighlighter } from 'shiki';
 import { isTag } from './types';
 
 const highlighter = await createHighlighter({
-	themes: ['github-light', 'github-dark'],
+	themes: ['github-light'],
 	langs: Object.values(bundledLanguages)
 });
 
@@ -30,17 +30,14 @@ export const fence: Schema = {
 	transform(node, config) {
 		const html = highlighter.codeToHtml(node.attributes.content, {
 			lang: node.attributes.language,
-			themes: {
-				light: 'github-light',
-				dark: 'github-dark'
-			},
+			theme: 'github-light',
 			transformers: [
 				// classes for pre
 				{
 					pre(node) {
 						this.addClassToHast(
 							node,
-							'border-silver dark:border-darkgray border overflow-x-scroll p-4 text-sm'
+							'border-silver dark:border-gray border overflow-x-scroll p-4 text-sm'
 						);
 					}
 				},

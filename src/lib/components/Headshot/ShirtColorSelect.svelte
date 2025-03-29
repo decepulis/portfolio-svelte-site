@@ -10,7 +10,7 @@
 <fieldset
 	style:grid-template-columns="repeat(15, minmax(0, 1fr))"
 	style:transform="scaleY({show ? 1 : 0})"
-	class="border-silver dark:border-darkgray relative grid origin-top transform-gpu border-x border-b transition-transform duration-200"
+	class="border-silver dark:border-gray relative grid origin-top transform-gpu border-x border-b transition-transform duration-200"
 	inert={!show}
 	{id}
 >

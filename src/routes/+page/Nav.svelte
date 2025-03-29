@@ -96,7 +96,7 @@
 </script>
 
 <nav
-	class="border-silver dark:border-darkgray sticky top-[-1px] z-50 flex flex-col items-center justify-between border-y bg-white px-4 py-2 md:flex-row dark:bg-black"
+	class="border-silver dark:border-gray dark:bg-gainsboro sticky top-[-1px] z-50 flex flex-col items-center justify-between border-y bg-white px-4 py-2 md:flex-row"
 >
 	<ul class="text-ceter flex gap-4">
 		{#each sections as { id, label, decoration } (id)}

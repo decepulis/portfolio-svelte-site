@@ -11,7 +11,7 @@
 			playback-id={playbackId}
 			metadata-video-title={title}
 			max-resolution="1080p"
-			class="border-silver dark:border-darkgray absolute inset-0 border"
+			class="border-silver dark:border-gray absolute inset-0 border"
 			style:--media-font-family="var(--font-family-sans)"
 			accent-color="var(--color-blue)"
 			thumbnail-time="0"

@@ -16,7 +16,7 @@
 			src="./dithering.jpg"
 			id="dithered"
 			alt="Darius, dithered"
-			class="border-silver dark:border-darkgray absolute inset-0"
+			class="border-silver dark:border-gray absolute inset-0"
 			hidden={!showProfilePicture}
 		/>
 		<button
