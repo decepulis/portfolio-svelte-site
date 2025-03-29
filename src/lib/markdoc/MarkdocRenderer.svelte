@@ -16,6 +16,7 @@
 	import UL from '$lib/components/typography/UL.svelte';
 	import OL from '$lib/components/typography/OL.svelte';
 	import Color from './components/Color.svelte';
+	import Fence from './components/Fence.svelte';
 
 	type Props = {
 		node: RenderableTreeNode | RenderableTreeNode[];
@@ -36,7 +37,8 @@
 		img: Image,
 		Grid,
 		Video,
-		Color
+		Color,
+		Fence
 	};
 </script>
 

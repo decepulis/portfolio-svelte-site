@@ -1,11 +1,22 @@
 @import 'tailwindcss';
 
+*:is([data-theme='dark']) .shiki,
+*:is([data-theme='dark']) .shiki span {
+	color: var(--shiki-dark) !important;
+	background-color: var(--shiki-dark-bg) !important;
+	/* Optional, if you also want font styles */
+	font-style: var(--shiki-dark-font-style) !important;
+	font-weight: var(--shiki-dark-font-weight) !important;
+	text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
 @custom-variant dark (&:is([data-theme='dark'] *));
 @custom-variant hocus (&:hover, &:focus);
 @custom-variant hocus-within (&:hover, &:focus-within);
 @theme {
 	--font-family-serif: Times, serif;
 	--font-family-sans: Helvetica, Arial, sans-serif;
+	--font-family-mono: 'Courier New', monospace;
 	--color-*: initial;
 
 	/* https://en.wikipedia.org/wiki/Web_colors */

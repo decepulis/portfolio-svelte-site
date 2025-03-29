@@ -1,8 +1,9 @@
-import Markdoc, { type Node, type RenderableTreeNode, type Schema } from '@markdoc/markdoc';
+import Markdoc, { type Node, type RenderableTreeNode } from '@markdoc/markdoc';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parse } from 'yaml';
 
+import { fence, paragraph } from './nodes';
 import { color, grid, video } from './tags';
 import { type Frontmatter, frontmatter, isTag } from './types';
 
@@ -53,27 +54,6 @@ function getFrontmatter(slug: string, ast: Node): Frontmatter {
 		throw new Error(`Error parsing frontmatter in ${slug}: ${e}`);
 	}
 }
-const paragraph: Schema = {
-	render: 'p',
-	children: ['inline'],
-	transform(node, config) {
-		const attributes = node.transformAttributes(config);
-		const children = node.transformChildren(config);
-
-		// if the paragraph has no children, return null
-		if (children.length === 0) {
-			return null;
-		}
-		// if the paragraph has only an image as a child, return that image
-		if (children.length === 1 && isTag(children[0]) && children[0].name === 'img') {
-			// mark the image as safe to render block-level
-			children[0].attributes.block = true;
-			return children[0];
-		}
-		// otherwise, return as normal!
-		return new Markdoc.Tag(`p`, attributes, children);
-	}
-};
 
 export async function getPosts() {
 	const files = await fs.readdir('src/posts');
@@ -95,7 +75,7 @@ export async function getPost(slug: string) {
 	const ast = Markdoc.parse(post);
 	const frontmatter = getFrontmatter(slug, ast);
 	const content = Markdoc.transform(ast, {
-		nodes: { paragraph },
+		nodes: { paragraph, fence },
 		tags: {
 			grid,
 			color,
