@@ -4,5 +4,20 @@ type: build
 pageUrl: https://formula-fun.vercel.app/
 githubUrl: https://github.com/decepulis/formula-fun-calc
 previewText: Moneyballing the heck out of a friendly F1 wager
-todo: true
 ---
+
+In 2021, much like the rest of the world, I was desperately into Formula 1, thanks to [Drive To Survive](https://www.netflix.com/title/80204890). Luckily, so too were a group of like 20 of my friends and acquaintances. So, of course, we made a lil betting pool.
+
+The rules were simple. Every week, you have $100 to buy four drivers for your team. The success of your drivers determines the points you earn each week. The better the driver (as decided by some odds) the more expensive they were. And, just for fun, the worst drivers were given a bonus multiplier.
+
+And I had a theory. My theory was that, if I assumed the odds were true (big stretch, I know) I could write an optimization function that found the team with the highest expected points for $100. 
+
+Interestingly, the function spit out a dozen or two teams with nearly-equal expected values. So I also had to add some logic to mix in some human input. (Which, of course, meant that I always had an excuse to buy a team that had Lewis Hamilton on it. Oh what a year it was to be a Lewis Hamilton fan.)
+
+{% grid %}
+![A grid of drivers and their prices](/src/posts/2021-03-f1/prices.png)
+
+![A list of teams](/src/posts/2021-03-f1/teams.png)
+{% /grid %}
+
+F1 isn't predictable. Obviously, odds are just probabilities and things can break in surprising and unexpected ways. Sometimes, even Haas scores points. But, over the course of a season, these variances tend to even out. Law of large numbers, or something like that. I don't think I ever finished first overall in this betting pool, but I did end up in the top three a few times!

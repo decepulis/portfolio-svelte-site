@@ -3,5 +3,20 @@ title: Our photo gallery
 type: build
 pageUrl: https://kcdc.fun/
 previewText: A place for me to put our slideshows so I wouldn't have to bore people in person!
-todo: true
 ---
+
+This started out as our wedding website. And our wedding's "brand" was just these two little stick figures, waving hello! All over our programs and signage and of course, our website, in a tribute to the legendary [parallax effect on the Firewatch website](https://www.firewatchgame.com). 
+
+{% video playbackId="mfFqfRuc00pd0257jvUhTOX00ake4382fu4RqJG9DDTou00" title="A parallax view of downtown Chicago" width=1476 height=830 /%}
+
+When the time came to put our wedding photos online, I ended up building a gallery app. And now, especially since we've left much of social media, I've expanded that to include [all sorts of photos](https://www.kcdc.fun/photos/eastern-europe) we want to share with our friends and family.
+
+{% video playbackId="JoTz2RbUW2hhXnI3aolh02khSimdzkCSRfQm5NGvPYdE" title="Our Eastern-European photos loading in" width=1480 height=890 /%}
+
+Some implementation notes:
+- It's a [SvelteKit](https://kit.svelte.dev) app, of course. A little out of date, though.
+- I use [Sanity](https://www.sanity.io) to manage the galleries. The [Sanity image pipeline](https://www.sanity.io/docs/presenting-images) is great for this. Building a [custom input component](https://www.sanity.io/docs/component-api), on the other hand, wasn't that great. 
+- I had to use [exifr](https://github.com/MikeKovarik/exifr) to write a little hack to pull the  description and store it in a field.
+- And of course, the videos are handled by [Mux](https://www.mux.com)
+- I probably spent the most time trying to get the full-screen lightbox to work. An [accessible dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) with gestures and keyboard navigation and an intuitive way to show descriptions.
+- I used to grab location and show it with Mapbox. I think that broke at some point. Maybe I'll bring it back.

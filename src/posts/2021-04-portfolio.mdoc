@@ -3,5 +3,77 @@ title: This website!
 type: build
 pageUrl: https://darius.place/
 previewText: A place to talk about myself and play with new web tech
-todo: true
 ---
+
+Even before it was my job, I've enjoyed playing with web tech. And for so long, my playground has been my portfolio website. From jQuery to 11ty to Gatsby to now SvelteKit, my portfolio has been a place to try out new toys. Tech my employer would never want in prod. Cool things other people are doing that I just have to try myself. Like Josh's [boop](https://www.joshwcomeau.com/react/boop/) or Cassie's [cartoon](https://www.cassie.codes/) watching me on her website or Chris's [clever bio](https://web.archive.org/web/20220102202624/https://chriscoyier.net/). 
+
+Here's a few notes on this current iteration:
+
+## Svelte & SvelteKit
+
+I'm impressionable. If someone comes along with a strong, well-reasoned opinion, they'll have me in no time. So it's no surprise that Rich Harris's iconic, strong, [well-reasoned opinions](https://www.youtube.com/watch?v=AdNJ3fydeao) got me. 
+
+I'll be honest, I genuinely miss [React Server Components](https://www.mux.com/blog/what-are-react-server-components). It's cool to be able to leave my rendering code behind on the server. It's cool to be able to colocate my server-side data fetching with my rendering code. I genuinely miss [React Actions](https://www.mux.com/blog/react-19-server-components-and-actions). It's cool that React just handles the tedious parts of async for me.
+
+But every time I come back to Svelte, it's a small relief. It's just a tiny bit less-clunky than React. And I trust its output to be as svelte as its DX. And that's just what I need for a personal project.
+
+## Tailwind CSS
+
+I have a strange feeling I'm about to write a blog post about Tailwind. When I do, I'll link to it here.
+
+Until then, I'll just say that it's a delight to have a way to write inline CSS while still having access to features like media queries. And it's a delight to be able to outsource architectural decisions to someone else who has stronger opinions. The ugly syntax is a fair trade.
+
+## Markdoc
+
+I knew I wanted to store the content of this site as [Markdown](https://daringfireball.net/projects/markdown/), for portability. I love Svelte, but you know how these things go. A few years from now, the next trendy framework is gonna come around and I'm gonna wanna try it. So, best store my content in an agnostic form. Also, I'm [happy to show you I know how to work with a CMS](/posts/2021-05-08-kcdc), but files on a disk are just so much easier and more maintainable for a small, text-based project like this.
+
+But Markdown isn't enough. I also wanted components, like a [mux-player](https://github.com/muxinc/elements) to stick videos in between my words.
+
+I have nothing against [MDX](https://mdxjs.com/). It drives a huge amount of what I do at work. I personally chose [Markdoc](https://markdoc.dev/) as a format just to see what it's about. (Again, this portfolio is a playground for trying new things.) I like that it's good enough for Stripe. And I like that I could build my own content-processing pipeline easily enough, so no external dependencies. 
+
+So is Markdoc better than MDX? Eh, I'd call it about on-par with MDX. Would I use it again? If I'm in React, I might as well plug into the well-supported MDX ecosystem. But if I'm not, well, doing what Stripe does is usually not a bad move.
+
+It's fun to have strong opinions about fun, new, trendy technologies. This time, though, I just don't got it in me.
+
+## Typescript
+
+If you're one of the few people out there who still don't think they need Typescript... I'm sorry. You just gotta try it. Also, I'm not sure you exist.
+
+I've really been enjoying [Zod](https://zod.dev/), lately, too. I just don't trust myself to consistently remember my posts' [frontmatter](https://docs.github.com/en/contributing/writing-for-github-docs/using-yaml-frontmatter) schema, so it's nice to know that Zod is double-checking my work.
+
+## Design, web brutalism, and interactions
+
+I used to have more animations, more colors, more... design. One of the hard lessons I've been learning, though (as life somehow gets busier and busier) is that you can't do it all if you want to not-half-ass things. Pick your battles, and say goodbye to the rest.
+
+Luckily, [web brutalism](https://www.awwwards.com/awwwards/collections/brutalism/) gave me cover to give up on the parts of design I'm not as good at. To reduce my website to its most bare, most functional form. And it gave me space to focus on the parts I do enjoy, like the little interactions. Maybe they'll be fun enough that you can forgive me for the site's stark look.
+
+### The rad H1
+This one's pretty simple. The "real" h1 sizes its container. And the "shadows" are absolutely positioned in that container. Then, I use user's scroll position to update a few springs of varying weights. The light springs stay close to the text, the heavy springs lag behind. [Here's](https://github.com/decepulis/portfolio-svelte-site/blob/d00e2aca5f9f1e34aefb5b29d932d36c8125e692/src/lib/components/RadText.svelte) the code. Here's some pseudocode:
+
+```html
+<span class="relative">
+  <h1>Text</h1>
+  <!-- light spring -->
+  <div class="absolute inset-0" aria-hidden>Text</div>
+  <!-- medium spring -->
+  <div class="absolute inset-0" aria-hidden>Text</div>
+  <!-- heavy spring -->
+  <div class="absolute inset-0" aria-hidden>Text</div>
+</span>
+```
+
+And here's what it looks like:
+
+{% video playbackId="5les2931u028DH48i6rqNaNRVSQNhG7QdgwxkXM1amG00" title="Rad text!" width=708 height=558 controls="false" loop="true" muted="true" autoplay="true" /%}
+
+### The profile pic
+
+I love that I can mess with SVG the same way I can mess with HTML. I'm not an illustrator, so it's a miracle I squeezed out this drawing as well as I did. Then, I just attached various parts of that SVG to springs that track the mouse position. The springs hide the fact that we're only checking the pointer position once every quarter second (for performance reasons).
+
+There's nothing clever [in this code](https://github.com/decepulis/portfolio-svelte-site/blob/d00e2aca5f9f1e34aefb5b29d932d36c8125e692/src/lib/components/Headshot/InteractiveHeadshot.svelte). Just some simple wiring and a delightful little idea.
+
+{% video playbackId="xss00mbhKIieMvcVBhgtJHCqDQakHYNmduai4kMUfm4U" title="Interactive profile pic" width=328 height=328 controls="false" loop="true" muted="true" autoplay="true" /%}
+
+### View Transitions
+
+I'm too old to do [FLIP](https://aerotwist.com/blog/flip-your-animations/) myself. Thank goodness there's a [web standard](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for that. I can't wait to find other places to use this.

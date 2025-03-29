@@ -9,8 +9,8 @@
 
 {#snippet short()}
 	<P>
-		I try and get devs excited about <A href="https://www.mux.com/">Mux</A>. I think the web is
-		pretty neat!
+		I make sure devs have a great experience developing with <A href="https://www.mux.com/">Mux</A>.
+		I think the web is pretty neat!
 	</P>
 {/snippet}
 {#snippet medium()}
@@ -18,9 +18,8 @@
 		I'm a Community Engineer at <A href="https://www.mux.com">Mux</A>, which means I work on making
 		a great developer experience with great
 		<A href="https://www.mux.com">code</A>, great
-		<A href="https://docs.mux.com">docs</A>, great
-		<A href="https://www.mux.com/team/darius-cepulis">posts</A>, and great
-		<A href="https://www.reactmiami.com/speakers/cepulis">talks</A>
+		<A href="https://docs.mux.com">docs</A>, and great
+		<A href="https://www.mux.com/team/darius-cepulis">content</A>.
 	</P>
 	<P>
 		Fun fact about me, I actually <i>like</i> writing CSS. Weird, huh?
@@ -44,7 +43,6 @@
 		Lately, I've been realizing that the skills I learned in web development work in developer
 		experience and community engineering, too. Designing a user journey through
 		<A href="https://docs.mux.com/">docs</A> or a
-		<A href="https://www.reactmiami.com/speakers/cepulis">talk</A> or a
 		<A href="https://www.mux.com/team/darius-cepulis">blog post</A>? It's a lot like designing a
 		user journey through a
 		<A href="https://www.mux.com/">website</A>. I'm proudly building these all of these at Mux as a
