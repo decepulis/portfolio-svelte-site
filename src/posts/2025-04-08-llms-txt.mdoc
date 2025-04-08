@@ -1,0 +1,35 @@
+---
+title: We want your LLM to read our docs
+type: post
+directUrl: https://www.mux.com/blog/llms-txt
+previewText: Is it hype-driven development? Or is there actually something to the trend of adding llms.txt to our websites?
+---
+
+You might dream of making a product that’s *so intuitive*, your users don’t even have to think. It Just Works™. But when “Just Works” fails, your users turn to the instruction manual. *Here be dragons*. The more time your users spend in your instruction manual, the less time they spend with your product and the more frustrated they get. 
+
+For developer tools, that instruction manual is the docs. And nobody wants to spend their one wild and precious life reading docs. So how do you get your users in and out of your docs quickly? As we’ve written before, it all comes down to [good content](https://www.mux.com/blog/building-better-docs) and [good usability](https://www.mux.com/blog/the-building-blocks-of-great-docs). And we’re trying something new in usability: [mux.com/llms.txt](https://www.mux.com/llms.txt).
+
+## **What is llms.txt?**
+
+llms.txt is a [proposed standard](https://llmstxt.org/) for [LLMs](https://en.wikipedia.org/wiki/Large_language_model) to discover and read your website. It’s a page hosted at /llms.txt with background information, guidance, and links to detailed [Markdown](https://daringfireball.net/projects/markdown/) files. On top of that, it’s a convention where, if you put `.md` after a URL, you’ll get a plain, Markdown version of that URL. It’s been adopted by [Stripe](https://docs.stripe.com/llms.txt), [Svelte](https://svelte.dev/docs/llms), and so [many](https://llmstxt.site/) [more](https://directory.llmstxt.cloud/).
+
+To some of you, this might feel a bit familiar... A directory of pages that a robot can read? Couldn’t we just use [sitemap.xml](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap#xml)? Well, not really. sitemap.xml still links to pages meant for humans. Pages full of extra divs and classes and navigation to make the page look and work better. To an LLM, though, this is all just wasted tokens. An LLM doesn’t care about your HTML, just the raw content within. So llms.txt points to pages that are reduced to just the basics.
+
+{% video playbackId="r57PvWbTLoIBmd026A73i00rYWw2unGudjd00KvsB7W4rk" caption="For now, you need to add these docs to Cursor or Claude manually" width=1424 height=838 /%}
+
+
+## **Why would you create an llms.txt?**
+
+Honestly, that’s a good question. Is this worth the effort? 
+
+If you were to hop on every spicy trend hitting web dev, you’d never get anything done. (“Hype-driven development”, anyone?) But I think even the most skeptical among us are starting to see by now that LLMs are *powerful*. The ability to just “talk” with docs is the best usability one could ask for: no finding things in the sidebar, no phrasing things to get the right result in search. It can be like having your own personal expert pair programming with you.
+
+Now, I’ve [expressed reservations](https://www.mux.com/blog/docs-ai-chatbot) about LLM docs in the past. Since that blog post, though, two things have changed. First, so much has happened in LLM development; these models are noticeably better. Second, because users are accessing this knowledge through their own tools, they’re (hopefully) more aware of the hallucinations that still sometimes happen with LLMs.
+
+## **Sounds great. What’s the catch?**
+
+When users are reading your docs, you know what experience you’re taking them on. By putting this content into an LLM, you’re giving a bit of that control up. LLMs *do* still hallucinate. Even if users know about hallucinations, they may still waste time going down the wrong path.
+
+It’s also true that the llms.txt convention is still just a proposal. A proposal with some limitations, as [Hacker News will happily tell you](https://news.ycombinator.com/item?id=41439983). Early adopters of llms.txt have to be careful to track the adoption of the standard and update their implementation as things evolve.
+
+We think these tradeoffs make sense for Mux. We're still committed to writing great docs—that's not going to change—but we're also excited to explore how LLMs might help our users find what they need and get back to building sooner. That's the whole point, after all: less time in the docs, more time creating.
