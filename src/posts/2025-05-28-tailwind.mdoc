@@ -1,0 +1,104 @@
+---
+title: Tailwind is the worst form of CSS, except for all the others
+type: post
+directUrl: https://www.mux.com/blog/tailwind-is-the-worst-form-of-css-except-for-all-the-others
+previewText: Opinionated tools are good for you and your team… even if you disagree with the opinion.
+previewImage: /src/posts/2025-05-28-tailwind/og.jpg
+previewImageAlt: A Tailwind-branded hand crushing a sheet of paper with "CSS" on it.
+---
+
+I think there’s a reason that every Tailwind take is spicy. It’s that Tailwind is a tool with **strong opinions**. Some developers find these opinions unnecessary, or even abrasive. Others find themselves and their teams way more productive.
+
+After years of using it in production, I’m definitely in the “more productive” camp… but I get it. I get why it feels unnecessary if you’re comfortable with CSS. I get why Tailwind’s opinions come across as abrasive. And *I’m not here to change your mind*. But maybe I can offer you a fresh perspective. 
+
+Maybe I can even convince you that, whether you like it or not, Tailwind is good for you and your team because opinionated tools are good for you and your team… even if you disagree with the opinion.
+
+That’s a big claim. Let’s dig in. 
+
+## **A crash-course on Tailwind**
+
+If you’re comfortable with Tailwind, jump to the next H2. If you’re not, let’s speedrun the essentials. There are three things you need to know about Tailwind to get started:
+
+**First**, you can think of Tailwind like inline styles. Except, instead of writing your styles in the `style` attribute, you write them as classes. For example:
+
+```html
+<!-- this -->
+<div style="display:flex;flex-direction:column;align-items:center;"></div>
+
+<!-- becomes this in Tailwind -->
+<div class="flex flex-column items-center"></div>
+```
+
+The Tailwind CLI reads your whole codebase and generates a CSS file with all the necessary classes, like `.items-center { align-items: center }`. 
+
+**Second**, these classes can do things that inline styles can’t. For example:
+
+```html
+<!-- with tailwind, you can respond to states like hover -->
+<button class="opacity-100 hover:opacity-75"></button>
+
+<!-- and you can make a responsive design that changes at certain breakpoints -->
+<span class="text-base lg:text-lg"></span>
+```
+
+**Third**, Tailwind encourages you to configure a limited number of design tokens. “Design tokens” is a scary way of saying: when you tell Tailwind you prefer your text size to be either `1rem`, `1.2rem`, `1.5rem`, or `2rem`, then your team can *only* use those text sizes; no `1.4rem` or `16px` nonsense, here. When you tell Tailwind your brand colors, your team can *only* use those colors.
+
+![The Mux color palette Tailwind tokens](/src/posts/2025-05-28-tailwind/palette.png "Your team is encouraged to use only these colors. No inventing yet *another* shade of gray.")
+
+I’m glossing over so many details, but, let’s get back to the story. If you’re still interested in Tailwind by the end of this all, [the docs](https://tailwindcss.com/docs/styling-with-utility-classes) go into the fundamentals and philosophy very well.
+
+## **Why is Tailwind bad?**
+
+Ok. If I’m trying to convince you that Tailwind is good, even if it has shortcomings… we should be honest about those shortcomings. Here are a few, just to start:
+
+First, just *look* at it. Really give this code block a scroll:
+
+```html
+
+​​<div class="border-b border-gray-91 dark:border-gray-40 lg:border-b-0 relative lg:absolute after:content-blank after:absolute after:inset-0 after:bg-gradient-to-b after:from-white lg:after:[background:linear-gradient(to_right,theme(colors.white)_0%,theme(colors.white/0%)_20%),linear-gradient(to_top,theme(colors.white)_0%,theme(colors.white/0%)_30%),linear-gradient(to_left,theme(colors.white)_0%,theme(colors.white/0%)_30%)]" />
+```
+
+This is *real* Tailwind I wrote once. Isn’t it *hideous*? I wouldn’t write that today, but Tailwind classes can still get enormous.
+
+Also, why do I have to learn all-new syntax for CSS I already know? Why do I have to know that it’s `items-center` when I already know `align-items: center`? (Legit, I still mix up the flex align and justify properties in Tailwind.) And my *team* has to learn it too? Now there’s a learning curve that everyone has to climb. And it’s steeper than other tools that just express their styles in basic CSS. Not to mention, there’s the sometimes-dramatic cost of migrating from one syntax to another. That’s a big deal.
+
+And finally, what a bummer it is to add another build tool. There’s no way to just toss up an directory with some files or a client-side codesandbox without building that CSS first. And how do I add Tailwind to my SvelteKit build pipeline, again?
+
+I’ve been working professionally with Tailwind for years now. And I’m *still* not over these things. And, like with any opinionated tool, everyone’s going to have a list just like this.
+
+These aren’t minor things, either. In particular, asking your team to climb a learning curve, or having to maintain another tool in your pipeline is no small ask. So… why would you use Tailwind anyways?
+
+## **Why is Tailwind good?**
+
+To begin, it’s probably good for performance. With [utility classes](https://tailwindcss.com/docs/styling-with-utility-classes), your style sheet stops growing after some time since you’re reusing the same classes over and over instead of adding new stuff with every page. Utility classes also offer a way to have effectively-scoped CSS without a CSS-in-JS library slowing you down. Utility classes keep you from getting fancy with the [cascade](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Cascade) and [specificity](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity) and [layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) and such. A component with `font-bold text-sm text-blue` is always going to have bold, small, blue text.
+
+Having a limited set of utilities makes our designers happy, too. They’ve spent literal years of their life trying to perfect the spacing and colors of [mux.com](http://mux.com). It’s nice that new devs can’t come in and start using `16px` where `14px` would be better.
+
+And then there’s all the reasons Tailwind is good for DX.
+
+First, decision fatigue is real. What should I name this button class? Where does my [BEM](https://getbem.com/) block end? Should I make this a global style? I don’t *want* to make these decisions and then decode why I made them later. And I *really* don’t want to *document* all my decisions for my coworkers. And I *really really* don’t want to decode why my coworkers made *their* decisions. Tailwind’s documented decisions free us to focus on what actually matters.
+
+This next one’s personal: I really don’t like having my styles separated from my markup. Scrolling to the bottom of the page for a Svelte `<style>` tag or to another file for my `.module.css` file is a total chore compared to having everything in one place. Our component-driven world [separates concerns by context](http://www.didoo.net/2017/10/let-there-be-peace-on-css/#:~:text=Separation%20of%20concerns%20is%20not%20\(necessarily\)%20separation%20of%20technologies.%20It%E2%80%99s%20separation%20of%20context%3A), not by technology. Having all that context (logic, markup, style, [even data](https://www.mux.com/blog/react-19-server-components-and-actions#:~:text=Adding%20server%2Dside%20data%20to%20our%20components%20extends%20this%2C%20and%20adds%20another%20layer%20to%20Rastelli%E2%80%99s%20diagram%3A)) on one screen is a superpower and you won’t convince me otherwise.
+
+And one last thing. Tailwind’s limited set of utilities can be a pain in the… ask me what some other time. And here’s where Tailwind gets a tricky part of API design right. Tailwind has good escape hatches. It makes decisions for me and keeps me productive when it can, and gets out of my way when I need to do something else. Typically, our icons would be `14px` but sometimes, they actually *do* need to be `16px`, like those icons at the top of our new [Free Plan pricing page](https://www.mux.com/pricing/video). (See that, Matt? I *can* promote our product while writing about Tailwind.) In cases like that, I can use Tailwind’s square brackets to escape the config.
+
+```javascript
+// escaaaaape!
+<svg className="lg:w-[1rem] lg:h-[1rem]" />
+```
+
+These are just the things that have been true for *me* in the last few years. For the definitive post, I’d suggest Adam Wathan’s [original post](https://adamwathan.me/css-utility-classes-and-separation-of-concerns/) when he got Tailwind rolling over 7 years ago. It stands the test of time.
+
+## **Should I use Tailwind?**
+
+Every team has rules. It is a burden to enforce those rules through policy. A burden for devs reading the docs and a burden for reviewers reading the PRs. Instead of policy, *you should seek to enforce your rules through structure*. That way, anyone following the structure ends up doing the right thing by default. 
+
+In other words, this was a blog post about [Conway’s Law](https://en.wikipedia.org/wiki/Conway%27s_law), all along. Conway’s Law says that, whether you mean to or not, the systems we build tend to reflect how our teams are structured and how they communicate. And Conway’s right: when you structure your team’s work with Tailwind, you’ll see it reflected in whatever you’re building.
+
+And this is a good thing. Consider [Prettier](https://prettier.io/) and [ESLint](https://eslint.org/). Sometimes Prettier puts in weird line breaks, but darn it, that code looks good. Sometimes, ESLint makes you write a funny conditional, but at least everyone on your team understands what’s going on.
+
+The tricky part is finding a tool that reflects your rules. I believe Tailwind is popular because it strikes a great balance between defaults and configurability. In other words, the things that are baked in are probably things that most teams want (or can tolerate), and you can configure or escape the rest.
+
+Like I said, I’m not here to convince you that it’s perfect for you. It’s not perfect for us, either. But we’ve made the decision to onboard our developers into this tool. And in exchange, we get a set of rails that keeps us all efficiently sprinting in the same direction.
+
+You might not make the same decision. Maybe the cost of onboarding your developers or migrating is too high. Maybe there’s another tool that matches your rules better. But when you *do* make the decision, consider this: you can get used to a tool’s weird, abrasive syntax. You won’t get used to correcting yet another PR for not following your team’s rules.
