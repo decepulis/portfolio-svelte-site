@@ -28,7 +28,7 @@ export const fence: Schema = {
 		}
 	},
 	transform(node, config) {
-		const html = highlighter.codeToHtml(node.attributes.content, {
+		const html = highlighter.codeToHtml(node.attributes.content?.trim(), {
 			lang: node.attributes.language,
 			theme: 'github-light',
 			transformers: [
