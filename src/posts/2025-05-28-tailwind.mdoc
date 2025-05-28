@@ -7,6 +7,8 @@ previewImage: /src/posts/2025-05-28-tailwind/og.jpg
 previewImageAlt: A Tailwind-branded hand crushing a sheet of paper with "CSS" on it.
 ---
 
+![A Tailwind-branded hand crushing a sheet of paper with "CSS" on it.](/src/posts/2025-05-28-tailwind/og.jpg)
+
 I think there’s a reason that every Tailwind take is spicy. It’s that Tailwind is a tool with **strong opinions**. Some developers find these opinions unnecessary, or even abrasive. Others find themselves and their teams way more productive.
 
 After years of using it in production, I’m definitely in the “more productive” camp… but I get it. I get why it feels unnecessary if you’re comfortable with CSS. I get why Tailwind’s opinions come across as abrasive. And *I’m not here to change your mind*. But maybe I can offer you a fresh perspective. 
@@ -54,13 +56,12 @@ Ok. If I’m trying to convince you that Tailwind is good, even if it has shortc
 First, just *look* at it. Really give this code block a scroll:
 
 ```html
-
 ​​<div class="border-b border-gray-91 dark:border-gray-40 lg:border-b-0 relative lg:absolute after:content-blank after:absolute after:inset-0 after:bg-gradient-to-b after:from-white lg:after:[background:linear-gradient(to_right,theme(colors.white)_0%,theme(colors.white/0%)_20%),linear-gradient(to_top,theme(colors.white)_0%,theme(colors.white/0%)_30%),linear-gradient(to_left,theme(colors.white)_0%,theme(colors.white/0%)_30%)]" />
 ```
 
 This is *real* Tailwind I wrote once. Isn’t it *hideous*? I wouldn’t write that today, but Tailwind classes can still get enormous.
 
-Also, why do I have to learn all-new syntax for CSS I already know? Why do I have to know that it’s `items-center` when I already know `align-items: center`? (Legit, I still mix up the flex align and justify properties in Tailwind.) And my *team* has to learn it too? Now there’s a learning curve that everyone has to climb. And it’s steeper than other tools that just express their styles in basic CSS. Not to mention, there’s the sometimes-dramatic cost of migrating from one syntax to another. That’s a big deal.
+Also, why do I have to learn all-new syntax for CSS I already know? Why do I have to know that it’s `items-center` when I already know `align-items: center`? (Legit, I still mix up the flex align and justify properties in Tailwind.) And my *team* has to learn it too? Now there’s a learning curve that everyone has to climb. And it’s steeper than other tools that just express their styles in basic CSS. Not to mention, there’s the sometimes-dramatic cost of migrating from one syntax to another. That’s a {% footnote content="Tailwind is gaining such wide adoption that I migrated some CSS to Tailwind the other day with AI and it was perfect. Required literally no correction. I'm hopeful that our AI overlords are about to bring us a beautiful future of easy refactors 🤖🙇‍♂️" %}big{% /footnote %} deal.
 
 And finally, what a bummer it is to add another build tool. There’s no way to just toss up an directory with some files or a client-side codesandbox without building that CSS first. And how do I add Tailwind to my SvelteKit build pipeline, again?
 
@@ -70,7 +71,7 @@ These aren’t minor things, either. In particular, asking your team to climb a 
 
 ## **Why is Tailwind good?**
 
-To begin, it’s probably good for performance. With [utility classes](https://tailwindcss.com/docs/styling-with-utility-classes), your style sheet stops growing after some time since you’re reusing the same classes over and over instead of adding new stuff with every page. Utility classes also offer a way to have effectively-scoped CSS without a CSS-in-JS library slowing you down. Utility classes keep you from getting fancy with the [cascade](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Cascade) and [specificity](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity) and [layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) and such. A component with `font-bold text-sm text-blue` is always going to have bold, small, blue text.
+To begin, it’s probably good for performance. With [utility classes](https://tailwindcss.com/docs/styling-with-utility-classes), {% footnote content="Sure, your HTML file is bigger with all those classes, but that typically streams in progressively, anyways, right?" %}your style sheet stops growing after some time since you’re reusing the same classes over and over instead of adding new stuff with every page.{% /footnote %} Utility classes also offer a way to have effectively-scoped CSS without a CSS-in-JS library slowing you down. Utility classes keep you from getting fancy with the [cascade](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Cascade) and [specificity](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascade/Specificity) and [layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) and such. A component with `font-bold text-sm text-blue` is always going to have bold, small, blue text.
 
 Having a limited set of utilities makes our designers happy, too. They’ve spent literal years of their life trying to perfect the spacing and colors of [mux.com](http://mux.com). It’s nice that new devs can’t come in and start using `16px` where `14px` would be better.
 
