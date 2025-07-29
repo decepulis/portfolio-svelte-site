@@ -9,17 +9,20 @@
 
 {#snippet short()}
 	<P>
-		I make sure devs have a great experience developing with <A href="https://www.mux.com/">Mux</A>.
-		I think the web is pretty neat!
+		I make sure devs have a great experience with <A href="https://www.mux.com/">Mux</A>. I think
+		the web is pretty neat!
 	</P>
 {/snippet}
 {#snippet medium()}
 	<P>
-		I'm a Community Engineer at <A href="https://www.mux.com">Mux</A>, which means I work on making
-		a great developer experience with great
-		<A href="https://www.mux.com">code</A>, great
-		<A href="https://docs.mux.com">docs</A>, and great
-		<A href="https://www.mux.com/team/darius-cepulis">content</A>.
+		I'm a Senior Developer Experience Engineer at <A href="https://www.mux.com">Mux</A>, doing
+		anything I can do to design and develop a better experience for devs. A
+		<A href="https://www.mux.com">delightful marketing site</A>, a better
+		<A href="https://dashboard.mux.com">dashboard</A>, useful
+		<A href="https://docs.mux.com">docs</A>, handy
+		<A href="https://www.mux.com/blog/mux-player-iframe">components</A>, and
+		<A href="https://www.youtube.com/@MuxHQ">some</A>
+		<A href="https://www.mux.com/team/darius-cepulis">content</A> on the side.
 	</P>
 	<P>
 		Fun fact about me, I actually <i>like</i> writing CSS. Weird, huh?
@@ -40,13 +43,16 @@
 		will work for all the different kinds of people who will interact with it.
 	</P>
 	<P>
-		Lately, I've been realizing that the skills I learned in web development work in developer
-		experience and community engineering, too. Designing a user journey through
-		<A href="https://docs.mux.com/">docs</A> or a
-		<A href="https://www.mux.com/team/darius-cepulis">blog post</A>? It's a lot like designing a
-		user journey through a
-		<A href="https://www.mux.com/">website</A>. I'm proudly building these all of these at Mux as a
-		Senior Community Engineer.
+		Lately, I've been realizing that the design skills I learned making static web pages work across
+		all of developer experience. From a
+		<A href="https://www.mux.com">marketing site</A>, to a
+		<A href="https://dashboard.mux.com">dashboard</A>, to
+		<A href="https://docs.mux.com">docs</A>, to
+		<A href="https://www.mux.com/blog/mux-player-iframe">components</A>, to
+		<A href="https://www.youtube.com/@MuxHQ">some</A>
+		<A href="https://www.mux.com/team/darius-cepulis">content</A>&hellip; It's all just ways to
+		lower the bar for users trying to get stuff done. That's the kind of stuff I get to design and
+		develop as a Senior Developer Experience Engineer at Mux.
 	</P>
 {/snippet}
 
