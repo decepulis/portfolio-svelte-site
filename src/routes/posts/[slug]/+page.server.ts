@@ -9,7 +9,8 @@ import type { Metadata } from '$lib/types/metadata';
 import type { PageServerLoad } from './$types';
 
 const allEnhancedImages: { [key: string]: { default: Picture } } = import.meta.glob(
-	'/src/posts/**/*.{avif,gif,heif,jpeg,jpg,png,tiff,webp,svg}',
+	// '/src/posts/**/*.{avif,gif,heif,jpeg,jpg,png,tiff,webp,svg}',
+	'/src/posts/**/*.{avif,heif,jpeg,jpg,png,tiff,webp,svg}',
 	{
 		eager: true,
 		query: {
