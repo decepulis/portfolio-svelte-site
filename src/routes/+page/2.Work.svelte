@@ -61,16 +61,13 @@
 					{/if}
 					<div class="mt-auto">
 						{#if type === 'build'}
-							🔨
+							⚙️
 						{:else if type === 'post'}
 							📝
 						{:else if type === 'video'}
 							🎥
 						{:else if type === 'talk'}
 							🗣️
-						{/if}
-						{#if todo}
-							🚧
 						{/if}
 						{#if directUrl}
 							🔗

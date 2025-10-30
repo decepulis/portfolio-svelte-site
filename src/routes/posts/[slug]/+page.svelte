@@ -7,7 +7,18 @@
 
 	const { data }: { data: PageData } = $props();
 	const {
-		frontmatter: { slug, title, date, hasMonth, hasDay, pageUrl, githubUrl, documentUrl, todo },
+		frontmatter: {
+			slug,
+			title,
+			date,
+			hasMonth,
+			hasDay,
+			pageUrl,
+			githubUrl,
+			documentUrl,
+			todo,
+			previewText
+		},
 		enhancedImages,
 		content
 	} = $derived(data);
@@ -54,7 +65,10 @@
 	</header>
 	<div style:view-transition-name="content-{slug}" class="max-w-prose">
 		{#if todo}
-			<P><i>This post is under construction</i></P>
+			{#if previewText}
+				<P>{previewText}</P>
+			{/if}
+			<P><i>This post, like most posts on this site, is under construction</i></P>
 			<img src="/under-construction.gif" alt="Under construction" class="my-4" loading="lazy" />
 		{/if}
 		<MarkdocRenderer node={content} {enhancedImages} />
