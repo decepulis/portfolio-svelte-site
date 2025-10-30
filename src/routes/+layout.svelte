@@ -1,10 +1,13 @@
 <script lang="ts">
-	import './layout.css';
-	import Metadata from '$lib/components/Metadata.svelte';
 	import type { Snippet } from 'svelte';
-	import { onNavigate } from '$app/navigation';
-	import UIManager from '$lib/stores/UIManager.svelte';
+
 	import Favicons from '$lib/components/Favicons.svelte';
+	import Metadata from '$lib/components/Metadata.svelte';
+	import UIManager from '$lib/stores/UIManager.svelte';
+
+	import { onNavigate } from '$app/navigation';
+
+	import './layout.css';
 
 	type Props = {
 		children?: Snippet;

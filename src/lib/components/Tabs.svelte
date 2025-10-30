@@ -1,7 +1,8 @@
 <!-- https://www.w3.org/WAI/ARIA/apg/patterns/tabs/ -->
 <script lang="ts">
-	import ui from '$lib/stores/ui.svelte';
 	import type { Snippet } from 'svelte';
+
+	import ui from '$lib/stores/ui.svelte';
 
 	type Tab = {
 		id: string;

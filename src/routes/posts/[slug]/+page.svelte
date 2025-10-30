@@ -2,8 +2,11 @@
 	import A from '$lib/components/typography/A.svelte';
 	import P from '$lib/components/typography/P.svelte';
 	import MarkdocRenderer from '$lib/markdoc/MarkdocRenderer.svelte';
-	import type { PageData } from './$types';
+
 	import { afterNavigate } from '$app/navigation';
+	import { resolve } from '$app/paths';
+
+	import type { PageData } from './$types';
 
 	const { data }: { data: PageData } = $props();
 	const {
@@ -82,7 +85,7 @@
 				← <span class="group-hocus:decoration-wavy underline">back</span>
 			</button>
 		{:else}
-			<a class="text-link dark:text-link-dark group" href="/#work">
+			<a class="text-link dark:text-link-dark group" href={resolve('/#work', {})}>
 				← <span class="group-hocus:decoration-wavy underline">back</span>
 			</a>
 		{/if}

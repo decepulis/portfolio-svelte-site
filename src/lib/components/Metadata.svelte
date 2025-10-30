@@ -1,9 +1,12 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import type { Snippet } from 'svelte';
-	import type { Metadata } from '$lib/types/metadata';
+
+	import type { BlogPosting, Person, ProfilePage, WithContext } from 'schema-dts';
+
 	import baseUrl from '$lib/stores/baseUrl';
-	import type { WithContext, BlogPosting, ProfilePage, Person } from 'schema-dts';
+	import type { Metadata } from '$lib/types/metadata';
+
+	import { page } from '$app/state';
 
 	type Props = {
 		children?: Snippet;

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+
 	import Hero from './+page/0.Hero.svelte';
 	import About from './+page/1.About.svelte';
 	import Work from './+page/2.Work.svelte';

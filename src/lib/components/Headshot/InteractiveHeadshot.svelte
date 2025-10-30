@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { spring } from 'svelte/motion';
+
 	import throttle from 'just-throttle';
 
 	type Props = {

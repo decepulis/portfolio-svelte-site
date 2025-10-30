@@ -1,10 +1,10 @@
 <script lang="ts">
+	import Headshot from '$lib/components/Headshot/index.svelte';
+	import Tabs from '$lib/components/Tabs.svelte';
+	import A from '$lib/components/typography/A.svelte';
 	import H1 from '$lib/components/typography/H1.svelte';
 	import P from '$lib/components/typography/P.svelte';
-	import A from '$lib/components/typography/A.svelte';
-	import Tabs from '$lib/components/Tabs.svelte';
 	import Section from '$lib/components/typography/Section.svelte';
-	import Headshot from '$lib/components/Headshot/index.svelte';
 </script>
 
 {#snippet short()}

@@ -3,6 +3,8 @@
 	import Section from '$lib/components/typography/Section.svelte';
 	import type { Frontmatter } from '$lib/markdoc/types';
 
+	import { resolve } from '$app/paths';
+
 	type Post = {
 		frontmatter: Pick<
 			Frontmatter,
@@ -27,7 +29,7 @@
 	>
 		{#each postsReversed as post (post.frontmatter.slug)}
 			{@const {
-				frontmatter: { type, title, directUrl, todo, slug, priority, previewTitle, previewText }
+				frontmatter: { type, title, directUrl, slug, priority, previewTitle, previewText }
 			} = post}
 			<li
 				class="border-silver dark:border-gray -m-[0.5px] border"
@@ -35,8 +37,9 @@
 				class:row-span-2={priority && priority >= 3}
 				style:view-transition-name="container-{slug}"
 			>
+				<!-- eslint-disable svelte/no-navigation-without-resolve -->
 				<a
-					href={directUrl ?? `/posts/${slug}`}
+					href={directUrl ?? resolve(`/posts/[slug]`, { slug })}
 					class="hocus:bg-(--bg-hocus) flex h-full flex-col gap-4 p-6 md:gap-6"
 					style:--bg-hocus={type === 'build'
 						? 'var(--color-yellow)'
@@ -74,6 +77,7 @@
 						{/if}
 					</div>
 				</a>
+				<!-- eslint-enable svelte/no-navigation-without-resolve -->
 			</li>
 		{/each}
 		<li

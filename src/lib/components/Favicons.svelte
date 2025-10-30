@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ui from '$lib/stores/ui.svelte';
+
 	const theme = $derived(ui.theme);
 
 	const svg = $derived(theme === 'dark' ? 'dark.svg' : 'light.svg');
