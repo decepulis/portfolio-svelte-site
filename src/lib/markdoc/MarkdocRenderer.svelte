@@ -61,6 +61,7 @@
 {:else if node.name in components}
 	<!-- known component -->
 	{@const Component = components[node.name as keyof typeof components]}
+	<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
 	<Component {...node.attributes as any}>
 		<MarkdocRenderer node={node.children} {enhancedImages} />
 	</Component>
