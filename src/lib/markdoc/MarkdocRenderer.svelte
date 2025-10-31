@@ -15,6 +15,7 @@
 	import MarkdocRenderer from './MarkdocRenderer.svelte';
 	import Color from './components/Color.svelte';
 	import Fence from './components/Fence.svelte';
+	import Footnote from './components/Footnote.svelte';
 	import Grid from './components/Grid.svelte';
 	import Image from './components/Image.svelte';
 	import Video from './components/Video.svelte';
@@ -39,6 +40,7 @@
 		img: Image,
 		Grid,
 		Video,
+		Footnote,
 		Color,
 		Fence
 	};
@@ -59,7 +61,7 @@
 {:else if node.name in components}
 	<!-- known component -->
 	{@const Component = components[node.name as keyof typeof components]}
-	<Component {...(node.attributes as any)}>
+	<Component {...node.attributes as any}>
 		<MarkdocRenderer node={node.children} {enhancedImages} />
 	</Component>
 {:else}

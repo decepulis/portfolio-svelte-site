@@ -1,4 +1,4 @@
-import type { Schema } from '@markdoc/markdoc';
+import Markdoc, { type Schema } from '@markdoc/markdoc';
 
 export const grid: Schema = {
 	render: 'Grid',
@@ -54,3 +54,23 @@ export const video: Schema = {
 		}
 	}
 };
+
+export function getFootnote(): Schema {
+	let footnoteCount = 0;
+	return {
+		render: 'Footnote',
+		selfClosing: true,
+		attributes: {
+			content: {
+				type: String,
+				required: true
+			}
+		},
+		transform(node, config) {
+			const attributes = node.transformAttributes(config);
+			const children = node.transformChildren(config);
+			footnoteCount += 1;
+			return new Markdoc.Tag('Footnote', { ...attributes, index: footnoteCount }, children);
+		}
+	};
+}

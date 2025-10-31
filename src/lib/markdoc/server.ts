@@ -4,7 +4,7 @@ import path from 'node:path';
 import { parse } from 'yaml';
 
 import { fence, paragraph } from './nodes';
-import { color, grid, video } from './tags';
+import { color, getFootnote, grid, video } from './tags';
 import { type Frontmatter, frontmatter, isTag } from './types';
 
 function stripTags(content: RenderableTreeNode): RenderableTreeNode {
@@ -79,7 +79,8 @@ export async function getPost(slug: string) {
 		tags: {
 			grid,
 			color,
-			video
+			video,
+			footnote: getFootnote()
 		},
 		variables: {
 			frontmatter
