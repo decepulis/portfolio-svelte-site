@@ -9,7 +9,7 @@
 	let headshot: InteractiveHeadshot;
 </script>
 
-<div class="flex w-full max-w-64 flex-col">
+<div class="flex w-full max-w-65.5 flex-col">
 	<div class="relative">
 		<InteractiveHeadshot {shirtColor} bind:this={headshot} />
 		<enhanced:img

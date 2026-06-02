@@ -15,13 +15,15 @@
 {/snippet}
 {#snippet medium()}
 	<P>
-		I'm a Senior Developer Experience Engineer at <A href="https://www.mux.com">Mux</A>, doing
-		anything I can do to design and develop a better experience for devs. A
-		<A href="https://www.mux.com">delightful marketing site</A>, a better
+		I'm a Senior Developer Experience Engineer at <A href="https://www.mux.com">Mux</A>. Team lead,
+		actually!
+	</P>
+	<P>
+		In DevEx, we're doing anything we can to design and develop a better experience for devs. (Go
+		figure!) Handy <A href="https://videojs.org">components</A>, a delightful
+		<A href="https://www.mux.com">marketing site</A>, a better
 		<A href="https://dashboard.mux.com">dashboard</A>, useful
-		<A href="https://docs.mux.com">docs</A>, handy
-		<A href="https://www.mux.com/blog/mux-player-iframe">components</A>, and
-		<A href="https://www.youtube.com/@MuxHQ">some</A>
+		<A href="https://docs.mux.com">docs</A>, and some
 		<A href="https://www.mux.com/team/darius-cepulis">content</A> on the side.
 	</P>
 	<P>
@@ -44,15 +46,15 @@
 	</P>
 	<P>
 		Lately, I've been realizing that the design skills I learned making static web pages work across
-		all of developer experience. From a
-		<A href="https://www.mux.com">marketing site</A>, to a
-		<A href="https://dashboard.mux.com">dashboard</A>, to
-		<A href="https://docs.mux.com">docs</A>, to
-		<A href="https://www.mux.com/blog/mux-player-iframe">components</A>, to
-		<A href="https://www.youtube.com/@MuxHQ">some</A>
+		all of developer experience. From
+		<A href="https://videojs.org">components</A>, to a
+		<A href="https://www.mux.com">marketing site</A>, a
+		<A href="https://dashboard.mux.com">dashboard</A>,
+		<A href="https://docs.mux.com">docs</A>, even some
 		<A href="https://www.mux.com/team/darius-cepulis">content</A>&hellip; It's all just ways to
 		lower the bar for users trying to get stuff done. That's the kind of stuff I get to design and
-		develop as a Senior Developer Experience Engineer at Mux.
+		develop as a Senior Developer Experience Engineer at Mux. And as a team lead, I'm helping other
+		folks do that, too.
 	</P>
 {/snippet}
 
