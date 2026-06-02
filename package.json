@@ -9,7 +9,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write . && eslint . --fix",
+		"format": "prettier --write . && node ./scripts/format-mdoc.mjs && eslint . --fix",
 		"prepare": "simple-git-hooks"
 	},
 	"devDependencies": {
@@ -67,8 +67,11 @@
 			"eslint --fix",
 			"prettier --write"
 		],
-		"*.{json,css,mdoc}": [
+		"*.{json,css}": [
 			"prettier --write"
+		],
+		"*.mdoc": [
+			"node ./scripts/format-mdoc.mjs"
 		]
 	},
 	"simple-git-hooks": {

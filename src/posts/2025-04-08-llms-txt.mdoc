@@ -6,7 +6,7 @@ previewText: Is it hype-driven development? Or is there actually something to th
 todoBackupOgImage: true
 ---
 
-You might dream of making a product that’s *so intuitive*, your users don’t even have to think. It Just Works™. But when “Just Works” fails, your users turn to the instruction manual. *Here be dragons*. The more time your users spend in your instruction manual, the less time they spend with your product and the more frustrated they get. 
+You might dream of making a product that’s *so intuitive*, your users don’t even have to think. It Just Works™. But when “Just Works” fails, your users turn to the instruction manual. *Here be dragons*. The more time your users spend in your instruction manual, the less time they spend with your product and the more frustrated they get.
 
 For developer tools, that instruction manual is the docs. And nobody wants to spend their one wild and precious life reading docs. So how do you get your users in and out of your docs quickly? As we’ve written before, it all comes down to [good content](https://www.mux.com/blog/building-better-docs) and [good usability](https://www.mux.com/blog/the-building-blocks-of-great-docs). And we’re trying something new in usability: [mux.com/llms.txt](https://www.mux.com/llms.txt).
 
@@ -16,12 +16,15 @@ llms.txt is a [proposed standard](https://llmstxt.org/) for [LLMs](https://en.wi
 
 To some of you, this might feel a bit familiar... A directory of pages that a robot can read? Couldn’t we just use [sitemap.xml](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap#xml)? Well, not really. sitemap.xml still links to pages meant for humans. Pages full of extra divs and classes and navigation to make the page look and work better. To an LLM, though, this is all just wasted tokens. An LLM doesn’t care about your HTML, just the raw content within. So llms.txt points to pages that are reduced to just the basics.
 
-{% video playbackId="r57PvWbTLoIBmd026A73i00rYWw2unGudjd00KvsB7W4rk" caption="For now, you need to add these docs to Cursor or Claude manually" width=1424 height=838 /%}
-
+{% video
+   playbackId="r57PvWbTLoIBmd026A73i00rYWw2unGudjd00KvsB7W4rk"
+   caption="For now, you need to add these docs to Cursor or Claude manually"
+   width=1424
+   height=838 /%}
 
 ## **Why would you create an llms.txt?**
 
-Honestly, that’s a good question. Is this worth the effort? 
+Honestly, that’s a good question. Is this worth the effort?
 
 If you were to hop on every spicy trend hitting web dev, you’d never get anything done. (“Hype-driven development”, anyone?) But I think even the most skeptical among us are starting to see by now that LLMs are *powerful*. The ability to just “talk” with docs is the best usability one could ask for: no finding things in the sidebar, no phrasing things to get the right result in search. It can be like having your own personal expert pair programming with you.
 

@@ -10,7 +10,13 @@ previewImageAlt: The Sanibit web app showing some pretty gnarly queries
 
 Turns out that healthcare providers need some help with their hand hygiene to reduce hospital-acquired infections. That's where Sanibit came in. Each healthcare provider would wear a wristband, created by our awesome hardware team, that kept track of their hand hygiene whenever they enter or exit a room. Then, those providers and their supervisors could check in on their performance using the Sanibit web app. (That's where I came in.)
 
-{% video playbackId="6LFQh005S8VQgZ1C8oJMpxaKGGq1eolVbl025GBCCbX02Q" title="The Sanibit web app showing some pretty gnarly queries" width=1080 height=778 muted="true" loop="true" /%}
+{% video
+   playbackId="6LFQh005S8VQgZ1C8oJMpxaKGGq1eolVbl025GBCCbX02Q"
+   title="The Sanibit web app showing some pretty gnarly queries"
+   width=1080
+   height=778
+   muted="true"
+   loop="true" /%}
 
 The Sanibit web app was a React [SPA](https://developer.mozilla.org/en-US/docs/Glossary/SPA) [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) (create-react-app) that used vanilla state management (hooks and context), [Recharts](https://recharts.org/en-US/), [React Router](https://reactrouter.com/en/main), [Styled Components](https://styled-components.com/), and [Axios](https://axios-http.com/). You know, the usual suspects for 2019. I inhereted a modest Django-driven jQuery app and wrote and learned new tech and rewrote as the project's demands grew. ([The Django API stuck around](/posts/2019-sanibit-server) even after the React rewrite.) By the end, the app had all sorts of features. Simple charts for individual healthcare providers, advanced ICU-wide and hospital-wide charts and maps for supervisors, settings, websocket-driven configuration for wristbands, and I don't even remember what else.
 
