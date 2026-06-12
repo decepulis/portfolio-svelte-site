@@ -24,7 +24,7 @@ export const load = (async () => {
 		metadata: {
 			pathname: `/`,
 			fullTitle: 'Darius Cepulis',
-			description: 'I make great web experiences',
+			description: 'I try and make the web nicer to use',
 			profile: true
 		} satisfies Metadata
 	};
