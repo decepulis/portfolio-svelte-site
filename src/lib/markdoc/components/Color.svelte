@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Tag } from '@markdoc/markdoc';
-	import '@mux/mux-player';
 
 	const { color, children }: Tag['attributes'] = $props();
 </script>
