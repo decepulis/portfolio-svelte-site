@@ -8,14 +8,16 @@
 	// one. A source object has no attribute form, so markup gets the URL.
 	const src = $derived(`https://stream.mux.com/${playbackId}.m3u8?max_resolution=1080p`);
 	// Posters come from Mux's thumbnail endpoint, where ?time= picks the frame. MuxVideo
-	// derives this same URL and reports it, and a skin picks it up as of beta.30 — at which
-	// point this <img> can go, in exchange for poster params on the source object.
+	// derives this same URL and reports it, but no packaged skin reads that, so supplying
+	// the poster is ours to do.
 	const poster = $derived(`https://image.mux.com/${playbackId}/thumbnail.webp?time=0`);
 
 	$effect(() => {
-		// These modules touch HTMLElement as they register their custom elements, so they
-		// can't be imported during prerender. The markup below renders as inert unknown
-		// elements until they land, then upgrades in place.
+		// The player and skin touch HTMLElement as they register their custom elements, so
+		// they can't be imported during prerender. The Mux media could be, but the hls.js
+		// it carries is ~640kB of the ~920kB total, so it stays out of the page bundle as
+		// well. The markup below renders as inert unknown elements until these land, then
+		// upgrades in place.
 		void Promise.all([
 			import('@videojs/html/video/player'),
 			import('@videojs/html/video/minimal-skin'),
