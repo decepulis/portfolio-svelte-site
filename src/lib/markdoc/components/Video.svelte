@@ -7,11 +7,6 @@
 	// MuxVideo takes either a structured source object or a stream URL it parses back into
 	// one. A source object has no attribute form, so markup gets the URL.
 	const src = $derived(`https://stream.mux.com/${playbackId}.m3u8?max_resolution=1080p`);
-	// Posters come from Mux's thumbnail endpoint, where ?time= picks the frame. MuxVideo
-	// derives this same URL and reports it, but no packaged skin reads that, so supplying
-	// the poster is ours to do.
-	const poster = $derived(`https://image.mux.com/${playbackId}/thumbnail.webp?time=0`);
-
 	$effect(() => {
 		// The player and skin touch HTMLElement as they register their custom elements, so
 		// they can't be imported during prerender. The Mux media could be, but the hls.js
@@ -34,8 +29,7 @@
 				style:--media-accent-color="var(--color-blue)"
 				style:--media-border-radius="0"
 			>
-				<mux-video {src} playsinline crossorigin="anonymous" {...rest}></mux-video>
-				<img slot="poster" src={poster} alt="" />
+				<mux-video {src} poster-time="0" playsinline crossorigin="anonymous" {...rest}></mux-video>
 			</video-minimal-skin>
 		</video-player>
 	</div>
