@@ -1,8 +1,266 @@
 ---
 title: React 19 lets you write impossible components
 directUrl: https://www.mux.com/blog/react-19-server-components-and-actions
-todoBackup: true
 type: post
 previewText: An adaptation of my React Miami talk
+previewImage: /src/posts/2024-05-24-react-19/og.png
+previewImageAlt: "An illustration of server and client components connected inside a shared boundary."
 ---
 
+![An illustration of server and client components connected inside a shared boundary.](/src/posts/2024-05-24-react-19/og.png)
+
+React 19 is here. And with it? Complex and flexible new features. Incredible optimizations. And a whole new way of thinking about your app.
+
+But when building a marketing site, are React 19’s features over-engineered? Or is it all worth the effort?
+
+For the last 18 months, these features have slowly been rolling out in [React Canary](https://react.dev/blog/2023/05/03/react-canaries) and the [Next.js App Router](https://nextjs.org/docs/app). And, for the last 18 months, we’ve been using them in our docs and our marketing site. So our team’s got some opinions.
+
+Let’s talk about React 19’s new features, and how they make the future of React development bright, even if you’re just writing a marketing site.
+
+## Server Components
+
+So I mentioned “a whole new way of thinking about your app”. The biggest part of that new paradigm is Server Components. You might’ve heard of them – they’ve been an absolute earthquake in the React community. If you’re familiar, skip to this next subheader. Otherwise, here’s a quick refresher:
+
+### What are Server Components? (The fast version)
+
+Back in the day, when we wrote React, we would ship that React code to the client, and that code would make HTML (again, on the client). Now, we have two types of components. Client components work the way React used to — on the client. And new Server Components run on the server and spit out HTML on the server{% footnote content="Let’s gloss over server-side rendering and static site generation, which do some work on the server, but still ship all that code to the client for hydration, and require you to learn framework-specific methods. Let's also gloss over the fact that client components still get SSR'd and hydrated in some frameworks like Next.js." /%}. In other words, **we can choose which of our code runs on the client and which of our code can stay on the server**. Usually, stuff that needs to be interactive (i.e., respond to user input and change over time) gets shipped to the client. Usually, stuff that can run once and never have to run again, like an <h1> or a <p>, stays on the server.
+
+![Four boxes representing four React components. Two of them are green (representing client components): InteractiveSidebar and VideoPlayer. Two are blue (representing Server Components): VideoTitle and VideoDescription](/src/posts/2024-05-24-react-19/af6101cf10383d93472f29c7a8137195d2966033-1456x880.png "Interactive components (green) get sent to the client, while static components (blue) stay behind on the server.")
+
+Server Components can do more than just let you pick where your code runs. **Server Components also let you fetch data directly within your component**. Previously, you’d have to run framework-specific functions like [getServerSideProps](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-server-side-props) or build some sort of framework [GraphQL data layer](https://www.gatsbyjs.com/docs/graphql/). Now? Nice and simple. Does your comment component need to talk to your comment database? Put your comment database code right there, in your comment component.
+
+There’s one more magic trick you can pull with Server Component data fetching. Let’s say your comment database is really slow. Previously, your whole page would have to wait for that database call to complete. Now, if you wrap your comment component in Suspense, it’ll **stream to your client when it’s ready**. In other words, your user can begin reading your page immediately, and when your comment database finally does its thing, that comment component can pop in later.
+
+![A blue component (labeled SlowComponent) pops in after loading for a short time](/src/posts/2024-05-24-react-19/31da28394f5e11b355337c48f4de8f27a9eca962-1456x880.gif "This Server Component is directly fetching its own data and streaming in when it’s ready.")
+
+### Living with Server Components after the honeymoon
+
+Server Components leave an incredible first impression. When we first implemented them, [we immediately shaved off 20%-90% of our pages’ bundle sizes.](https://www.mux.com/blog/the-building-blocks-of-great-docs#you-too-can-have-numbers-like-this) That’s _wild_. But it makes sense — our marketing site and documentation site are largely static content, like paragraph tags and headers and highlighted code blocks and a markdown loader. These components don’t need to respond to user interaction. That means they can stay on the server. This alone makes Server Components worth considering for marketing websites.
+
+That being said, Server Components also demand that you climb a steep learning curve. After the honeymoon, the reality is that it’s hard to keep everything in your head at once. It’s hard to avoid the footguns of mixing Client and Server Components. The learning curve is so steep that I had to write a [4,000-word blog post](https://www.mux.com/blog/what-are-react-server-components) just to get it all straight in my head. You should check out that post if you’re climbing the curve too.
+
+Since we’ve already climbed the curve, though, I want to focus on what Server Components do for us _now_. How have Server Components changed how we write our websites?
+
+### The future of Server Components is bright
+
+Now that we’ve migrated our marketing and documentation websites to Server Components, we can write impossible new components.
+
+Pretty early on, we took advantage of Server Components’ new data-fetching superpowers. For example: our whole docs page would have to wait for the changelog sidebar to get its data from our database, even though that sidebar usually begins off-screen.
+
+```jsx
+export default async function Page() {
+  const changelogData = await getChangelogData()
+
+  /* all of this has to wait for changelogData to load */
+  return (
+    <Layout>
+      <Sidebar>
+        {/* other sidebar stuff */}
+        <Changelog data={changelogData} />
+      </Sidebar>
+      {/* other page stuff */}
+    </Layout>
+  )
+}
+```
+
+Now, instead of making the whole page wait for the changelog data fetching, we moved that fetching into the component and wrapped that component in Suspense.
+
+```jsx
+import { Suspense } from 'react';
+
+/* We've moved data fetching into the changlog compoment */
+async function ChangelogWithDataFetching() {
+  const changelogData = await getChangelogData()
+  return <Changelog data={changelogData} />
+}
+
+/*
+  ...and wrapped that component in Suspense.
+  The user can see the page immediately, while the changelog component loads
+*/
+export default function Page() {
+  return (
+    <Layout>
+      <Sidebar>
+        {/* other sidebar stuff */}
+        <Suspense fallback={<ChangelogPlaceholder />}>
+          <ChangelogWithDataFetching />
+        </Suspense>
+      </Sidebar>
+      {/* other page stuff */}
+    </Layout>
+  )
+}
+```
+
+This optimization was just the start of our Server Component journey. As we kept building, we realized that there were components, like our Pricing component on our marketing pages, that required their own document in the database. Before, if we added the pricing component to the page, we’d also have to add the pricing component’s document retrieval to the page or to an API endpoint, somewhere else. Now, since the pricing component fetches its own data, we can just plop in the component and move along. **Server-side data fetching used to be separate from components; now it’s in the same place**.
+
+For some, it’s controversial that React encourages us to put our logic, our markup, and our styling all in the same file. For some, that single-file approach violates the “[separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns)” principle so many of us in programming hold dear. However, as [Cristiano Rastelli](http://www.didoo.net/) argues [with their iconic diagram](http://www.didoo.net/2017/10/let-there-be-peace-on-css/), React components are still “separating concerns”, but by _context_, not by _technology_. React components are at their best when they let you see everything about them in one place. Adding server-side data to our components extends this, and adds another layer to Rastelli’s diagram:
+
+![Two diagrams, side-by-side. The first is labeled "Separation of concerns". It shows four bars, stacked in four rows: Data, JS, CSS, and HTML. The next diagram is labeled "Separation of concerns, only, from a different point of view". It features more bars stacked in columns instead of rows. The bars are labeled by component: Button, Date Picker, Modal, and more. While the bars in the first diagram were four different solid colors, each of the bars in the second diagram is a gradient of all four colors, implying that each component spans the four concerns described in the first diagram.](/src/posts/2024-05-24-react-19/68e2c669cba74322901f3b51d417f6ecaaaae099-1456x960.png "Cristiano Rastelli’s iconic “separation of concerns” diagram extends naturally with React Server Components and server-side data.")
+
+Once that way of thinking became ingrained, we started thinking of components we would never have written before. Take, for example, our new VideoGlossaryHoverCard component. We frequently have to talk about video terms that no normal person should have to know off the top of their head, like [HDCP](https://www.mux.com/video-glossary/hdcp) and [LL-HLS](https://www.mux.com/video-glossary/ll-hls-low-latency-http-live-streaming). We wanted to add definitions to those terms when you hover over them. Here’s what the finished component looks like:
+
+![A cursor hovers over the term "QoE". Beneath that term hovers a card with a definition.](/src/posts/2024-05-24-react-19/b7fd8932466cdea2c5d524cd0a7a57a336709c26-1536x530.png "We wanted to add a component that would show video glossary terms when you hovered over them. Server Components made this easy")
+
+And here’s what it looks like under the hood. First, I wrote a VideoGlossaryHoverCard Server Component: given a glossary link, query the database for that glossary term and display it in a [hover card](https://www.radix-ui.com/primitives/docs/components/hover-card). (Isn’t it sweet that we can do all that in one place?). Next, I added a conditional to our Link component: if you detect a video glossary link, show the video glossary hover card. (And the hover card is wrapped in Suspense to make sure this component doesn’t slow the main experience down.)
+
+```jsx
+import 'server-only';
+import { Suspense } from 'react';
+import NextLink from 'next/link';
+import VideoGlossaryHoverCard from './VideoGlossaryHoverCard';
+
+export default function Link({ href, ...rest }) {
+  const linkComponent = <BaseNextLink href={href} {...rest} ref={ref} />;
+
+  if (href?.includes('/video-glossary/')) {
+    return (
+      <Suspense fallback={linkComponent}>
+        <VideoGlossaryHoverCard href={href}>{linkComponent}</VideoGlossaryHoverCard>
+      </Suspense>
+    );
+  }
+
+  return linkComponent;
+}
+```
+
+Let me underline why this component would’ve been a catastrophic pain before. If we wanted to perform this work on the client, we would’ve had to write a whole [API endpoint](https://nextjs.org/docs/app/building-your-application/routing/route-handlers) and then query that endpoint in a useEffect in VideoGlossaryHoverCard and do all the boilerplate involved with that. Something we’ve all done and we’re all sick of. Or, imagine doing this work on the server at the _page_ level! We’d have to go through our markup and detect every single video glossary term on the page, and then write a query against our database for all those terms, and then [prop-drill](https://react.dev/learn/passing-data-deeply-with-context#the-problem-with-passing-props) those terms down to the link… and… ugh. No.
+
+One simple const glossaryTerm = await getGlossaryTerm(href). One simple component. All with minimal boilerplate, all in one place. I love it. Once you start thinking in Server Components, you can never go back.
+
+## Actions
+
+In short, if you call an async function in a special way{% footnote content="The technical way to say “in a special way” would be “if you call an async function as a transition.” In React, one way to call transitions is using the useTransition hook. Another way is with React's new Server Actions functionality, which we'll discuss in about two paragraphs, so stay tuned." /%}, you’ll get three things for free. First (and most importantly) you get access to an isPending state. No more managing setIsPending yourself. Second, Actions are hooked into React’s native [Error Boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) feature. This means that when things go wrong, you can easily show an error state to your user. And finally, Actions work with a new hook called [useOptimistic](https://react.dev/blog/2024/04/25/react-19#new-hook-optimistic-updates) which lets you show your user the result of the action before it completes. For example, if you click a 🩷 button, you can show a cute 💖 animation _before_ the API has responded successfully.
+
+So much boilerplate melts away when React handles this all for you. If you want to see, check out React’s great examples [on their blog](https://react.dev/blog/2024/04/25/react-19#actions). But Actions are just the tip of the boilerplate-melting iceberg. What we find _really_ changes things for marketing sites are _Server_ Actions.
+
+### **Bringing it all together with Server Actions**
+
+Server Actions add one last layer of cake to the boilerplate-melting iceberg. (I acknowledge: these analogies are out of control.) Server Actions melt the boilerplate of writing [API endpoints](https://nextjs.org/docs/app/building-your-application/routing/route-handlers), too.
+
+Let’s imagine you want to build a little “[contact support](https://www.mux.com/support)” box on your website. Well, now you’ve got to write an endpoint to handle comments on the backend. And then you need to write a little form for your website with a textarea; when that form submits, you’ll need to POST that data to your new endpoint and manage all that pending and optimistic UI and error handling.
+
+But wait! Actions manage pending and optimistic UI and error handling… which leaves just that annoying API endpoint. This is where Server Actions come in. Instead of writing an API endpoint, you write a Server Action. And then, instead of interacting with that API endpoint by POSTing with fetch, you just call your Server Action like a function.
+
+Let’s take a look at an example of a Server Action in action. By putting "use server" at the top of a file, you’re telling your bundler “Hey, turn this into a Server Action. Turn this into an endpoint to which my client can POST.”
+
+```javascript
+"use server"
+// the "use server" directive tells React to make this its own bundle
+// that can be called as a Server Action.
+// under the hood, React turns this into its own API endpoint for you.
+
+export async function saveContactFormAction(formData) {
+  const name = formData.get('name')
+  const text = formData.get('text')
+
+  try {
+    await saveToDatabase(name, text)
+    return { message: 'Text saved successfully' }
+  } catch (error) {
+    return { message: error.message }
+  }
+}
+```
+
+That’s not too dissimilar from an API endpoint… but once we get to the front end, that’s where magic begins. We can just import that Server Action and pass it to a form’s [action](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#action) prop. And then, to get that easy isPending state I mentioned, we tap into React’s new [useActionState](https://react.dev/blog/2024/04/25/react-19#new-hook-useactionstate) hook.
+
+```jsx
+"use client"
+
+import { useActionState } from "react"
+import saveContactFormAction from "./actions"
+
+const initialState = { message: '' }
+
+export default function ContactForm() {
+  const [response, formAction, isPending] = useActionState(saveContactForm)
+
+  return (
+    <form action={formAction}>
+      <label>Name: <input type="text" name="name" required /></label>
+      <label>Text: <textarea name="text" required /></label>
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Submitting..." : "Submit"}
+      </button>
+      <p aria-live="polite">{response?.message}</p>
+    </form>
+}
+```
+
+No setIsLoading. No fetch('/api/contact', { method: 'POST' }). Just calling a function and getting everything else for free. This is just a simple example; for so much more, definitely check out this [Next.js doc](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
+
+### The future of Server Actions seems bright
+
+We’ve been working with Server Components a lot longer than Server Actions. Over a year into Server Components, we started seeing cool new patterns like that video glossary hover box that we talked about earlier. I think we’re starting to see that happen for Server Actions as well.
+
+In the example above, we respond to the action with an object that contains a success and message. You know what else is an object, though? Server Components are just objects. What if we responded to our Server Action with a Server Component? For example, here’s a cool pagination feature we added to our changelog last week:
+
+{% video
+   playbackId="tOWLqq849rOBUzWqX3wHLIa026bZEOujJX4U00oIKbeYg"
+   title="This new pagination function on our changelog was extremely easy to write with Server Actions"
+   width=1263
+   height=1000
+   caption="This new pagination function on our changelog was extremely easy to write with Server Actions"
+   muted=true /%}
+
+And here’s the outrageously simple action behind that:
+
+```jsx
+'use server'
+
+import { getPosts } from './data'
+import Posts from './posts'
+
+export async function getPostPageAction(formData) {
+  const page = formData.get('page')
+  const posts = await getPosts(page)
+  return <Posts posts={posts} />
+}
+```
+
+We then added a button to the bottom of our changelog. When the action responds, the button is replaced with new posts from the Server Action:
+
+```jsx
+'use client';
+
+import { useActionState } from 'react';
+import Button from 'components/button';
+import { getPostPageAction } from './actions';
+
+const defaultComponent = null;
+
+export default function LoadPostPageButton({ page }) {
+  const [component, formAction, isPending] = useActionState(getPostPageAction, defaultComponent);
+
+  return component || (
+    <form action={formAction}>
+      <input type="hidden" name="page" value={page} />
+      <Button cta disabled={isPending} type="submit">
+        {isPending ? 'Loading...' : 'Load more'}
+      </Button>
+    </form>
+  );
+}
+```
+
+And that’s how easy it was to write this pagination interaction. No client-side data management. Barely any code shipped to the client. No API endpoint. No pending state management. Just a great new user experience.
+
+## The Future of React is bright
+
+There’s so much more coming to React 19 that’s going to improve our lives as web developers. React is adding component-level support for [document metadata](https://react.dev/blog/2024/04/25/react-19#support-for-metadata-tags), [stylesheets](https://react.dev/blog/2024/04/25/react-19#support-for-stylesheets), [async script tags](https://react.dev/blog/2024/04/25/react-19#support-for-async-scripts), and [preloading](https://react.dev/blog/2024/04/25/react-19#support-for-preloading-resources) other resources. Earlier, we talked about how React is at its best when it lets you view everything about a component in the same place. These new features let you collocate even more relevant functionality for your component.
+
+There’s some higher-level features I’m really excited about, too! [Fewer and better hydration errors](https://react.dev/blog/2024/04/25/react-19#diffs-for-hydration-errors), a nicer developer experience for [Context](https://react.dev/blog/2024/04/25/react-19#context-as-a-provider) and [forwarding refs](https://react.dev/blog/2024/04/25/react-19#ref-as-a-prop), and don’t even get me started on first-class [web component support](https://react.dev/blog/2024/04/25/react-19#support-for-custom-elements) – we’re so jazzed, [Dylan wrote a whole blog post about it](https://www.mux.com/blog/facebook-just-updated-it-s-relationship-status-with-web-components).
+
+I could go on, but, oh, look at the word count. Maybe it’s time to start wrapping up instead.
+
+There’s a concept in technology market research called the [Gartner hype cycle](https://en.wikipedia.org/wiki/Gartner_hype_cycle). It shows how a new technology entering a market explodes as we try to apply it to every problem under the sun. Then, as we grow more familiar with that technology, first we’re disappointed that it couldn’t solve all of the world’s problems. Then, as the technology becomes an old friend, we start seeing the technology for what it is: a really good tool for a specific set of problems.
+
+![A chart. On the Y axis, "visibility". On the X axis, "time". The curve on the chart has labels at key events. The curve begins in the lower left with the "technology trigger". It then soars upward with the "peak of inflated expectations". It then crashes downward in the "trough of disillusionment". Finally, it climbs back to a middle ground with the "slope of enlightenment", before leveling off on the "plateau of productivity"](/src/posts/2024-05-24-react-19/b9b1aae22ce5cd896edd6100e1c6edf4cea8b340-1000x651.png "By Jeremykemp at English Wikipedia, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=10547051")
+
+Especially with Server Components, the honeymoon was so bright, with its smaller bundles and fashionable new data loading. Then, we sloshed through the trough of disillusionment as we realized that the developer experience of Server Components is challenging.
+
+Now, though? We’re learning how to think about and how to teach these new concepts. And we’re seeing their true potential. So much of our time as web developers is just spent sending data to the client, and sending data from the client back to the server. So much of our job is boilerplate surrounding these two tasks. React 19 sees this, and melts the boilerplate. React 19 is a great tool that makes communicating between the server and the client easier, so we can be more productive.

@@ -18,6 +18,7 @@
 	import Footnote from './components/Footnote.svelte';
 	import Grid from './components/Grid.svelte';
 	import Image from './components/Image.svelte';
+	import Table from './components/Table.svelte';
 	import Video from './components/Video.svelte';
 	import { isTag } from './types';
 
@@ -38,6 +39,7 @@
 		ul: UL,
 		ol: OL,
 		img: Image,
+		table: Table,
 		Grid,
 		Video,
 		Footnote,

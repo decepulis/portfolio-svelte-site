@@ -1,8 +1,262 @@
 ---
 title: Can React Server Actions finally fix forms?
 directUrl: https://www.mux.com/blog/what-are-react-server-actions
-todoBackup: true
 previewText: An early look at React Server Actions
 type: post
+previewImage: /src/posts/2023-08-10-rsa/og.png
+previewImageAlt: "An illustrated client and server connected by a form action."
 ---
 
+![An illustrated client and server connected by a form action.](/src/posts/2023-08-10-rsa/og.png)
+
+Interacting with the server used to be painful in React. I spent _years_ writing APIs in my server-side language, and then fetching those APIs with axios in a componentDidMount or useEffect. I could write that boilerplate in my sleep. Then, Gatsby and Next.js told me that I could hit my back-end _in the same language_ and _in the same place_ that I was using to write my front-end code. Reader, let me tell you, I just about cried from happiness. And now, we have React Server Components that make getting data so nice, [I wrote more than 4000 words on it](https://www.mux.com/blog/what-are-react-server-components).
+
+I thought I would never have to write an API again.
+
+And then I added a form to my app.
+
+That form launched me back into the dark ages of 2015. Once again, writing a separate API. Once again, calling that API from my front end with all sorts of boilerplate.
+
+React Server Actions, [now available as an alpha in Next.js 13.4](https://nextjs.org/blog/next-13-4#server-actions-alpha), promise to fix this by offering a React-official way of simplifying _posting_ data, just like React Server Components simplified _getting_ data. Posting to the server should be as easy as calling a function. But do React Server Actions live up to the promise? Let’s find out by building an app that lets users upload videos to Mux.
+
+## **What we’re building**
+
+Our app is going to look something like this: A form where users can enter a video title, an uploader where they can upload their video to Mux, and a submit button.
+
+Uploading a video to Mux from a web app isn’t too bad. I encourage you to read our [great guide on it](https://docs.mux.com/guides/video/mux-uploader). For the impatient, here’s a summary. Starting with some Mux terminology:
+
+1. **Direct Upload**. Direct Uploads allow your user to upload to your Mux account directly, so you don’t have to deal with their file. Direct Uploads include an Upload ID and a signed URL to which your user posts their video.
+1. **Asset ID**. Asset IDs are what you store on your server at the end, so you can retrieve/update/delete your videos. Once your direct upload is finished, you can exchange your Direct Upload ID for an Asset ID.
+
+Here’s how we’ll get those from Mux, and how the client will use them in this app.
+
+![A diagram showing the interaction between client and server, as described in the next section](/src/posts/2023-08-10-rsa/35985c9c26226e4cbe903a21d895750a365e658c-1456x890.png)
+
+1. Your server creates a Direct Upload with Mux. You send it to the client.
+1. The user uploads the video from the client using that URL.
+1. The user sends the video title and Upload ID to your server.
+1. You exchange the Upload ID for an Asset ID with Mux. You save the Asset ID alongside the video title.
+1. You show the user whether the interaction succeeded or failed.
+
+In ye olden days, this would take a client-side GET API request for that Direct Upload and a client-side POST to an API for that form submission. React Server Components have made the GET as easy as calling a function that gets that Direct Upload. And maybe, React Server Actions can simplify that POST…
+
+## **What are React Server Actions?**
+
+As we’ve been hinting, **React Server Actions are functions that we can call on the client that do something on the server.** Now, instead of writing an API, you can just import a Server Action. Check out how nice a form submission with a Server Action looks.
+
+```jsx
+"use client"
+
+import { saveTitle } from './actions'
+
+export default function Form() {
+  return (
+    <form action={saveTitle}>
+      <label>
+        Title
+        <input type="text" name="title" id="title" />
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  )
+}
+```
+
+```javascript
+"use server"
+
+import { redirect } from "next/navigation";
+
+export async function saveTitle(formData) {
+  const title = formData.get("title");
+
+  await writeToDatabaseOrSomething(title);
+  redirect('/success');
+}
+```
+
+Notice that our form has ”use client” at the top. For the unfamiliar, this is what tells React Server Components to ship a component to the client. Also notice that our Server Action has ”use server” up top. This is React Server Action’s new directive that says “you can call this function on the client, but it’s going to run on the server.” Any function declared in a file that opens with ”use server” becomes a Server Action.
+
+Also notice that we called our Server Action in a [form’s action prop](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attributes_for_form_submission). This isn’t the only way to call Server Actions, but it’s the one we’re focusing on today. If you want to call Server Actions elsewhere in your app, check out those [Next.js docs](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions#invocation).
+
+There’s one last bonus I want to mention before we move on: Server Actions make forms work better without JavaScript. In our example, we imported a Server Action into a **Client Component**. If a user were to try submitting that form before the JavaScript is loaded, React would queue that submission and prioritize the hydration of the form to make sure it can get out the door ASAP. It gets even cooler if we import a Server Action in a **Server Component** instead. In Server Components, that form would still work even if JavaScript never loads, by relying on HTML forms’ native functionality. Love it.
+
+## **Uploading a video to Mux with React Server Actions**
+
+If you’re following along, you’ll want to [create a Next App with App Router](https://nextjs.org/docs/getting-started/installation) and [create a Mux account](https://dashboard.mux.com/signup) (don’t worry, you can start building for free). Don’t forget to [enable Server Actions in Next.js](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions#convention) by adding experimental: { serverActions: true } to your next.config.js.
+
+Oh, and if you get stuck, we have a [GitHub repository with the finished app](https://github.com/decepulis/mux-uploader-server-actions). Copypasta away!
+
+### **Fetching our Direct Upload from the server**
+
+When the user navigates to our app, they expect to be able to upload a video right away. So let’s [get a Direct Upload from Mux](https://docs.mux.com/api-reference#video/tag/direct-uploads) and create a page that includes it. For this step, you’ll need to [add @mux/node to your project](https://www.mux.com/for/node).
+
+```javascript
+// First, let's set up our Mux client so we can easily talk to the Mux API
+import Mux from "@mux/mux-node";
+
+// If your MUX_TOKEN_ID and MUX_TOKEN_SECRET are in your .env
+// Mux() will pick them up
+const { Video } = new Mux();
+
+export default Video;
+```
+
+Then, let’s use that Mux client to create a Direct Upload and pass it to our form.
+
+```jsx
+import Form from "./form.jsx";
+import Video from "./mux.js";
+
+export default async function Page() {
+  // Server Components make this so much nicer than calling an API :)
+  const directUpload = await Video.Uploads.create({
+    // In production, you should update this value to something like
+    // cors_origin: 'https://your-app.com',
+    // to restrict uploads to only be allowed from your application.
+    cors_origin: "*",
+    new_asset_settings: {
+      playback_policy: "public",
+    },
+  });
+
+  return (
+    <Form
+      uploadId={directUpload.id}
+      endpoint={directUpload.url}
+    />
+  )
+}
+```
+
+And what’s in form.jsx? Well, I’m glad you asked.
+
+### **Uploading the video to the Direct Upload URL**
+
+Now, let’s create a form where users can upload their video, and add a title. For this step, you’ll need to [add @mux/mux-uploader-react](https://docs.mux.com/guides/video/mux-uploader#react) to your project.
+
+```jsx
+"use client"
+import { useState } from "react";
+import MuxUploader from "@mux/mux-uploader-react";
+
+export default function Form({ uploadId, endpoint }) {
+  // We don't want the user to submit the form before the upload is complete
+  // so let's track that in state
+  const [uploaded, setUploaded] = useState(false)
+
+  return (
+    <form>
+      <MuxUploader endpoint={endpoint} onSuccess={() => setUploaded(true)} />
+      {/* our back-end is going to need the uploadId later. Let's pass it along here. */}
+      <input type="hidden" name="upload" id="upload" defaultValue={uploadId} />
+      {/* After the uploader, this is just a standard form! */}
+      <label htmlFor="title">Title</label>
+      <input required type="text" name="title" id="title" />
+      <button type="submit" disabled={!uploaded}>Submit</button>
+    </form>
+  )
+}
+```
+
+### **Submitting the form with React Server Actions**
+
+So far, we haven’t hit any speed bumps. But now the moment of truth. What happens when the user submits the form? Like in our example earlier, let’s handle that with a Server Action.
+
+```javascript
+"use server"
+
+export async function saveVideoToDb(formData) {
+  const title = formData.get("title");
+  const uploadId = formData.get("upload");
+
+  const upload = await Video.Uploads.get(uploadId);
+  const assetId = upload.asset_id;
+
+  /**
+    * this is where we would save to our database.
+    * However, since we don't have a db configured,
+    * let's just store our title in our asset passthrough field.
+    * The passthrough is limited to 255 characters,
+    * so you shouldn't do this in production.
+    */
+  await Video.Assets.update(assetId, { passthrough: title })
+}
+```
+
+Then, we attach that action to our app/form.jsx by importing it (import { saveVideoToDb } from ‘./actions/js) and attaching it to the form with the action prop (<form action={saveVideoToDb}>).
+
+Wait. That’s it? Are we… done? Server Actions obviously make for a great demo, but what happens when we try to add some more advanced functionality, like success/error states?
+
+### **Adding a success & error state**
+
+As of the writing of this post, Server Actions have few official ways of responding to user input. The most simple, demonstrated above, is [to redirect](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions#redirection) a user to a success or error page. Or, they can hook into React Server Components. In Next.js, by [using revalidateTag or revalidatePath](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions#on-demand-revalidation), we can instruct Next to re-fetch certain data and stream it to the client.
+
+But what if we want to show some success or error state that’s not associated with a tag or path? I couldn’t find anything in the official Next docs, but a [tweet (xeet?) from former Meta Engineer Dan Abramov](https://twitter.com/dan_abramov/status/1654265515043332101) set me on the right track. Turns out that we can return data from our Server Action, and we can respond to that data using client-side state.
+
+Let’s add some return values to our saveVideoToDb function.
+
+```javascript
+"use server"
+
+export async function SaveVideoToDb(formData) {
+  // ...
+  // let's skip to the end and wrap our Video.Assets.update in a try/catch block
+
+  try {
+    await Video.Assets.update(assetId, { passthrough: title })
+    return { success: true }
+  } catch (e) {
+    return { error: "Failed to update asset" }
+  }
+}
+```
+
+And let’s handle those returns on the client side by expanding our action function a bit.
+
+```jsx
+"use client"
+import { useState } from "react";
+import MuxUploader from "@mux/mux-uploader-react";
+import { saveVideoToDb } from "./actions";
+
+export default function Form({ uploadId, endpoint }) {
+  const [uploaded, setUploaded] = useState(false);
+  const [message, setMessage] = useState(null); // <- new state to handle our response
+
+  // new action that waits for a response and updates state
+  const actionWithResponse = async (formData) => {
+      setMessage(null)
+      const response = await saveVideoToDb(formData);
+      if (response.error) setMessage(response.error);
+      if (response.success) setMessage("success!");
+    }
+  }
+
+  return (
+    <form action={actionWithResponse}>
+      {/* nothing new here... */}
+      {/* and at the end of the form, we show the response.*/}
+      {message ? <p>{message}</p> : null}
+    </form>
+  )
+}
+```
+
+### **Next steps**
+
+First things first, if you’re going anywhere with this app, you’ll have to make a few small changes to make it production ready. As mentioned in the comments, restrict your cors_origin to something like https://your-app.example.com to make sure uploads can only come from your application. Use a database ([or maybe a CMS](https://docs.mux.com/guides/video/integrate-with-your-cms)) to store your Asset ID, title, and other video metadata. And finally, if you’re allowing end users to upload videos to your Mux account, you should probably add a layer of auth to make sure that any ol’ Joe can’t start [uploading illegal soccer feeds](https://www.mux.com/blog/how-content-moderation-rescued-750k-in-unpaid-invoices-from-soccer-pirates).
+
+You can imagine how we could make this more complex with better validation on our back-end and by tying errors to individual fields on the front-end, maybe by integrating a form validation library. I enjoyed reading [Sebastien Castiel’s post](https://scastiel.dev/server-components-actions-react-nextjs), which demonstrates a deep integration of [react-hook-form](https://react-hook-form.com/) and [Zod](https://zod.dev/).
+
+Maybe instead of responding with a success, you could redirect to a playback page that uses [Mux Player](https://docs.mux.com/guides/mux-player-web). If you’re curious about how that looks, we went ahead and added that to the [finished repo](https://github.com/decepulis/mux-uploader-server-actions).
+
+One of the [new hooks](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions#enhancements) that the React team has added for Server Actions is [useFormStatus](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions#experimental-useformstatus). The hook only returns whether the form is pending or not, though one could easily imagine this hook returning success and error states in the future. Our [repo with the finished app](https://github.com/decepulis/mux-uploader-server-actions) includes an example of this, too.
+
+And finally, if you’re ready to get to know Mux a bit better, we do have a pretty great [next js video player](https://mux.com/for/nextjs).
+
+## **Are React Server Actions ready?**
+
+That Dan Abramov [tweet](https://twitter.com/dan_abramov/status/1654265515043332101) I mentioned reminds me: React Server Actions aren’t done yet. The story for success and error states doesn’t feel like it’s there yet. (Heck; return values from Server Actions aren’t even documented yet). And frameworks like SvelteKit [have already demonstrated](https://kit.svelte.dev/docs/form-actions) that not only are these states possible, but it’s also possible to do more without JavaScript. There’s work left to do.
+
+Even so. Not having to call fetch from a client-side component just _feels better_. API boilerplate feels gone for good. I think we’re onto something here.

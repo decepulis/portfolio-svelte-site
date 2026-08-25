@@ -1,8 +1,69 @@
 ---
 title: AI chatbots are banned from our docs… for now
 directUrl: https://www.mux.com/blog/docs-ai-chatbot
-todoBackup: true
 type: post
 previewText: Why we decided not to use an AI chatbot in our docs, and what that says about the state of LLMs
+previewImage: /src/posts/2024-09-06-docs-ai/og.png
+previewImageAlt: "An illustrated blue robot responding with a shrug emoticon."
 ---
 
+![An illustrated blue robot responding with a shrug emoticon.](/src/posts/2024-09-06-docs-ai/og.png)
+
+I can’t live without [GitHub Copilot](https://github.com/features/copilot). Meanwhile, we tested an AI chatbot for our docs and immediately threw it out. Why does one AI app work and the other doesn’t? If we can answer that, we can learn a lot about the current state of AI… and what needs to change for it to solve more of our problems.
+
+But before we get to that, why _did_ we test an AI chatbot for our docs, and more importantly, why did we ditch it?
+
+## **The promise of an AI chatbot**
+
+In our docs, a user might have a hard time finding a guide that will help them. If they find a guide, they might not understand it. Some more complex problems might require finding and reading multiple guides, carrying context across them all.
+
+We work hard to keep these problems from happening. We try to be extraordinarily considerate about how we [write our guides](https://www.mux.com/blog/building-better-docs) and [form our information architecture](https://www.mux.com/blog/the-building-blocks-of-great-docs). But when we don’t succeed, an AI chatbot _could_ fill that gap. Users could describe their problem in their own vocabulary and have a tailored answer provided to them.
+
+An AI chatbot clearly has a lot of potential. That’s why, earlier this year, we tried out a few solutions. So why didn’t they stick?
+
+## **The peril of an AI chatbot**
+
+We got in touch with a few docs bot services and set up demos that were trained on our docs and blog posts. Our first impressions were bad.
+
+The first question we asked was “how do I play a video in Next.js”. We would’ve hoped to see something like our [“Stream video in five minutes” guide](https://docs.mux.com/core/stream-video-files), which talks about getting videos into Mux and playing them with [Mux Player React](https://docs.mux.com/guides/mux-player-web#react). Instead, one bot answered something like “Install mux-embed and use it to [monitor your dash.js player](https://docs.mux.com/guides/monitor-dash-js)”. Totally wrong. Another paraphrased our [Video.js guide](https://docs.mux.com/guides/playback-videojs-with-mux). That _would_ get a video playing in a React app, but misses the basics and omits the newer Mux Player tech.
+
+When asked “How can I let users download videos from Mux?”, they answered something like “here’s how you enable master access”. At Mux, we have two ways to download MP4s: [master access](https://docs.mux.com/guides/download-for-offline-editing) is optimized for quality above all else, while [static renditions](https://docs.mux.com/guides/enable-static-mp4-renditions) are a balance between file size and quality. Masters are for platform owners and developers, static renditions are for users. Clearly, this can be tricky to communicate. We try to provide this nuance [in our docs](https://docs.mux.com/guides/download-for-offline-editing#why-download-the-master); the chatbots missed it entirely.
+
+We saw this time and again. Most answers were close enough. But some answers were misleading or outright wrong. _We_ could see the difference between the good answers and the bad, but we were worried our customers wouldn’t—especially customers early on their Mux-learning journey. The cost of failure was too high. We decided not to ship.
+
+![An anonymized message on Slack with this text: "Yeah that type of answer legitimately hurts us and our customers. We can't let that go out to people. Is there any way to help train this?"](/src/posts/2024-09-06-docs-ai/81c674da3bdab7444c9adffbef357aee7a245ac8-1427x228.png "Some internal feedback to one of our docsbot answers. And… a really good question. IS there a way to help train this? Let’s talk about that.")
+
+## **Will we ever have an AI chatbot?**
+
+After hitting these initial roadblocks, we saw two ways to improve the chatbots’ performance:
+
+1. make fewer mistakes, and
+1. help users navigate the mistakes that _did_ happen.
+
+First, how could we help the chatbot make fewer mistakes? In short: more/better data. We were encouraged by the (extremely gracious and helpful) representatives of the chatbot companies to provide their models with anonymized support conversations, corrections to incorrect answers, and yes, maybe some old guides that are more clear about new ways to do things. The more the model knew about Mux, the better it could answer questions.
+
+Next, how could we help users through the mistakes that the chatbots did make? Many AI chatbots are surrounded with UI notices like “Please note that answers are generated by AI and may not be fully accurate, so use your best judgment.” Within their answers are citations so users can fact-check and read more. And finally, some chatbots are in public contexts like Discord, so the community can provide feedback and corrections. All three of these are great failsafes.
+
+If we saw a path forward with these chatbots, why didn’t we proceed? Because anonymizing support conversations and correcting individual answers takes time. And we decided that our time would be better-spent improving our guides. Guides that don’t send users down fact-checking rabbit holes.
+
+I know it’s a bit reactionary to say “what if we do the old way _better_ instead of working through the kinks of the new way?” The fastest horse-driven buggy probably won’t beat a Ford Fiesta, ya know? For now, though, we’re making a calculation. We’re a startup that needs to move fast. We know other companies are [making different choices](https://www.docker.com/blog/docker-documentation-ai-powered-assistant/), but we’re choosing to spend our precious time on what we know works instead of risking it on something new{% footnote content="I know this is precious coming from me, the guy who rewrote our front-end in React Server Components. To be fair, those were supposed to be stable." /%}.
+
+I also know that, as time goes on, the cost of improving AI chatbots _might_ become low enough that the equation changes. In the months since we’ve tried these services, they’ve shipped all sorts of improvements, steadily closing the gap.
+
+We’ll keep checking in to see if they’re ready. The promise is worth it.
+
+## **What does this tell us about AI in general?**
+
+I said it earlier. I love GitHub Copilot. Why does Copilot work when an AI docs chatbot struggles? After all, they’re quite similar. They both let you ask technical questions and they both provide useful and occasionally sus responses. The difference between the two is also the difference between the tools that are succeeding and the tools that still need work: GitHub Copilot is _supervised_.
+
+When I say “supervised”, I mean “the output is supervised by a trained human”{% footnote content="And not “supervised learning”, which talks about the input of a model, not an output. I probably shouldn't have picked a word that's already used by the AI/ML industry." /%}. For example, _I_ know what good code is supposed to look like. I’ve written an automated unit test hundreds of times; if Copilot makes a mistake, I’ll spot it. Copilot is providing me with suggestions of things I more or less already know how to do; I’m providing guardrails, supervising its output, sorting the good from the bad. On the flip side, a docs bot is often unsupervised. Sure, we have experienced Mux developers in our docs who would heed our warnings and fact-check answers, but we also have beginners who won’t know the difference between master access and static renditions.
+
+(By the way: the kind of tools that I’m talking about are _fact-based_ tools, not _creative_ tools. Supervision isn’t a super-big deal in creative tools, where flaws are a feature, not a bug. That’s why Apple and Google can confidently ship [writing tools](https://www.apple.com/apple-intelligence/) and [image generators](https://deepmind.google/technologies/imagen-3/) to billions of users. But when it comes to confidently generating facts, supervision [might still be required](https://www.theverge.com/2024/5/23/24162896/google-ai-overview-hallucinations-glue-in-pizza).)
+
+It’s clear to me that **supervised** services are going to stick around and change how we work. They’ll do more and more of the repetitive tasks we already know how to do and let us focus on higher-level challenges. In doing this, they’ll follow in the footsteps of [frameworks](https://github.com/vercel/next.js) and [services](https://www.mux.com) before them. Sure you _could_ do it yourself, but wouldn’t you rather focus on what makes you unique?
+
+And it’s not just code: consider that [fraud detection](https://home.treasury.gov/news/press-releases/jy2134), [content moderation](https://openai.com/index/using-gpt-4-for-content-moderation/), and even [drug discovery](https://www.nytimes.com/2024/06/17/business/ai-drugs-development-terray.html) are already tasks being assisted by supervised AI.
+
+Here’s what’s still unclear: will **unsupervised** services close the gap? There’s promise: new, improved models come out every year, trained with more data, making fewer mistakes. And when models can [retrieve information](https://cloud.google.com/use-cases/retrieval-augmented-generation), they can check their own mistakes, too. As the quality of models and retrieval-augmented generation improve, it’s possible that the need for supervision will fall away entirely.
+
+Unsupervised services are the bigger promise of our current AI revolution. Services that generate and act on their own. [Home robots](https://www.youtube.com/watch?v=bUrLuUxv9gE)? [Self-driving cars](https://www.youtube.com/watch?v=Ucp0TTmvqOE)? If unsupervised AI truly gets solved, that’s when stuff really gets wild.
