@@ -2,8 +2,143 @@
 title: Why are video players so big?
 fullTitle: Why are video players so big? A trip down the rabbit hole of video playback engines
 directUrl: https://www.mux.com/blog/what-is-a-video-playback-engine
-todoBackup: true
 type: post
 previewText: A simple question with a fascinating answer
+previewImage: /src/posts/2024-04-15-playback-engines/og.png
+previewImageAlt: "An illustrated Swiss Army knife surrounded by video player feature icons."
 ---
 
+![An illustrated Swiss Army knife surrounded by video player feature icons.](/src/posts/2024-04-15-playback-engines/og.png)
+
+There’s a rite of passage you might’ve gone on if you’re a web developer. You embed your first YouTube video and all of a sudden… **wham**! 3MB of JavaScript load. And it’s not just YouTube; [Mux Player is pretty big, too](https://bundlephobia.com/package/@mux/mux-player@2.3.3).
+
+![A list from a browser developer tools' network tab, showing the JavaScript loaded by a YouTube embed. Resource sizes range from 50 KB to 2.51 MB.](/src/posts/2024-04-15-playback-engines/c0b949509ba0ca58579050ed20563d8830beb020-1170x262.png "On a page with nothing but a YouTube embed, we load 3MB of JavaScript. Why is that?")
+
+We have ways of dealing with this. Most boil down to [showing a facade](https://developer.chrome.com/docs/lighthouse/performance/third-party-facades/) while you lazy-load your player. But we’re not here to talk about lazy-loading. (We already did that [here](https://www.mux.com/blog/mux-player-lazy-loading-with-blurhash) and [here](https://www.mux.com/blog/blurry-image-placeholders-on-the-web)!) We’re here to talk about _why_ video players are so big.
+
+After all, lazy-loading isn’t the best user experience. And if you don’t lazy-load, these big JavaScript packages might negatively impact your [web vitals](https://web.dev/articles/vitals) or video [QoE](https://www.mux.com/video-glossary/qoe-quality-of-experience) metrics like [startup time](https://www.mux.com/blog/the-video-startup-time-metric-explained)… or both. What do you get in exchange for that bundle size? And can anything be done to make it smaller?
+
+This rabbit hole goes deep. You’ll learn more about video playback engines than you might expect. But before we get there, let’s start simple. Let’s ask, what _is_ a video player, anyway?
+
+## What is a video player?
+
+A video player is… well… it’s a thing in your browser or app that plays videos. But we can break it down more than that.
+
+It’s helpful to think of video players as two things. The face and the brain. How it looks, and how it works. What the user clicks, and how those clicks show video. The **chrome** and the **playback engine**.{% footnote content="Depending on who you ask, this is either a little oversimplified or way oversimplified. Some people might call what’s going on under the hood the “video player” and what the website is shipping with “the application layer”. Others will mention that stopping at the playback engine is silly, and that you have to go deeper, to OS-level tools like AVFoundation, and to the device drivers and hardware-level encoders and decoders down below. For now, though, let’s just talk about chrome and playback engines. As a developer, that’s probably what’s in the package you’re adding to your website or app." /%}
+
+Let’s start by talking about chrome. No, not [that Chrome](https://www.google.com/chrome/). In the context of a video player, chrome is the user interface elements and controls surrounding the video. Play/pause buttons, the timeline scrubber, volume, full-screen, subtitles, video quality, playback speed, and so on. Not only does chrome have to look good, but it has to remain accessible and respond to a wide variety of possible changes to the video. This is one reason video players are big. (By the way: we at Mux work on the Media Chrome project to try and make building this kind of chrome easier for you. [Check it out](https://www.media-chrome.org/docs/en/get-started)!)
+
+As you can see in the [Bundlephobia](https://bundlephobia.com/package/@mux/mux-player@2.3.3) diagram below, Media Chrome takes up about a quarter of Mux Player. Another quarter is [glue code](https://en.wikipedia.org/wiki/Glue_code) and [analytics](https://www.mux.com/data). Meanwhile, more than half of the bundle is taken up by our playback engine of choice, [hls.js](https://github.com/video-dev/hls.js). Therefore, to answer the question of why video players are so big, the playback engine seems like the most important thing to check out. So let’s spend some more time talking about playback engines: what do they do… and why are they so big?
+
+![A chart showing the composition of Mux Player: 52.4% hls.js, 24.9% media-chrome, and a handful of other packages including mux-embed.](/src/posts/2024-04-15-playback-engines/6f9e01ddc5541ed4eaf64bd0200a6c15ccfa49bc-1999x265.png "Bundlephobia helpfully illustrating what Mux Player is made of")
+
+## What does a video playback engine do?
+
+Browsers have built-in support for a few different video formats, like [MP4](https://www.mux.com/blog/a-beginners-guide-to-video-file-formats) and [WebM](https://www.mux.com/video-glossary/webm)… but this only takes you so far. What if that MP4 is too big for a mobile connection or too small for a 4K TV? What if you want to send a media container or codec that the browser doesn’t support? What if you want to encrypt your media or protect your content with [DRM](https://www.mux.com/video-glossary/drm-digital-rights-management)? And how does the server communicate these video complexities to the client, anyway? You probably know where this is going: beyond the most basic video use case, you’re going to need a playback engine.
+
+A video playback engine is, in short, the part of a video player that’s responsible for handling these problems (and so much more!) and playing the resulting video.
+
+Let’s dig into these problems a bit more so we can appreciate the hard work that playback engines are doing for us. Maybe that will help us understand an engine’s size. Starting with this diagram of hls.js – an open source, feature-rich, extremely popular playback engine (that, as mentioned, we happily use in Mux Player). What do some of these modules do? Looks like some of them line up with our problems up above…
+
+![A rollup-bundle-visualizer of the main entry point bundle shipped in hls.js. It's a little hard to read, but if you look closely, you can see packages like hls.ts, mpr-generator.ts, m3u8-parser.ts, eme-controller.ts, and so many more.](/src/posts/2024-04-15-playback-engines/e286ce78f5941ad90b233f815975aa1500ed89cd-1999x1250.png "A rollup-bundle-visualizer of the main entry point bundle shipped in hls.js. Let’s talk about what some of these modules do")
+
+We’ll be using the hls.js as our example playback engine. However, we don’t mean to pick on hls.js here; [dashjs](https://www.npmjs.com/package/dashjs), [shaka-player](https://www.npmjs.com/package/shaka-player), [@videojs/http-streaming](https://www.npmjs.com/package/@videojs/http-streaming) and even commercial playback engines like [@theoplayer/basic-hls-dash](https://www.npmjs.com/package/@theoplayer/basic-hls-dash) all tackle similar problems and [grow](https://bundlephobia.com/package/dashjs@4.7.4) [to](https://bundlephobia.com/package/shaka-player@4.7.11) [similar](https://bundlephobia.com/package/@videojs/http-streaming@3.10.0) [sizes](https://bundlephobia.com/package/@theoplayer/basic-hls-dash@6.12.1)
+
+### Working with HLS - playlists, fragments, etc.
+
+First things first: what is the “HLS” of “hls.js” and how does it solve our problems? That’s a bigger question than we’re prepared to answer here. [Long story](https://howvideo.works/#playback) short, [HLS](https://www.mux.com/video-glossary/hls-http-live-streaming) is a protocol that lets media servers and clients talk about media in a more complex way. Rather than just saying “hey, here’s an MP4”, we can break media down into multiple segments and add all sorts of additional information about those segments. (We’ll get more specific in upcoming sections.)
+
+hls.js needs a bunch of code to “speak” the HLS protocol: it fetches, parses, and models HLS playlists, and understands what to do with that information in order to get a video playing in the browser.
+
+### Adaptive bitrate streaming engine - buffering, switching, fetching logic
+
+One of the biggest reasons that [standards like](https://www.mux.com/blog/http-adaptive-streaming-history) HLS exist is _adaptive bitrate streaming_, or “ABR”. [ABR](https://www.mux.com/video-glossary/abr-adaptive-bitrate) is a technique that solves our biggest problem: how do we provide different versions of our video that work in different situations?
+
+ABR involves converting a video down into various resolutions and bitrates. Those various versions are called renditions. Those renditions are broken down and provided to the player in segments. Here’s the trick: when things are good, the player can grab a few high-quality segments. Then, when things change (like, your train goes into a tunnel or something) the player can switch to lower-quality segments mid-stream. Neat!
+
+To do this, hls.js needs to consider things like network conditions, dropped frames, and player size in order to select the best rendition. It then fetches and buffers segments for that rendition, and manages filling and purging media [SouceBuffers](https://developer.mozilla.org/en-US/docs/Web/API/SourceBuffer). Along the way, hls.js is working hard to make decisions about how lazily or eagerly to do this all.
+
+### Media containers and codecs - decoding, transmuxing, and managing content
+
+At the end of the day, hls.js’s job is to get media segments and provide them to the browser via the [Media Source API](https://developer.mozilla.org/en-US/docs/Web/API/Media_Source_Extensions_API). However, just downloading and providing the right segments isn’t enough. HLS has a few extra jobs while decoding and transmuxing those segments. To name just two:
+
+1. Web browsers natively support only a handful of media formats. For example, many HLS streams use [MPEG-TS](https://en.wikipedia.org/wiki/MPEG_transport_stream) segments, instead of the more-commonly-supported MP4 standard (or, if we’re being technical, [ISO-BMFF](https://en.wikipedia.org/wiki/ISO_base_media_file_format)).
+1. hls.js may also be extracting additional media-relevant information contained within a [media container](https://howvideo.works/#containers) (e.g. ID3, IMSC/TTML, CEA-608 text track information).
+
+And speaking of text tracks…
+
+### Subtitles
+
+Out of the box, the browser does support subtitles with the [<track> element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track). With HLS, though, you unlock all sorts of capabilities. Provide the user with dozens of subtitle tracks without having to download them all at once. Describe details about the subtitles through metadata, like if they’re closed captions. Handle [types other than VTT](https://www.mux.com/blog/subtitles-captions-webvtt-hls-and-those-magic-flags#types-of-captions). Show subtitles, but only when there’s dialogue not in your user’s native tongue. Line up subtitles with timestamps different from those in your video (which is especially relevant when it comes to clipping). All of these tasks? HLS and hls.js have got it. Oh and by the way, it’s not just subtitles. hls.js has got your back if you have [multiple audio tracks](https://www.mux.com/blog/parlez-vous-anglais-introducing-multi-track-audio), too.
+
+### DRM & encrypted media
+
+Listen. You _could_ interface with the browser’s [EME API](https://developer.mozilla.org/en-US/docs/Web/API/Encrypted_Media_Extensions_API) yourself to handle encrypted and DRM content yourself, but wouldn’t you rather have hls.js do it for you? HLS and hls.js provide all sorts of tools for dealing with such content, whether using "[Clear Key](https://www.w3.org/TR/encrypted-media/#clear-key)" decryption keys or some DRM system.
+
+Of course, to manage this, HLS now needs to extract relevant information from the HLS playlists or media containers, load keys at the right time, and account for integration with different DRM servers and standards using the [EME API](https://developer.mozilla.org/en-US/docs/Web/API/Encrypted_Media_Extensions_API).
+
+### But wait, there's more
+
+I think you get it. hls.js has a lot of jobs.
+
+But let’s pause for a moment and underline what an amazing Swiss Army knife hls.js really is. We’ll start by naming a few modules that we missed up above:
+
+1. Content Steering (See, e.g. this [WWDC presentation](https://developer.apple.com/videos/play/wwdc2022/10144/) by Zheng Naiwei)
+1. CMCD/CMSD (See, e.g. this [Demuxed presentation](https://www.youtube.com/watch?v=xS1-QB6ultc&ab_channel=Demuxed) by Will Law)
+1. Multi-track audio (See, e.g. [this Mux](https://docs.mux.com/guides/add-alternate-audio-tracks-to-your-videos)guide by Phil Cluff)
+1. Peripheral HLS info/tags (e.g. [#EXT-X-DATERANGE](https://datatracker.ietf.org/doc/html/draft-pantos-hls-rfc8216bis-14#section-4.4.5.1), [variable substitution](https://datatracker.ietf.org/doc/html/draft-pantos-hls-rfc8216bis-14#section-4.3))
+1. Error handling/modeling
+1. Generic core playback engine functionality (e.g. events, logging, types, task loops, fetch/XHR)
+1. Other bits and bobs, including various categories of defensive code (e.g. "gap-controller")
+
+And that “defensive code” deserves more of an explanation because it’s a key component of this Swiss Army knife philosophy. Every module has its jobs, but hls.js takes care that the module is ready for almost **every situation**.
+
+Let’s take, for example, the media containers and codecs module: While performing its regular duties, the module also makes sure that even the most unusual media makes it to playback without a hitch. What kind of unusual media? For one, hls.js can adjust timelines between audio and video for out-of-sync segments. For another, it will account for different durations when transitioning between [discontinuities](https://datatracker.ietf.org/doc/html/draft-pantos-hls-rfc8216bis-14#section-4.4.4.3).
+
+So, in many ways, “Swiss Army knife” is the wrong analogy here. A Swiss Army knife – with its stubby little tools – is a jack of all trades, master of none. Somehow, though, hls.js has managed to be competent at _all_.
+
+## We need to talk about playback engine architecture
+
+You probably feel like you have the answer to this blog post’s titular question: “Why are video players so big? Because they have a lot of great features.” And yeah, that’s true, but stick with us for one last section, because the answer is actually a bit bigger and more interesting than that. There’s one last size-aggravating factor that needs talking about: features that span across the playback engine.
+
+Up above, we named a bunch of “buckets” of video playback engine functionality. There are some features, however, that don’t fit neatly into a bucket. These features have a _particular_ impact on size. Consider the following example:
+
+hls.js supports both on-demand and live streaming. Some of the on-demand/live code lives in the “working with HLS” module, some of it in the “ABR” module, some in the “Decoding” module, and some elsewhere. It’s **diffused** throughout the codebase. On top of that, everywhere this code appears, it appears supporting _both_ on-demand _and_ live, since the two actually share many similarities in implementation. These two pieces of functionality are **coupled**.
+
+(You can see these diffused and coupled code all over. With DVR use-cases, with low-latency vs. standard live streams, with discontinuities, with HTTP range request support, with encrypted media/DRM key rotation… You get the point.)
+
+### But why is diffused and coupled code a problem for playback engine size?
+
+Great question, thanks for asking. Let’s say you don’t need a jack of all trades. Let’s say you’re a dedicated media and entertainment company that has tight control over its streaming media use case and knows the exact handful of features it needs. (If you’re reading this, I’m guessing you’re probably not… but you’re also probably curious, so let’s keep going!) Because of this diffused and coupled architecture, it becomes difficult to drop features. Don’t want live streaming? Too bad; it’s hard to remove because it’s so spread out and shares so much code with on-demand.
+
+Diffused and coupled code is why, at least in part, the official [light version](https://github.com/video-dev/hls.js?tab=readme-ov-file#build-tasks) of hls.js only removes alternate audio, subtitles, CMCD, EME (DRM), and variable substitution support. Sure it shrinks the package by over 25%, but that package still likely includes things you don’t need. Mind you, you could go through the effort of forking hls.js and [configuring your own build](https://github.com/video-dev/hls.js/blob/master/build-config.js)… but even then, you’re still limited to dropping the same handful of features.
+
+You can get a sense of this diffusion and coupling by looking at the dependency relationships in hls.js’s source code. Here’s a visual generated by [madge](https://www.npmjs.com/package/madge). This graph shows the complex dependencies that make subsetting difficult.
+
+![A graph of modules and their dependencies. There are a lot of connections, here. While it's hard to pick out details, the effect is a little overwhelming.](/src/posts/2024-04-15-playback-engines/84eec29b9bf5f11ccbdc5acf86cf0d804d353993-3632x1516.svg "A visualization of the hls.js dependency graph, generated with madge")
+
+### If that’s a problem, why does Mux use hls.js?
+
+Despite its bundle size and its subsetting limitations, we at Mux (as well as several other major players out there) still use hls.js. Clearly we consider the trade-off worth it. And maybe it’s worth it for you, too.
+
+Here's how we thought about it. First, why did we pick hls.js in particular? Hopefully, for obvious reasons, closed-source/commercial playback engines were non-starters. That left a very short free-and-open-source list. Since Mux Video only supports HLS, not [MPEG-DASH](https://www.mux.com/video-glossary/mpeg-dash), that list became even shorter. We explored cutting off unneeded bits of [Shaka Player](https://github.com/shaka-project/shaka-player) and [VHS](https://github.com/videojs/http-streaming), but in the end, hls.js was a very clear (and good!) choice for us.
+
+But if we could build our own chrome with [Media Chrome](https://www.media-chrome.org), why didn’t we just build our own playback engine? Co-author of this piece [Christian Pillsbury](https://www.mux.com/team/christian-pillsbury) has spent _years_ doing significant work on several playback engines. He would be the first to tell you about the time and effort DIY would take, even for the subset of HLS features Mux Video supports (including [low-latency](https://www.mux.com/blog/let-s-talk-video-wait-for-it-latency?_gl=1*1f5p19h*_ga*MTg5MTkxNzEzNy4xNzEwODgwMDg5*_ga_D3BFYPQXX7*MTcxMjMyNDcwNi40OS4xLjE3MTIzMjYxOTAuMC4wLjA.) and [multi-track audio](https://www.mux.com/blog/parlez-vous-anglais-introducing-multi-track-audio)). Even if we just DIY'd for _some_ cases and used hls.js for others, we would still run into a deeper issue: hls.js is battle-tested and our DIY solution wouldn’t be. A DIY solution would be **more work** and **more risk**.
+
+Like the media and entertainment companies we mentioned above (and unlike, we imagine, many of our readers), we do have control over our streaming media pipeline. And even for us, it makes sense – at least for now – to take advantage of the incredible work that has been done on hls.js.
+
+We hope to help continue that work and improve hls.js, too. Discussions and initial steps are already underway among the maintainers of hls.js – including ourselves – to make targeted, slimmed down usage of hls.js easier. This can be you as well! If you want to help improve hls.js, please file specific issues and contribute to [the project](https://github.com/video-dev/hls.js).
+
+## So where does that leave us?
+
+Video playback engines are big. But don’t be mad at the playback engines or their authors for that.
+
+In hls.js's 9+ years of life, contributors have changed 83,263 lines of code. 38,065 of those changes – more than 45% – were contributed by [Rob Walch](https://github.com/robwalch) alone. You reach more than 86% if you include top contributors [Tom Jenkinson](https://github.com/tjenkinson), [John Bartos](https://github.com/johnBartos), [Guillaume du Pontavice aka “mangui”](https://github.com/mangui), [Jamie Stackhouse](https://github.com/itsjamie), and of course [Stephan Hesse](https://github.com/tchakabam){% footnote content="If you want to check our work, run this across the hls.js repository: git ls-files | while read f; do git blame -w -M -C -C --line-porcelain $f | grep -I '^author '; done | sort -f | uniq -ic | sort -n" /%}. Although these folks may receive some support from their companies, this herculean effort is often done alongside a “real job”. And then, like the vast majority of long-lived, complex projects, tech debt accrues. Expedient fixes, improvements, and feature additions are often fit into pre-existing implementations out of necessity and time scarcity. Complete re-architectures are rare, if not impossible.
+
+And despite this, look at what they’ve built! hls.js and its video playback engine peers are engineering marvels: Swiss Army knives that support so many features and edge cases. Developers shouldn’t have to know the ins and outs of how streaming media works, how their media servers or OVPs work, or what streaming media features they rely on. Are you sometimes playing low latency live streams and other times using on-demand? No problem. Does some of your content have in-mux CEA-708 closed caption data carried in transport stream media containers, and some use WebVTT subtitle media playlists? You’re good. Does your OVP occasionally produce small gaps between your media segments, made more complex because you also rely on segment discontinuities to stitch together your brand’s splash video segments before the primary content, where all of that content is also DRM-protected with Widevine, FairPlay, and PlayReady for cross-browser and cross-platform compatibility? Don’t worry about… ok, this case may have some rough edges still, but playback engines like hls.js will still try really hard to handle most of the complexity.
+
+The great thing about a Swiss Army knife is that it can do a whole bunch of different things. Things you didn’t even know you’d be doing. For the vast majority of cases, it will Just Work™.
+
+Still, one problem with a Swiss Army knife is that sometimes you just need a pair of tweezers, and now you’re getting hassled by the TSA and might miss your flight. In other words, playback engines often pull in more than you need for a given use case, and the result is large JavaScript packages that can affect your user experience. Like Joe Armstrong said in _Coders At Work_: "You wanted a banana but what you got was a gorilla holding the banana and the entire jungle".
+
+There are companies out there – like a few of those media and entertainment companies streaming TV on the internet – who _did_ traipse through the TSA jungle and find their banana-tweezers. They do have smaller playback engines. But they also have the engineering resources to build it and to control their streaming media use case. For everyone else, that trade-off might not be worth it. For everyone else, there are superpowered Swiss Army knife video playback engines like hls.js.

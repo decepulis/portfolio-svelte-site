@@ -3,6 +3,74 @@ title: Mux Player iframe and playback page
 type: build
 previewText: A little hack week project that I brought over the line... with a few useful easter eggs!
 directUrl: https://www.mux.com/blog/mux-player-iframe
-todoBackup: true
+previewImage: /src/posts/2025-02-04-iframe/og.jpg
+previewImageAlt: "An illustration of a video player entering a wireframe portal."
 ---
 
+![An illustration of a video player entering a wireframe portal.](/src/posts/2025-02-04-iframe/og.jpg)
+
+Full disclosure: it took us a while to build an iframe because honestly, we love our [Web Components](https://www.mux.com/blog/slow-is-stable-stable-is-fast-building-mux-player-on-the-slow-platform-of-web-components) experience. I mean, isn’t this great?
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player"></script>
+<mux-player
+  playback-id="zbY4SjSppSvqGGptpWqJ6i00zL02L8RFEgR2jDyjXuArE"
+  accent-color="rgb(172,57,242)"
+></mux-player>
+```
+
+We still stand by that. If you can npm install mux-player or use the script tag up above, we think that’s the best way to get our modern, open source, batteries-included player into your app. It's a good balance between convenience and customizability.
+
+But at the same time, we know there are devs out there who want a simple way to embed video on their low-code/no-code platforms. We know there are devs out there who are just more comfortable with iframes. To you, we say this:
+
+```html
+<iframe
+  src="https://player.mux.com/zbY4SjSppSvqGGptpWqJ6i00zL02L8RFEgR2jDyjXuArE?accent-color=rgb(172,57,242)"
+></iframe>
+```
+
+Which looks something like this:
+
+{% video
+   playbackId="zbY4SjSppSvqGGptpWqJ6i00zL02L8RFEgR2jDyjXuArE"
+   title="Mux Player iframe embed"
+   width=16
+   height=9 /%}
+
+You can embed Mux Player by following player.mux.com/ with your playback ID. And you can customize the embed with query parameters; we support most of [Mux Player's attributes](https://www.mux.com/docs/guides/player-api-reference/html).
+
+Of course, the story doesn’t end there. Here at Mux, we’re in the business of making video experiences great wherever we can, however we can. With an iframe, we saw an opportunity to add a few dashes of secret Mux sauce…
+
+First of all, if you visit a [player.mux.com link](https://player.mux.com/zbY4SjSppSvqGGptpWqJ6i00zL02L8RFEgR2jDyjXuArE?accent-color=rgb\(172,57,242\)) in a browser, you get this awesome web page around your video. It’s an easy way to share your Mux Video without spinning up a website.
+
+![Mux Player with some simple chrome around it](/src/posts/2025-02-04-iframe/5017e33f4557364958f817aa50b59bcabf575bcf-2984x1750.png)
+
+Second, we’ve added [Player.js](http://playerjs.io/) support so you can programmatically control your video from outside your iframe. No [postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage) nonsense. Neat!
+
+{% video
+   playbackId="RgITr8vVz1aNtDL86PR8YXXGfoaptVLmZa0000HUZrAnE"
+   title="Controlling a Mux Player iframe with Player.js"
+   width=1495
+   height=1000
+   autoplay=true
+   muted=true
+   loop=true /%}
+
+The code for that looks something like this:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/player.js@0.1.0/dist/player-0.1.0.min.js"></script>
+<script>
+  const playButton = document.querySelector('button.play');
+  const player = new playerjs.Player(document.querySelector('iframe'));
+  player.on('ready', () => {
+   playButton.addEventListener('click', player.play);
+  });
+</script>
+```
+
+And finally, because we generate this HTML on a server, we can do a little bit of extra work to fill in some details. Your iframe automatically comes loaded with [Open Graph tags](https://ogp.me/) for social, [LD-JSON](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data) for SEO, and even a [blurup placeholder](https://www.mux.com/blog/blurry-image-placeholders-on-the-web) that improves perceptual performance on slower connections. That comes with a trade-off: because we have to do work on a server first, your video is going to load a bit more slowly than if you added [Mux Player](https://www.mux.com/docs/guides/mux-player-web) yourself. In performance-sensitive applications, keep an eye on your [Mux Data metrics](https://www.mux.com/docs/guides/understand-metric-definitions) so you can make sure your users are having the [quality of experience](https://www.mux.com/video-glossary/qoe-quality-of-experience) you’re looking for.
+
+This is just the start of our client-side journey this year. We’ve got a lot of ideas that we’re excited to tell you about, so stay tuned! (There’s a newsletter signup form down below, and Dave writes great newsletters 😉)
+
+Finally, as you try the iframe out, please hit us up with your thoughts, comments, and concerns on [Bluesky](https://bsky.app/profile/mux.com), [TwiX](https://x.com/muxhq), or our good ‘ol [support page](https://www.mux.com/support).

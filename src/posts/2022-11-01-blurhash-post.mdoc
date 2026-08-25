@@ -1,8 +1,277 @@
 ---
 title: How we made Mux Player’s loading feel great
 directUrl: https://www.mux.com/blog/mux-player-lazy-loading-with-blurhash
-todoBackup: true
 type: post
 previewText: Writing about the creation of @mux/blurhash
+previewImage: /src/posts/2022-11-01-blurhash-post/og.gif
+previewImageAlt: "An animation of a video player placeholder resolving into a sharp video poster."
 ---
 
+![An animation of a video player placeholder resolving into a sharp video poster.](/src/posts/2022-11-01-blurhash-post/og.gif)
+
+Look. There’s no getting around it. Weighing in at 626KB (170KB gzipped), [Mux Player](https://www.mux.com/player) is a bit of a chonk.
+
+Granted, that’s the price you gotta pay if you want nice things like [HLS](https://www.mux.com/video-glossary/hls-http-live-streaming). But including Mux Player in our website’s main JavaScript bundle means that a 3G user might wait to interact with our pages for a whole [3.5 extra seconds](https://bundlephobia.com/package/@mux/mux-player). Oof. That’s called having poor [time to interactive (TTI)](https://web.dev/interactive/), and it can make our users sad and our SEO sad.
+
+So what do we do about that? And can we fix that while looking stylin'?
+
+![A big, fluffy cat lazily laying on its back on a couch cushion.](/src/posts/2022-11-01-blurhash-post/7f7458277571ed82e0eea713f644c5e56e322b41-1999x1126.jpg "My sister’s cat, like Mux Player, is a lovable chonk")
+
+## Part I: Let’s just load Mux Player later
+
+Lucky for us, many modern browsers and bundlers like Webpack and Parcel have realized that big bundles are a problem, so they’ve bestowed upon us dynamic import statements that enable code-splitting and lazy-loading. In other words, we don’t have to include Mux Player in our main JavaScript bundle; we can just kick it out and load it later!
+
+![A hand-drawn diagram showcasing how the Mux player bundle can be loaded on demand, allowing a webpage to become interactive without first depending on the loading of the Mux Player javascript bundle.](/src/posts/2022-11-01-blurhash-post/2f6ba0f5132272392e463b62ee889cdb39d22e65-2338x900.png "a very professional and not at all simplified diagram")
+
+So what about the code? You might be familiar with normal import statements. They look something like this:
+
+```javascript
+import MuxPlayer from '@mux/mux-player'
+doStuff()
+```
+
+It’s just a small change to kick @mux/mux-player out into its own bundle:
+
+```javascript
+// import is a promise, so we can chain our follow-up work with `then()`
+import('@mux/mux-player').then(() => { doStuff() })
+
+// or we can use async/await
+const loadPlayer = async () => {
+  await import('@mux/mux-player')
+  doStuff()
+}
+```
+
+And here’s the best part of this syntax. We can actually put this statement anywhere! For example, let’s say we only want to load the @mux/mux-player bundle when the player element is on screen. We can put that dynamic import statement inside an [Intersection Observer](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), like this:
+
+```javascript
+const player = document.querySelector('.player-wrapper')
+
+const onIntersection = (entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      import('@mux/mux-player')
+    }
+  })
+}
+const observer = new IntersectionObserver(onIntersection)
+observer.observe(player)
+```
+
+Meanwhile, in React, we have access to [React.lazy and React.Suspense](https://reactjs.org/docs/code-splitting.html), which make it easier to do all of this with React components. Importing a component with React.lazy puts off loading that component until it is first rendered. Suspense offers us an option to show a fallback while that component loads. (More on fallbacks later.) So, in React, loading Mux Player once it enters the window looks something like this:
+
+```jsx
+import React, { lazy, Suspense, useRef } from 'react'
+import { useIntersection }  from 'react-use'
+
+const PlayerComponent = lazy(() => import('./PlayerComponent'))
+
+const Component = () => {
+  const wrapperRef = useRef()
+  const intersection = useIntersection(intersectionRef)
+
+  return (
+    <div className="player-wrapper" ref={wrapperRef}>
+      <Suspense fallback={false}>
+        {/* React.lazy won't call import() until this condition is met
+            and the component is rendered. */}
+        { intersection && intersection.isIntersecting && <PlayerComponent /> }
+      </Suspense>
+    </div>
+  )
+}
+```
+
+Of course, that’s not the end of the story. We still have another problem. When the player bundle finally loads, Mux Player makes all the content jump around. That’s called having poor [cumulative layout shift (CLS)](https://web.dev/cls/), and it once again might make our users sad and our SEO sad. So now what?
+
+## Part II: Let’s save some space for Mux Player while it loads
+
+When Mux Player finally loads, it all of a sudden takes up a bunch of vertical space, making the whole layout shift. Let’s fix that by saving some space for Mux Player with a placeholder. Then, once the bundle loads, let’s swap that placeholder out for the mux-player element.
+
+First, let’s make a placeholder that is the same size as Mux Player. The CSS [aspect-ratio property](https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio) and our [Mux Video asset’s aspect_ratio property](https://docs.mux.com/api-reference/video#tag/assets) make this pretty straightforward. With aspect ratio, as long as we tell our browser how wide an element should be, the browser sets the height automatically regardless of the element’s content. We’ll use aspect ratio to set the size of a wrapper, and then make sure both the placeholder and the player are the exact same size as the wrapper:
+
+```html
+<script>
+  // How big should that placeholder be? We need to tell CSS the aspect ratio of our asset
+  const asset = getMuxAssetFromDatabaseOrWhatever()
+  const wrapper = document.querySelector('.player-wrapper')
+
+  // since Mux formats its aspect ratios as width:height, we can do this:
+  const [aspectWidth, aspectHeight] = asset.data.aspect_ratio.split(':')
+  wrapper.style.setProperty('--asset-aspect-ratio', aspectWidth / aspectHeight)
+</script>
+
+<!-- Our markup is simple. A wrapper to size things, a placeholder to hold... place.-->
+<div className='player-wrapper'>
+  <div className='player-placeholder'></div>
+  <!-- Of course, mux-player hasn't loaded yet. When it does, it'll be here. -->
+</div>
+
+<style>
+  .player-wrapper {
+    width: 100%;
+    aspect-ratio: var(--asset-aspect-ratio, 16/9);
+    position: relative;
+  }
+  .player-placeholder, mux-player {
+    // let's use absolute positioning to make sure these two
+    // are the same size as the wrapper
+    position: absolute;
+    inset: 0;  // equivalent to setting top, bottom, left, and right to 0
+  }
+</style>
+```
+
+Then, it’s just a matter of swapping that placeholder out for the player! In vanilla JavaScript, that might look something like this:
+
+```javascript
+const wrapper = document.querySelector('.player-wrapper');
+const placeholder = document.querySelector('.player-placeholder');
+// lazy load the mux player javascript bundle...
+import('@mux/mux-player').then(() => {
+  // ...then create a <mux-player> element...
+  const player = document.createElement('mux-player');
+
+  player.setAttribute('stream-type', 'on-demand');
+  player.setAttribute('playback-id', playbackId);
+  player.setAttribute('metadata-video-title', 'Test video title');
+  player.setAttribute('metadata-viewer-user-id', 'user-id-007');
+// ...then swap the placeholder for the incoming element!
+  wrapper.replaceChild(player, placeholder);
+});
+```
+
+Meanwhile, in React, Suspense does the work for us:
+
+```jsx
+<div className="player-wrapper" ref={wrapperRef} style={{ "--asset-aspect-ratio": sourceWidth / sourceHeight }}>
+  <Suspense fallback={<PlaceholderComponent />}>
+    { intersection && intersection.isIntersecting && <PlayerComponent /> }
+  </Suspense>
+</div>
+```
+
+Because our sites are written in Next.js, the placeholder is sent in the initial HTML, reserving space for the incoming Mux Player even before the first byte of JavaScript loads. No layout shift for you!
+
+## Part III: Jazzing up that placeholder with a blurhash
+
+Oh my goodness, though — that placeholder is boring. And what’s worse, it’s kinda awkward for the user, isn’t it? Imagine being on a slow connection and just seeing a white rectangle. Why is there this weird gap on the page? What’s going on here?
+
+Fear not, fair reader! Following the example of [next/image](https://nextjs.org/docs/api-reference/next/image) and many before it, we’re going to compute a [blurhash](https://blurha.sh/) to display while the player loads. A blurhash is a lightweight, multicolor gradient representation of an image. Here’s what we’re cooking today:
+
+{% grid %}
+![A blurry suggestion of an image](/src/posts/2022-11-01-blurhash-post/57130a82f943f7d2689ce0e3090f0fe13a2e0581-1999x1125.png)
+
+![The blur has resolved into a picture of my australian shepherd harassing my chihuahua mix.](/src/posts/2022-11-01-blurhash-post/f2c5a4af823fde0a03207f99a57594c7c5c9ed26-1920x1080.jpg)
+{% /grid %}
+
+Since we wrote this post, we've learned a _lot_ about blurry image placeholders on the web. Using blurhash in the way we describe may not be the most efficient technique for generating blurry placeholders. Read on... but also check out [Wes's post on the topic](https://www.mux.com/blog/blurry-image-placeholders-on-the-web) for the latest.
+
+Step one: What image can we blurhash that will best represent the incoming player? Well, [because we read the docs](https://docs.mux.com/guides/video/mux-player-customize-look-and-feel#customize-the-poster-image), we know that Mux Player will use a thumbnail from the middle of the video as a poster. Let’s grab the same thumbnail [with image.mux.com](https://docs.mux.com/guides/video/get-images-from-a-video) to use for our blurhash.
+
+https://image.mux.com/{PLAYBACK_ID}/thumbnail.{png|jpg}
+
+Next step: Making it blurry. To do that, we’ll use a combination of the [sharp](https://www.npmjs.com/package/sharp) and [blurhash](https://www.npmjs.com/package/blurhash) packages. Because these are heavier packages and a more computationally expensive step, we’ll definitely want to run this server-side. (Our site is Next.js, so we’re running this step in [getStaticProps or getServerSideProps](https://nextjs.org/docs/basic-features/data-fetching/overview).)
+
+```javascript
+import sharp from 'sharp'
+import { encode } from 'blurhash'
+
+const url = `https://image.mux.com/${playbackId}/thumbnail.png`
+const response = await fetch(url)
+
+// from our response we now need a Buffer
+const arrayBuffer = await response.arrayBuffer()
+const buffer = Buffer.from(new Uint8Array(arrayBuffer))
+
+// and we use sharp to convert that buffer to a blurhash
+const image = sharp(buffer)
+
+const { data, info } = await image
+  .raw()
+  .ensureAlpha()
+  .resize(blurWidth, blurHeight, { fit: 'inside' })
+  .toBuffer({ resolveWithObject: true })
+
+const blurHash = encode(new Uint8ClampedArray(data), info.width, info.height, 4, 4)
+
+// bonus: we can grab a width and height here to use for aspect ratio later
+const { width, height } = await image.metadata()
+```
+
+Well, that’s all fine and dandy, but what can we _do_ with a blurhash? We could use the [decode function](https://github.com/woltapp/blurhash/tree/master/TypeScript#decodeblurhash-string-width-number-height-number-punch-number--uint8clampedarray) and pass those pixels to a canvas client-side, but let me do you one better. If we convert our blurhash to a [base64 Data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs), we’re easily able to display the blurhash in an image element or as a CSS background image without any client-side code. Something like this:
+
+```javascript
+import { decode } from 'blurhash'
+
+const hashWidth = info.width
+const hashHeight = Math.round(hashWidth * (info.height / info.width))
+
+const pixels = decode(hash, hashWidth, hashHeight)
+
+const resizedImageBuf = await sharp(
+  Buffer.from(pixels), { raw: { channels: 4, width: hashWidth, height: hashHeight }}
+).jpeg({ overshootDeringing: true, quality: 40 }).toBuffer()
+
+const blurHashBase64 = `data:image/jpeg;base64,${resizedImageBuf.toString('base64')}`
+```
+
+Final step: Let’s add that blurhash to our front-end! We add it not just to the placeholder, but also to mux-player itself. That way, mux-player will show the placeholder while it loads the poster over the network. Neat!
+
+```html
+<script>
+    player.setAttribute('placeholder', blurHashBase64)
+</script>
+
+<style>
+  .player-placeholder {
+    background-image: url({blurHashBase64});
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+</style>
+```
+
+{% video
+   playbackId="xRIN02Ed9EkAvTcgFtX01wYdtm3WHg2e4Tgl02H02CLGSVk"
+   title="A BlurHash placeholder resolving into a video poster"
+   width=1509
+   height=1000
+   autoplay=true
+   muted=true
+   loop=true /%}
+
+## Shameless plug: we built things that do this for you in React
+
+Not gonna lie; some of that placeholder stuff got kinda dicey at the end. I wouldn’t blame you if you wanted to take it easy and not do this.
+
+Actually, let me help you out there. We went ahead and built this functionality into two new libraries here at Mux: [@mux/mux-player-react/lazy](https://www.npmjs.com/package/@mux/mux-player-react) and [@mux/blurhash](https://www.github.com/muxinc/blurhash).
+
+Mux Player React Lazy takes whatever’s in the placeholder= attribute of the Mux Player element and displays that as a placeholder. It’ll swap that placeholder out when the player enters the viewport.
+
+Meanwhile, Mux Blurhash bundles all that sharp and blurhash work into one nice function, muxBlurHash(playbackId, options). Used together, you get happy users and happy SEO.
+
+Here’s what it all looks like in Next.js.
+
+```jsx
+import muxBlurHash from '@mux/blurhash'
+import MuxPlayer from '@mux/mux-player-react/lazy'
+
+export default function Page({ playbackId, sourceWidth, sourceHeight, blurHashBase64 }) {
+  return <MuxPlayer
+    playbackId={playbackId}
+    style={{ aspectRatio: `${sourceWidth}/${sourceHeight}` }}
+    placeholder={blurHashBase64}
+  />
+}
+
+export async function getServerSideProps({ params }) {
+  const playbackId = params.playbackId
+  const { sourceWidth, sourceHeight, blurHashBase64 } = await muxBlurHash(playbackId)
+
+  return { props: { playbackId, sourceWidth, sourceHeight, blurHashBase64 }  }
+}
+```
+
+Pretty nice, right? You can get started with our docs on [lazy-loading Mux Player](https://docs.mux.com/guides/video/mux-player-lazy-loading) and [providing a placeholder for Mux Player](https://docs.mux.com/guides/video/mux-player-customize-look-and-feel#provide-a-placeholder-while-the-poster-image-loads)**.** And if you have any questions, don’t be afraid to hit us up at [@MuxHQ on Twitter](https://twitter.com/muxhq).
