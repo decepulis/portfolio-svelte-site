@@ -1,23 +1,29 @@
 <script lang="ts">
 	import type { Tag } from '@markdoc/markdoc';
-	import '@videojs/html/video/minimal-skin.css';
 
-	const { title, caption, playbackId, width, height, ...rest }: Tag['attributes'] = $props();
+	import '$lib/videojs';
 
-	// MuxVideo takes either a structured source object or a stream URL it parses back into
-	// one. A source object has no attribute form, so markup gets the URL.
-	const src = $derived(`https://stream.mux.com/${playbackId}.m3u8?max_resolution=1080p`);
+	const { title, caption, playbackId, width, height, loop, autoplay, muted }: Tag['attributes'] =
+		$props();
+
+	const source = $derived({
+		playbackId,
+		playback: { maxResolution: '1080p' },
+		poster: { time: 0 }
+	});
+	let mediaReady = $state(false);
+
 	$effect(() => {
-		// The player and skin touch HTMLElement as they register their custom elements, so
-		// they can't be imported during prerender. The Mux media could be, but the hls.js
-		// it carries is ~640kB of the ~920kB total, so it stays out of the page bundle as
-		// well. The markup below renders as inert unknown elements until these land, then
-		// upgrades in place.
-		void Promise.all([
-			import('@videojs/html/video/player'),
-			import('@videojs/html/video/minimal-skin'),
-			import('@videojs/html/media/mux-video')
-		]);
+		let cancelled = false;
+
+		// Keep the hls.js-backed media implementation out of the initial bundle.
+		void import('@videojs/html/media/mux-video').then(() => {
+			if (!cancelled) mediaReady = true;
+		});
+
+		return () => {
+			cancelled = true;
+		};
 	});
 </script>
 
@@ -29,7 +35,10 @@
 				style:--media-accent-color="var(--color-blue)"
 				style:--media-border-radius="0"
 			>
-				<mux-video {src} poster-time="0" playsinline crossorigin="anonymous" {...rest}></mux-video>
+				{#if mediaReady}
+					<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
+					></mux-video>
+				{/if}
 			</video-minimal-skin>
 		</video-player>
 	</div>
