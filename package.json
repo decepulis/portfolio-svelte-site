@@ -54,7 +54,8 @@
 	"type": "module",
 	"dependencies": {
 		"@vercel/analytics": "^1.5.0",
-		"@videojs/html": "10.0.0-beta.32",
+		"@videojs/html": "10.0.1",
+		"@videojs/mux-video": "10.0.1",
 		"just-throttle": "^4.2.0"
 	},
 	"pnpm": {

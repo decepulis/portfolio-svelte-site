@@ -30,7 +30,7 @@
 <figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
 	<div style:aspect-ratio="{width}/{height}" class="bg-gray relative w-full">
 		<video-player content-title={title}>
-			<video-minimal-skin
+			<video-neutral-skin
 				class="border-silver dark:border-gray absolute inset-0 border"
 				style:--media-accent-color="var(--color-blue)"
 				style:--media-border-radius="0"
@@ -39,7 +39,7 @@
 					<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
 					></mux-video>
 				{/if}
-			</video-minimal-skin>
+			</video-neutral-skin>
 		</video-player>
 	</div>
 	{#if caption}
