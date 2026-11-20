@@ -71,7 +71,7 @@
 		'active:border-t-(--t-dark) active:border-l-(--t-dark) active:border-r-(--t-light) active:border-b-(--t-light) active:shadow-[inset_1px_1px_var(--t-shadow),inset_-1px_-1px_var(--t-hilite)]',
 		'aria-expanded:border-t-(--t-dark) aria-expanded:border-l-(--t-dark) aria-expanded:border-r-(--t-light) aria-expanded:border-b-(--t-light) aria-expanded:shadow-[inset_1px_1px_var(--t-shadow),inset_-1px_-1px_var(--t-hilite)]',
 		'active:[&>*]:translate-x-px active:[&>*]:translate-y-px aria-expanded:[&>*]:translate-x-px aria-expanded:[&>*]:translate-y-px',
-		'outline-none focus-visible:outline-1 focus-visible:outline-dotted focus-visible:outline-offset-[-5px] focus-visible:outline-(color:--t-text)',
+		'outline-none focus-visible:outline-1 focus-visible:outline-dotted focus-visible:outline-offset-[-5px] focus-visible:outline-(color:--t-text)!',
 		'aria-disabled:cursor-not-allowed aria-disabled:text-(--t-shadow) aria-disabled:[filter:drop-shadow(1px_1px_0_var(--t-light))]',
 		'forced-colors:border forced-colors:border-solid forced-colors:border-[ButtonText] forced-colors:bg-[ButtonFace] forced-colors:text-[ButtonText]',
 		'forced-colors:forced-color-adjust-none',
@@ -178,7 +178,7 @@
 	];
 	const radioItem = [
 		'group/menu-radio flex cursor-pointer items-center justify-between gap-3 rounded-none min-h-[18px] w-full shrink-0 px-[3px] py-[2px] leading-[14px]',
-		'outline-none data-highlighted:outline-1 data-highlighted:outline-dotted data-highlighted:outline-offset-[-1px] data-highlighted:outline-(color:--t-well-text)',
+		'outline-none data-highlighted:outline-1 data-highlighted:outline-dotted data-highlighted:outline-offset-[-1px] data-highlighted:outline-(color:--t-well-text)!',
 		'aria-checked:bg-(--t-select) aria-checked:text-white aria-checked:data-highlighted:outline-[#ffffe1]',
 		'forced-colors:aria-checked:bg-[Highlight] forced-colors:aria-checked:text-[HighlightText]',
 		'data-custom:italic'
@@ -538,7 +538,7 @@
 									raised,
 									'absolute left-[var(--media-slider-fill,0%)] h-[20px] w-[11px] transform-[translateX(-50%)] rounded-none bg-(--t-face)',
 									'group-data-dragging/slider:left-(--media-slider-pointer)',
-									'outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-(color:--t-text) focus-visible:outline-dotted',
+									'outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-(color:--t-text)! focus-visible:outline-dotted',
 									'forced-colors:bg-[ButtonFace] forced-colors:forced-color-adjust-none',
 									'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
 								]}
@@ -633,7 +633,7 @@
 										class={[
 											raised,
 											'absolute bottom-[var(--media-slider-fill,0%)] left-1/2 h-[11px] w-[20px] transform-[translate(-50%,50%)] rounded-none bg-(--t-face)',
-											'outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-(color:--t-text) focus-visible:outline-dotted',
+											'outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-(color:--t-text)! focus-visible:outline-dotted',
 											'forced-colors:bg-[ButtonFace] forced-colors:forced-color-adjust-none',
 											'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
 										]}
@@ -739,7 +739,7 @@
 														raised,
 														'flex h-[22px] items-center gap-[4px] bg-(--t-face) px-[8px]',
 														'group-active/menu-row:border-t-(--t-dark) group-active/menu-row:border-r-(--t-light) group-active/menu-row:border-b-(--t-light) group-active/menu-row:border-l-(--t-dark)',
-														'group-data-highlighted/menu-row:outline-1 group-data-highlighted/menu-row:outline-offset-[-4px] group-data-highlighted/menu-row:outline-(color:--t-text) group-data-highlighted/menu-row:outline-dotted'
+														'group-data-highlighted/menu-row:outline-1 group-data-highlighted/menu-row:outline-offset-[-4px] group-data-highlighted/menu-row:outline-(color:--t-text)! group-data-highlighted/menu-row:outline-dotted'
 													]}
 												>
 													{@render chevron(true)}
