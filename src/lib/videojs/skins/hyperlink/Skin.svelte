@@ -1,8 +1,11 @@
 <!--
 	Lab skin: hyperlink. Forked from $lib/videojs/scaffold/ScaffoldSkin.svelte.
-	Markup follows the HTML registry skin (html/scaffold, video/skin.html); classes come from the
-	React Tailwind registry skin (react/scaffold, video/**/*.tsx), which has the same structure.
-	Copy this file as the starting point for a custom skin.
+
+	Every control is a bracketed text link, HTML 3.2 style: [Play] [Mute] [CC] [Settings].
+	The time slider is the control row's underline. Played time is a "visited" link (purple),
+	buffered time is an unvisited link (blue), and the rest is a dotted not-yet-loaded line. Point
+	at it and it goes wavy like every other link on the site; press it and it turns the classic
+	active red.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -23,34 +26,42 @@
 	const id = (name: string) => `${uid}-${name}`;
 
 	// == shared classes ==
+	const serif = "font-[Times,'Times_New_Roman',serif]";
+	const mono = "font-['Courier_New',Courier,monospace]";
+	// A plain white page-like surface (the site's dark theme is a gainsboro page, not black).
+	const paper = 'bg-white text-black dark:bg-gainsboro';
+	// A `<table border=1>` box.
+	const box = [paper, 'border border-solid border-black'];
+	// Classic dotted focus rectangle.
+	const focusRing =
+		'outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-dotted focus-visible:outline-black';
+
+	// Buttons are links: blue, underlined, wavy on hover (like the rest of the site), red while pressed.
 	const button = [
-		'relative grid size-8 shrink-0 cursor-pointer place-items-center rounded-none bg-media-background p-0 text-inherit',
+		'relative inline-flex h-8 shrink-0 cursor-pointer items-center whitespace-nowrap rounded-none bg-transparent p-0 text-link',
 		"pointer-coarse:before:absolute pointer-coarse:before:-inset-[3px] pointer-coarse:before:content-['']",
-		'hover:bg-(--media-button-highlight) focus-visible:bg-(--media-button-highlight) aria-expanded:bg-(--media-button-highlight)',
-		'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-media-ring',
-		'outline-none aria-disabled:cursor-not-allowed aria-disabled:opacity-40 disabled:cursor-not-allowed disabled:opacity-40',
-		'media-high-contrast:hover:bg-media-foreground media-high-contrast:hover:text-media-background media-high-contrast:focus-visible:bg-media-foreground media-high-contrast:focus-visible:text-media-background',
-		'media-high-contrast:aria-expanded:bg-media-foreground media-high-contrast:aria-expanded:text-media-background',
-		'forced-colors:border forced-colors:border-solid forced-colors:border-[ButtonText] forced-colors:bg-[ButtonFace] forced-colors:text-[ButtonText]',
-		'forced-colors:forced-color-adjust-none',
-		'forced-colors:hover:bg-[Highlight] forced-colors:hover:text-[HighlightText] forced-colors:focus-visible:bg-[Highlight] forced-colors:focus-visible:text-[HighlightText]',
-		'forced-colors:aria-expanded:bg-[Highlight] forced-colors:aria-expanded:text-[HighlightText] forced-colors:aria-disabled:text-[GrayText] forced-colors:aria-disabled:opacity-100',
+		'hover:decoration-wavy focus-visible:decoration-wavy aria-expanded:decoration-wavy active:text-red',
+		focusRing,
+		'aria-disabled:cursor-not-allowed aria-disabled:text-gray disabled:cursor-not-allowed disabled:text-gray',
+		'forced-colors:text-[LinkText] forced-colors:active:text-[ActiveText]',
+		'forced-colors:aria-disabled:text-[GrayText] forced-colors:disabled:text-[GrayText]',
 		'data-hidden:hidden'
 	];
+	// Underline lives on the label only, so the brackets stay plain black.
+	const linkLabel = 'underline decoration-1 underline-offset-2 [text-decoration-style:inherit]';
 	const centerButton = [
-		'm-0! bg-media-popover/40! media-high-contrast:bg-media-background! forced-colors:bg-[ButtonFace]!',
-		'hover:bg-media-popover/60! focus-visible:bg-media-popover/60! aria-expanded:bg-media-popover/60!',
-		'media-high-contrast:hover:bg-media-foreground! media-high-contrast:focus-visible:bg-media-foreground! media-high-contrast:aria-expanded:bg-media-foreground!',
-		'forced-colors:hover:bg-[Highlight]! forced-colors:focus-visible:bg-[Highlight]! forced-colors:aria-expanded:bg-[Highlight]!'
+		box,
+		'm-0! px-3! h-auto! py-1! shadow-[2px_2px_0_black] active:translate-x-px active:translate-y-px active:shadow-[1px_1px_0_black]',
+		'motion-reduce:active:translate-0'
 	];
 	const centerSeek = [
 		centerButton,
-		'hidden size-8! pointer-fine:grid media-max-360:hidden! group-not-data-started/controls:hidden!'
+		'hidden! pointer-fine:inline-flex! media-max-360:hidden! group-not-data-started/controls:hidden!'
 	];
-	const icon = 'col-start-1 row-start-1 size-4.5';
 	const popup = [
-		'm-0 overflow-visible border-0 text-inherit',
-		'media-transitioning:opacity-0 media-transitioning:blur-media-hidden-popup media-transitioning:scale-media-hidden-popup',
+		'm-0 overflow-visible text-inherit',
+		'transition-[opacity,transform] duration-media-fast ease-out motion-reduce:transition-none',
+		'media-transitioning:opacity-0',
 		'data-starting-style:transform-[translate(var(--media-popup-translate-x-distance,0),var(--media-popup-translate-y-distance,0))]',
 		'data-ending-style:transform-none',
 		'data-[side=top]:origin-bottom data-[side=bottom]:origin-top data-[side=left]:origin-right data-[side=right]:origin-left',
@@ -65,58 +76,65 @@
 		'data-[side=right]:before:inset-y-0 data-[side=right]:before:right-full',
 		'data-[side=top]:before:h-(--media-popup-side-offset) data-[side=bottom]:before:h-(--media-popup-side-offset)',
 		'data-[side=left]:before:w-(--media-popup-side-offset) data-[side=right]:before:w-(--media-popup-side-offset)',
-		'media-high-contrast:outline forced-colors:outline'
+		'forced-colors:outline'
 	];
+	// Old system tooltips: light yellow, 1px black border, small sans.
 	const tooltipPopup = [
 		popup,
-		'pointer-events-none z-20 whitespace-nowrap rounded-none bg-media-popover px-1.5 py-0.5 text-media-popover-foreground',
-		'shadow-none [--media-popup-side-offset:var(--media-tooltip-side-offset)] [--media-tooltip-side-offset:calc(var(--media-spacing)*9)]',
+		'pointer-events-none z-20 whitespace-nowrap rounded-none border border-solid border-black bg-[lightyellow] px-1.5 py-0.5 font-sans text-[12px] text-black',
+		'shadow-none [--media-popup-side-offset:var(--media-tooltip-side-offset)] [--media-tooltip-side-offset:calc(var(--media-spacing)*12)]',
 		'data-open:flex data-open:items-center data-open:gap-1'
 	];
 	const screenTooltipPopup = [
 		tooltipPopup,
-		'[--media-tooltip-side-offset:calc(var(--media-spacing)*3)]!'
+		'[--media-tooltip-side-offset:calc(var(--media-spacing)*2)]!'
 	];
-	const tooltipShortcut =
-		'min-w-[1.5em] bg-white/10 p-[0.1em] text-center text-media-sm [font-family:inherit] leading-tight';
+	const tooltipShortcut = [mono, "text-[12px] before:content-['('] after:content-[')']"];
 	const indicator = [
-		'pointer-events-none flex items-center gap-2 rounded-none bg-media-background px-2.5 py-1',
-		'media-high-contrast:bg-media-background media-high-contrast:outline media-high-contrast:outline-current',
+		box,
+		mono,
+		'pointer-events-none flex items-center gap-2 rounded-none px-2 py-0.5 text-[13px]',
 		'forced-colors:bg-[Canvas] forced-colors:text-[CanvasText] forced-colors:outline forced-colors:outline-[CanvasText]'
 	];
+	// Menu rows highlight like a Windows 3.1 menu: navy with white text.
+	const menuHighlight =
+		'data-highlighted:bg-navy data-highlighted:text-white data-highlighted:outline-none forced-colors:data-highlighted:bg-[Highlight] forced-colors:data-highlighted:text-[HighlightText]';
 	const menuRow = [
-		'flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-none min-h-8 w-full shrink-0 bg-media-background bg-clip-padding px-2 py-0 text-start',
-		'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-current',
-		'data-highlighted:bg-(--media-button-highlight) media-high-contrast:data-highlighted:highlight-media forced-colors:data-highlighted:highlight-media'
+		'flex cursor-pointer items-baseline gap-1.5 whitespace-nowrap rounded-none min-h-7 w-full shrink-0 bg-transparent px-2 py-1 text-start',
+		focusRing,
+		'focus-visible:outline-offset-[-2px]',
+		menuHighlight
 	];
 	const menuTrigger = [
 		menuRow,
 		'data-[availability=unavailable]:hidden data-[availability=unsupported]:hidden'
 	];
+	const menuLink =
+		'text-link underline decoration-1 underline-offset-2 in-data-highlighted:text-white forced-colors:text-[LinkText]';
 	const menuContent = [
 		'absolute max-h-full overflow-auto overscroll-none outline-hidden',
 		'[clip-path:inset(0)]',
-		'flex flex-col gap-2! p-2 not-data-submenu:inset-x-0 not-data-submenu:top-0',
+		'flex flex-col p-1 not-data-submenu:inset-x-0 not-data-submenu:top-0',
 		'not-data-submenu:data-child-open:transform-[translateX(-100%)]',
 		'not-data-submenu:data-child-open:rtl:transform-[translateX(100%)]',
 		'not-data-submenu:data-child-open:[clip-path:inset(0_0_0_100%)] not-data-submenu:data-child-open:rtl:[clip-path:inset(0_100%_0_0)]',
 		'data-submenu:inset-x-0 data-submenu:top-0 data-submenu:z-10'
 	];
+	// Radio items: a bulleted list of links. The current one is bold black and not a link.
 	const radioItem = [
-		'group/menu-radio flex cursor-pointer items-center justify-between gap-3 rounded-none min-h-8 w-full shrink-0 bg-media-background bg-clip-padding px-2 py-0',
-		'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-current',
-		'data-highlighted:bg-(--media-button-highlight) media-high-contrast:data-highlighted:highlight-media forced-colors:data-highlighted:highlight-media',
+		'group/menu-radio flex cursor-pointer items-baseline gap-1.5 rounded-none min-h-7 w-full shrink-0 bg-transparent px-2 py-1',
+		focusRing,
+		'focus-visible:outline-offset-[-2px]',
+		menuHighlight,
 		'data-custom:italic'
 	];
-	const menuHint = 'ms-auto inline-flex min-w-0 items-center gap-1 ps-2 opacity-70';
-	const menuBadge = 'rounded-none bg-media-muted px-1.5 text-media-sm';
-	const menuIcon = 'size-4.5 shrink-0 opacity-70';
+	const menuBadge = [mono, 'text-[11px] uppercase opacity-80'];
 
 	const submenus = [
-		{ key: 'quality', icon: 'switches', group: 'media-quality-radio-group' },
-		{ key: 'audio', icon: 'speech', group: 'media-audio-track-radio-group' },
-		{ key: 'speed', icon: 'speed', group: 'media-playback-rate-radio-group' },
-		{ key: 'captions', icon: 'captions-off', group: 'media-captions-radio-group' }
+		{ key: 'quality', group: 'media-quality-radio-group' },
+		{ key: 'audio', group: 'media-audio-track-radio-group' },
+		{ key: 'speed', group: 'media-playback-rate-radio-group' },
+		{ key: 'captions', group: 'media-captions-radio-group' }
 	] as const;
 	const menuLabels = { quality: 'Quality', audio: 'Audio', speed: 'Speed', captions: 'Captions' };
 
@@ -158,67 +176,34 @@
 	</media-tooltip>
 {/snippet}
 
-{#snippet playIcons(iconClass?: ClassValue)}
-	<media-icon
-		family="scaffold"
-		name="restart"
-		class={[icon, 'hidden group-data-ended/play:block', iconClass]}
-	></media-icon>
-	<media-icon
-		family="scaffold"
-		name="play"
-		class={[
-			icon,
-			'hidden',
-			'group-not-data-ended/play:group-data-paused/play:block',
-			'group-not-data-ended/play:group-not-data-started/play:block',
-			iconClass
-		]}
-	></media-icon>
-	<media-icon
-		family="scaffold"
-		name="pause"
-		class={[
-			icon,
-			'hidden',
-			'group-data-started/play:group-not-data-paused/play:group-not-data-ended/play:block',
-			iconClass
-		]}
-	></media-icon>
+<!-- `[label]`, where the label may be several state-dependent spans; brackets are decorative. -->
+{#snippet link(label: Snippet)}
+	<span aria-hidden="true" class="text-black forced-colors:text-[CanvasText]">[</span><span
+		class={linkLabel}>{@render label()}</span
+	><span aria-hidden="true" class="text-black forced-colors:text-[CanvasText]">]</span>
 {/snippet}
 
-{#snippet seekContent(seconds: number)}
-	<div class="relative grid">
-		<media-icon
-			family="scaffold"
-			name="seek"
-			class={[icon, seconds < 0 && 'transform-[scaleX(-1)]']}
-		></media-icon>
-		<span
-			class={[
-				'absolute bottom-[calc(var(--media-spacing)*-0.75)] text-[calc(var(--media-spacing)*2.25)] tabular-nums',
-				seconds < 0 ? '-left-px' : '-right-px'
-			]}
-		>
-			{Math.abs(seconds)}
-		</span>
-	</div>
-{/snippet}
-
-{#snippet chevron(back = false)}
-	<media-icon
-		family="scaffold"
-		name="chevron"
-		class={back
-			? 'size-4 shrink-0 transform-[rotate(180deg)] opacity-70 rtl:transform-none'
-			: 'size-4 shrink-0 opacity-70 rtl:transform-[scaleX(-1)]'}
-	></media-icon>
+{#snippet playLabels(glyphs = false)}
+	<span class="hidden group-data-ended/play:inline"
+		>{#if glyphs}<span aria-hidden="true" class="no-underline">&#x21BA;&#xFE0E;&nbsp;</span
+			>{/if}Replay</span
+	>
+	<span
+		class="hidden group-not-data-ended/play:group-not-data-started/play:inline group-not-data-ended/play:group-data-paused/play:inline"
+		>{#if glyphs}<span aria-hidden="true">&#x25B6;&#xFE0E;&nbsp;</span>{/if}Play</span
+	>
+	<span
+		class="hidden group-data-started/play:group-not-data-paused/play:group-not-data-ended/play:inline"
+		>{#if glyphs}<span aria-hidden="true">&#x2016;&nbsp;</span>{/if}Pause</span
+	>
 {/snippet}
 
 <media-container
 	class={[
-		'media-skin',
-		'rounded-media-player text-media text-media-foreground @container/media-root relative block h-full w-full overflow-hidden [font-family:var(--media-font-family,inherit)] [--spacing:var(--media-spacing)]',
+		'media-skin hyperlink-skin',
+		'rounded-media-player text-media-foreground @container/media-root relative block h-full w-full overflow-hidden text-[15px] leading-tight',
+		serif,
+		'[--media-accent:var(--color-link)] [--media-popover-foreground:black] [--media-popover:white] [--media-ring:black]',
 		'focus-visible:outline-media-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px]',
 		'bg-black',
 		className
@@ -234,245 +219,150 @@
 		<img alt="" decoding="async" class="object-media size-full" />
 	</media-poster>
 
-	<!-- error dialog -->
+	<!-- error dialog: a plain alert box -->
 	<media-error-dialog>
 		<media-dialog-backdrop
-			class="absolute inset-0 z-40 bg-black not-data-open:hidden data-[scope=document]:fixed"
+			class="absolute inset-0 z-40 bg-black/70 not-data-open:hidden data-[scope=document]:fixed"
 		></media-dialog-backdrop>
 		<media-dialog-popup
 			class={[
-				'bg-media-popover text-media-popover-foreground absolute top-1/2 left-1/2 z-50 grid max-h-[calc(100%-var(--media-spacing)*8)] w-[calc(100%-var(--media-spacing)*8)] max-w-80 transform-[translate(-50%,-50%)] gap-3 overflow-auto rounded-none p-5 not-data-open:hidden',
+				box,
+				'absolute top-1/2 left-1/2 z-50 grid max-h-[calc(100%-var(--media-spacing)*8)] w-[calc(100%-var(--media-spacing)*8)] max-w-80 transform-[translate(-50%,-50%)] gap-3 overflow-auto rounded-none p-5 not-data-open:hidden',
+				'shadow-[3px_3px_0_black]',
 				'data-[scope=document]:fixed data-[scope=document]:max-h-[calc(100dvh-var(--media-spacing)*8)]',
-				'focus-visible:outline-media-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px]',
-				'media-high-contrast:border media-high-contrast:border-solid media-high-contrast:border-current forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
+				focusRing,
+				'forced-colors:border-[CanvasText]'
 			]}
 		>
-			<media-dialog-title class="text-[calc(var(--media-spacing)*4.5)] leading-7"
-			></media-dialog-title>
-			<media-dialog-description class="text-[calc(var(--media-spacing)*3.5)]"
-			></media-dialog-description>
+			<media-dialog-title class="text-xl leading-7 font-bold"></media-dialog-title>
+			<media-dialog-description class="text-[15px]"></media-dialog-description>
 			<media-dialog-close
-				class={[button, 'h-8 w-auto justify-self-end border! border-solid border-current px-3']}
+				class={[
+					button,
+					'justify-self-end underline decoration-1 underline-offset-2',
+					"before:text-black before:no-underline before:content-['['] after:text-black after:content-[']']"
+				]}
 			></media-dialog-close>
 		</media-dialog-popup>
 	</media-error-dialog>
 
 	<media-controls>
-		<media-controls-backdrop
-			class={[
-				'pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.5),transparent_40%,transparent_60%,rgb(0_0_0/0.4))] not-data-visible:hidden forced-colors:bg-none',
-				'not-data-started:[visibility:var(--media-controls-before-start,hidden)]'
-			]}
-		></media-controls-backdrop>
-
 		<!-- buffering, while controls are hidden -->
 		<media-controls-group class="group/buffering-controls contents">
 			<media-buffering-indicator
-				class="pointer-events-none absolute inset-0 z-40 grid place-items-center not-data-visible:hidden not-data-visible:[--media-spinner-animation:none] group-not-data-visible/buffering-controls:bg-[rgba(0,0,0,0.4)] motion-reduce:[--media-spinner-animation:none] forced-colors:bg-transparent!"
+				class="pointer-events-none absolute inset-0 z-40 grid place-items-center not-data-visible:hidden"
 			>
-				<media-icon family="scaffold" name="spinner" class="size-7"></media-icon>
+				<span class={[indicator, 'text-[14px]']}>Transferring data&hellip;</span>
 			</media-buffering-indicator>
 		</media-controls-group>
 
 		<media-controls-content class="group/controls pointer-events-none absolute inset-0 z-30">
 			<media-tooltip-group>
-				<!-- top: title and screen controls -->
+				<!-- top: title and casting -->
 				<media-controls-group
 					class={[
-						'pointer-events-auto absolute inset-x-0 top-0 flex items-center justify-end gap-2 p-3 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
-						'media-high-contrast:rounded-none media-high-contrast:bg-media-background forced-colors:rounded-none forced-colors:bg-[Canvas]',
-						'forced-colors:inset-x-0 forced-colors:inset-e-0 forced-colors:top-0 forced-colors:justify-end forced-colors:rounded-none!',
+						'pointer-events-auto absolute inset-x-0 top-0 flex items-start justify-end gap-3 p-3 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
+						'duration-media-controls transition-opacity motion-reduce:transition-none',
 						'group-not-data-visible/controls:opacity-0',
 						'not-data-started:[visibility:var(--media-controls-before-start,hidden)]'
 					]}
 				>
-					<media-title
-						class={[
-							'bg-media-background text-media-foreground media-max-3xs:hidden pointer-events-none min-w-0 flex-1 truncate px-2 text-[calc(var(--media-spacing)*4)]',
-							'media-high-contrast:bg-media-background forced-colors:z-40 forced-colors:bg-transparent! forced-colors:text-[CanvasText]',
-							'not-data-visible:opacity-0'
-						]}
-					></media-title>
+					<div class="media-max-3xs:hidden pointer-events-none min-w-0 flex-1">
+						<media-title
+							class={[
+								box,
+								'inline-block max-w-full truncate px-2 py-0.5 align-top font-bold',
+								'forced-colors:bg-[Canvas] forced-colors:text-[CanvasText]',
+								'not-data-visible:hidden'
+							]}
+						></media-title>
+					</div>
 
-					<media-airplay-button id={id('airplay')} class={[button, 'group/airplay']}>
-						<media-icon
-							family="scaffold"
-							name="airplay-enter"
-							class={[icon, 'group-data-[airplay-state=connected]/airplay:hidden']}
-						></media-icon>
-						<media-icon
-							family="scaffold"
-							name="airplay-exit"
-							class={[icon, 'hidden group-data-[airplay-state=connected]/airplay:block']}
-						></media-icon>
-					</media-airplay-button>
-					{@render tooltip('airplay', { class: screenTooltipPopup })}
+					<div class={[box, 'flex gap-3 px-2 empty:hidden has-[>*:not([data-hidden])]:flex']}>
+						<media-airplay-button id={id('airplay')} class={[button, 'group/airplay']}>
+							{#snippet airplay()}
+								<span class="group-data-[airplay-state=connected]/airplay:hidden">AirPlay</span>
+								<span class="hidden group-data-[airplay-state=connected]/airplay:inline"
+									>Stop AirPlay</span
+								>
+							{/snippet}
+							{@render link(airplay)}
+						</media-airplay-button>
+						{@render tooltip('airplay', { class: screenTooltipPopup })}
 
-					<media-cast-button id={id('cast')} class={[button, 'group/cast']}>
-						<media-icon
-							family="scaffold"
-							name="cast-enter"
-							class={[icon, 'group-data-[cast-state=connected]/cast:hidden']}
-						></media-icon>
-						<media-icon
-							family="scaffold"
-							name="cast-exit"
-							class={[icon, 'hidden group-data-[cast-state=connected]/cast:block']}
-						></media-icon>
-					</media-cast-button>
-					{@render tooltip('cast', { class: screenTooltipPopup })}
-
-					<media-pip-button id={id('pip')} class={[button, 'group/pip']}>
-						<media-icon
-							family="scaffold"
-							name="pip-enter"
-							class={[icon, 'group-data-pip/pip:hidden']}
-						></media-icon>
-						<media-icon
-							family="scaffold"
-							name="pip-exit"
-							class={[icon, 'hidden group-data-pip/pip:block']}
-						></media-icon>
-					</media-pip-button>
-					{@render tooltip('pip', { class: screenTooltipPopup })}
-
-					<media-fullscreen-button id={id('fullscreen')} class={[button, 'group/fullscreen']}>
-						<media-icon
-							family="scaffold"
-							name="fullscreen-enter"
-							class={[icon, 'hidden group-not-data-fullscreen/fullscreen:block']}
-						></media-icon>
-						<media-icon
-							family="scaffold"
-							name="fullscreen-exit"
-							class={[icon, 'hidden group-data-fullscreen/fullscreen:block']}
-						></media-icon>
-					</media-fullscreen-button>
-					{@render tooltip('fullscreen', { class: screenTooltipPopup })}
+						<media-cast-button id={id('cast')} class={[button, 'group/cast']}>
+							{#snippet cast()}
+								<span class="group-data-[cast-state=connected]/cast:hidden">Cast</span>
+								<span class="hidden group-data-[cast-state=connected]/cast:inline"
+									>Stop casting</span
+								>
+							{/snippet}
+							{@render link(cast)}
+						</media-cast-button>
+						{@render tooltip('cast', { class: screenTooltipPopup })}
+					</div>
 				</media-controls-group>
 
 				<!-- center: seek and play -->
 				<media-buffering-indicator class="group/center-buffering contents">
 					<media-controls-group
 						class={[
-							'pointer-events-auto absolute top-1/2 left-1/2 flex transform-[translate(-50%,-50%)] items-center gap-2 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
-							'media-high-contrast:rounded-none media-high-contrast:bg-media-background media-high-contrast:px-2 forced-colors:bg-transparent!',
+							'pointer-events-auto absolute top-1/2 left-1/2 flex transform-[translate(-50%,-50%)] items-center gap-4 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
+							'duration-media-controls transition-opacity motion-reduce:transition-none',
 							'group-not-data-visible/controls:opacity-0 group-data-visible/center-buffering:hidden!'
 						]}
 					>
 						<media-seek-button seconds={-10} id={id('center-back')} class={[button, centerSeek]}>
-							{@render seekContent(-10)}
+							{#snippet back()}<span aria-hidden="true">&laquo;&nbsp;</span>10s{/snippet}
+							{@render link(back)}
 						</media-seek-button>
 						{@render tooltip('center-back', { disabled: true })}
 
 						<media-play-button
 							id={id('center-play')}
-							class={[button, centerButton, 'group/play media-max-360:size-11! size-14.5!']}
+							class={[
+								button,
+								centerButton,
+								'group/play group-data-ended/play:text-visited media-max-360:text-xl text-3xl'
+							]}
 						>
-							{@render playIcons('size-7! media-max-360:size-5.5!')}
+							{#snippet centerPlay()}{@render playLabels(true)}{/snippet}
+							{@render link(centerPlay)}
 						</media-play-button>
 						{@render tooltip('center-play', { disabled: true })}
 
 						<media-seek-button seconds={10} id={id('center-forward')} class={[button, centerSeek]}>
-							{@render seekContent(10)}
+							{#snippet forward()}10s<span aria-hidden="true">&nbsp;&raquo;</span>{/snippet}
+							{@render link(forward)}
 						</media-seek-button>
 						{@render tooltip('center-forward', { disabled: true })}
 					</media-controls-group>
 				</media-buffering-indicator>
 
-				<!-- bottom: time slider and control row -->
+				<!-- bottom: a row of links, underlined by the time slider -->
 				<div
 					class={[
-						'bg-media-background pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col gap-2 p-3 group-not-data-visible/controls:pointer-events-none',
-						'media-high-contrast:rounded-none media-high-contrast:bg-media-background forced-colors:rounded-none forced-colors:bg-[Canvas]',
+						paper,
+						'pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col px-3 pt-0.5 pb-1.5 group-not-data-visible/controls:pointer-events-none',
+						'border-t border-solid border-black',
+						'duration-media-controls transition-opacity motion-reduce:transition-none',
+						'forced-colors:bg-[Canvas] forced-colors:text-[CanvasText]',
 						'group-not-data-visible/controls:opacity-0',
-						'group-not-data-started/controls:[visibility:var(--media-controls-before-start,hidden)] forced-colors:inset-x-0 forced-colors:bottom-0 forced-colors:rounded-none!'
+						'group-not-data-started/controls:[visibility:var(--media-controls-before-start,hidden)]'
 					]}
 				>
-					<div class="w-full">
-						<media-time-slider
-							thumb-alignment="edge"
-							class={[
-								'group/slider relative flex h-4 min-w-12 flex-1 cursor-pointer items-center',
-								'data-disabled:cursor-not-allowed data-disabled:opacity-40 forced-colors:data-disabled:text-[GrayText] forced-colors:data-disabled:opacity-100'
-							]}
-						>
-							<media-time-slider-chapters class="relative flex size-full items-center">
-								<template>
-									<div
-										class={[
-											'clip-media-chapter-x absolute inset-0 flex items-center',
-											'[--media-chapter-inset-end:0.5] [--media-chapter-inset-start:0.5]',
-											'first-of-type:[--media-chapter-inset-start:0] last-of-type:[--media-chapter-inset-end:0]'
-										]}
-									>
-										<media-slider-track
-											class={[
-												'absolute inset-x-0 isolate h-1.5 rounded-none forced-colors:h-1.5',
-												'before:clip-media-chapter-track-x before:absolute before:inset-y-0 before:rounded-none before:bg-white/10',
-												'forced-colors:before:bg-[Canvas] forced-colors:before:opacity-100! forced-colors:before:forced-color-adjust-none',
-												'forced-colors:before:border forced-colors:before:border-solid forced-colors:before:border-[CanvasText]'
-											]}
-										>
-											<media-slider-buffer
-												class={[
-													'clip-media-x-[--media-slider-buffer] absolute inset-y-0 rounded-none bg-white/10',
-													'forced-colors:opacity-100! forced-colors:forced-color-adjust-none',
-													'forced-colors:bg-[repeating-linear-gradient(135deg,CanvasText_0px,CanvasText_1px,Canvas_1px,Canvas_3px)]'
-												]}
-											></media-slider-buffer>
-											<media-slider-fill
-												class={[
-													'clip-media-x-[--media-slider-fill] bg-media-accent absolute inset-y-0 rounded-none forced-colors:forced-color-adjust-none',
-													'group-data-dragging/slider:clip-media-x-[--media-slider-pointer]',
-													'forced-colors:bg-[Canvas] forced-colors:bg-[linear-gradient(Highlight,Highlight)]'
-												]}
-											></media-slider-fill>
-										</media-slider-track>
-									</div>
-								</template>
-							</media-time-slider-chapters>
-							<media-slider-thumb
-								class={[
-									'border-media-foreground bg-media-foreground absolute left-[var(--media-slider-fill,0%)] size-3 transform-[translateX(-50%)] rounded-none border border-solid',
-									'group-data-dragging/slider:left-(--media-slider-pointer)',
-									'outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current',
-									'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
-									'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
-								]}
-							></media-slider-thumb>
-							<media-slider-preview
-								class={[
-									'pointer-events-none bottom-[calc(100%+var(--media-spacing)*3)] grid max-w-39 origin-bottom justify-items-center gap-1',
-									'opacity-0 group-data-disabled/slider:hidden',
-									'group-data-pointing/slider:opacity-100',
-									'group-data-dragging/slider:opacity-100'
-								]}
-							>
-								<media-slider-thumbnail
-									class="bg-media-background block max-w-39 overflow-hidden rounded-none"
-								>
-									<img alt="" aria-hidden="true" decoding="async" class="block" />
-								</media-slider-thumbnail>
-								<div class="flex w-full min-w-0 justify-center px-2 py-1">
-									<div class="flex max-w-full min-w-0 items-center gap-2">
-										<media-slider-value type="pointer" class="shrink-0 tabular-nums"
-										></media-slider-value>
-										<media-time-slider-chapter-title
-											class="min-w-0 truncate opacity-70 empty:hidden"
-										></media-time-slider-chapter-title>
-									</div>
-								</div>
-							</media-slider-preview>
-						</media-time-slider>
-					</div>
-
 					<media-controls-group
-						class="flex items-center justify-between gap-2 rtl:flex-row-reverse"
+						class="media-max-sm:gap-2 flex items-center justify-between gap-4 rtl:flex-row-reverse"
 					>
-						<media-controls-group class="flex min-w-0 items-center gap-2 rtl:flex-row-reverse">
-							<media-play-button id={id('play')} class={[button, 'group/play']}>
-								{@render playIcons()}
+						<media-controls-group
+							class="media-max-sm:gap-2 flex min-w-0 items-center gap-3 rtl:flex-row-reverse"
+						>
+							<media-play-button
+								id={id('play')}
+								class={[button, 'group/play group-data-ended/play:text-visited']}
+							>
+								{#snippet play()}{@render playLabels()}{/snippet}
+								{@render link(play)}
 							</media-play-button>
 							{@render tooltip('play')}
 
@@ -481,16 +371,11 @@
 								id={id('mute')}
 								class={[button, 'group/mute']}
 							>
-								<media-icon
-									family="scaffold"
-									name="volume-off"
-									class={[icon, 'hidden group-data-muted/mute:block']}
-								></media-icon>
-								<media-icon
-									family="scaffold"
-									name="volume-high"
-									class={[icon, 'hidden group-not-data-muted/mute:block']}
-								></media-icon>
+								{#snippet mute()}
+									<span class="hidden group-data-muted/mute:inline">Unmute</span>
+									<span class="hidden group-not-data-muted/mute:inline">Mute</span>
+								{/snippet}
+								{@render link(mute)}
 							</media-mute-button>
 							{@render tooltip('mute', { delay: 0, disabled: true, sticky: true })}
 							<media-volume-popover
@@ -501,44 +386,48 @@
 								side="top"
 								class={[
 									popup,
-									'bg-media-popover text-media-popover-foreground z-20 h-24 w-7 rounded-none px-3.5 py-2.5',
-									'shadow-none [--media-popover-side-offset:calc(var(--media-spacing)*9)] [--media-popup-side-offset:var(--media-popover-side-offset)]'
+									box,
+									'z-20 h-24 w-8 rounded-none px-2 py-2.5',
+									'shadow-[2px_2px_0_black] [--media-popover-side-offset:calc(var(--media-spacing)*3)] [--media-popup-side-offset:var(--media-popover-side-offset)]'
 								]}
 							>
 								<media-volume-slider
 									orientation="vertical"
 									thumb-alignment="edge"
-									class="relative flex size-full cursor-pointer justify-center [--media-accent:var(--media-accent-color,var(--media-popover-foreground))] data-disabled:cursor-not-allowed data-disabled:opacity-40"
+									class="group/volume relative flex size-full cursor-pointer justify-center data-disabled:cursor-not-allowed data-disabled:opacity-40"
 								>
 									<media-slider-track
 										class={[
-											'absolute bottom-0 left-1/2 h-full w-1 transform-[translateX(-50%)] overflow-hidden rounded-none bg-[#808080] forced-colors:forced-color-adjust-none',
+											'bg-silver absolute bottom-0 left-1/2 h-full w-0.5 transform-[translateX(-50%)] overflow-hidden rounded-none forced-colors:forced-color-adjust-none',
 											'forced-colors:w-1.5 forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText] forced-colors:bg-[Canvas]'
 										]}
 									>
 										<media-slider-fill
-											class="bg-media-accent absolute bottom-0 left-0 h-[var(--media-slider-fill,0%)] w-full rounded-none forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none"
+											class="bg-link group-data-dragging/volume:bg-red absolute bottom-0 left-0 h-[var(--media-slider-fill,0%)] w-full rounded-none forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none"
 										></media-slider-fill>
 									</media-slider-track>
 									<media-slider-thumb
 										class={[
-											'bg-media-popover-foreground absolute bottom-[var(--media-slider-fill,0%)] left-1/2 size-3 transform-[translate(-50%,50%)] rounded-none',
-											'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current',
-											'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
-											'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
+											'absolute bottom-[var(--media-slider-fill,0%)] left-1/2 h-0.5 w-3 transform-[translate(-50%,50%)] rounded-none bg-black',
+											focusRing,
+											'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none'
 										]}
 									></media-slider-thumb>
 								</media-volume-slider>
 							</media-volume-popover>
 
 							<media-time-group
-								class="flex h-4 shrink-0 items-center gap-1 px-1 leading-none tabular-nums rtl:flex-row-reverse"
+								class={[
+									mono,
+									'flex h-4 shrink-0 items-center gap-1 px-1 text-[14px] leading-none tabular-nums rtl:flex-row-reverse'
+								]}
 							>
 								<media-time
 									type="current"
 									toggle
 									class={[
-										'focus-visible:outline-media-ring media-xs:hidden cursor-pointer rounded-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2',
+										'media-xs:hidden cursor-pointer rounded-none underline decoration-dotted underline-offset-2',
+										focusRing,
 										'data-disabled:cursor-not-allowed data-disabled:opacity-40 forced-colors:data-disabled:text-[GrayText] forced-colors:data-disabled:opacity-100'
 									]}
 								></media-time>
@@ -547,30 +436,24 @@
 									class="media-xs:inline hidden data-unavailable:opacity-50"
 								></media-time>
 								<media-time-separator
-									class="media-xs:inline hidden opacity-70 data-unavailable:opacity-50"
+									class="media-xs:inline hidden text-[dimgray] data-unavailable:opacity-50"
 								></media-time-separator>
 								<media-time
 									type="duration"
-									class="media-xs:inline hidden opacity-70 data-unavailable:opacity-50"
+									class="media-xs:inline hidden text-[dimgray] data-unavailable:opacity-50"
 								></media-time>
 							</media-time-group>
 						</media-controls-group>
 
-						<media-controls-group class="flex items-center gap-2 rtl:flex-row-reverse">
+						<media-controls-group
+							class="media-max-sm:gap-2 flex items-center gap-3 rtl:flex-row-reverse"
+						>
 							<media-captions-button
 								id={id('captions')}
-								class={[button, 'group/captions media-max-3xs:hidden']}
+								class={[button, 'group/captions media-max-3xs:hidden data-active:font-bold']}
 							>
-								<media-icon
-									family="scaffold"
-									name="captions-off"
-									class={[icon, 'group-data-active/captions:hidden']}
-								></media-icon>
-								<media-icon
-									family="scaffold"
-									name="captions-on"
-									class={[icon, 'hidden group-data-active/captions:block']}
-								></media-icon>
+								{#snippet cc()}CC{/snippet}
+								{@render link(cc)}
 							</media-captions-button>
 							{@render tooltip('captions')}
 
@@ -580,7 +463,11 @@
 								id={id('settings')}
 								class={[button, 'media-max-3xs:hidden']}
 							>
-								<media-icon family="scaffold" name="gear" class={icon}></media-icon>
+								{#snippet settings()}
+									<span class="media-max-md:hidden" aria-hidden="true">Settings</span>
+									<span class="media-md:hidden" aria-hidden="true">Menu</span>
+								{/snippet}
+								{@render link(settings)}
 								<media-text token="menu.settings" class="sr-only">Settings</media-text>
 							</button>
 							<media-tooltip trigger={id('settings')} side="top" class={tooltipPopup}>
@@ -590,13 +477,15 @@
 							<media-menu
 								id={id('menu')}
 								side="top"
-								align="center"
+								align="end"
 								class={[
 									popup,
-									'bg-media-popover text-media-popover-foreground z-20 m-0 max-w-(--media-menu-available-width) min-w-44 overflow-hidden! rounded-none p-0',
-									'shadow-none [--media-popover-side-offset:calc(var(--media-spacing)*9)] [--media-popup-side-offset:var(--media-popover-side-offset)]',
-									'max-h-[min(var(--media-menu-available-height,--spacing(56)),--spacing(56))] overscroll-none',
-									'h-(--media-menu-height) w-(--media-menu-width)'
+									box,
+									'z-20 m-0 max-w-(--media-menu-available-width) min-w-48 overflow-hidden! rounded-none p-0',
+									'shadow-[2px_2px_0_black] [--media-popover-side-offset:calc(var(--media-spacing)*3)] [--media-popup-side-offset:var(--media-popover-side-offset)]',
+									'max-h-[min(var(--media-menu-available-height,--spacing(60)),--spacing(60))] overscroll-none',
+									'h-(--media-menu-height) w-(--media-menu-width)',
+									'transition-media-menu-resize motion-reduce:transition-none'
 								]}
 							>
 								<media-menu-content class={menuContent}>
@@ -604,44 +493,55 @@
 										{@const label = menuLabels[submenu.key]}
 										{@const contentId = id(`menu-${submenu.key}`)}
 										<media-menu-item commandfor={contentId} class={menuTrigger}>
-											<media-icon family="scaffold" name={submenu.icon} class={menuIcon}
-											></media-icon>
-											<media-text token="menu.{submenu.key}">{label}</media-text>
-											<span class={menuHint}>
+											<span aria-hidden="true" class="w-3 shrink-0 text-center">&bull;</span>
+											<media-text token="menu.{submenu.key}" class={menuLink}>{label}</media-text>
+											<span
+												class="ms-auto inline-flex min-w-0 items-baseline gap-1 ps-4 text-[dimgray] in-data-highlighted:text-white"
+											>
 												<span data-part="value" class="max-w-24 truncate"></span>
-												{@render chevron()}
+												<span aria-hidden="true" class="rtl:-scale-x-100">&raquo;</span>
 											</span>
 										</media-menu-item>
 										<media-menu-content id={contentId} class={menuContent}>
-											<media-menu-item class={menuRow}>
-												{@render chevron(true)}
+											<media-menu-item
+												class={[menuRow, 'border-silver mb-0.5 border-b border-solid font-bold']}
+											>
+												<span aria-hidden="true" class="w-3 shrink-0 text-center rtl:-scale-x-100"
+													>&laquo;</span
+												>
 												<media-text token="menu.{submenu.key}">{label}</media-text>
 											</media-menu-item>
 											<media-menu-separator class="hidden"></media-menu-separator>
-											<svelte:element this={submenu.group} class="flex flex-col gap-2">
+											<svelte:element this={submenu.group} class="flex flex-col">
 												<template>
 													<media-menu-radio-item class={radioItem}>
-														{#if submenu.key === 'quality'}
-															<span>
-																<span data-part="label"></span>
-																<sup
-																	data-part="tier"
-																	class="text-media-sm ps-0.5 pt-px leading-none opacity-70 empty:hidden"
-																></sup>
-															</span>
-														{:else}
-															<span data-part="label"></span>
-														{/if}
-														{#if submenu.key === 'quality' || submenu.key === 'captions'}
-															<span data-part="badge" class={[menuBadge, 'empty:hidden']}></span>
-														{/if}
 														<media-menu-item-indicator
 															force-mount
-															class="ms-auto -me-1 shrink-0 opacity-0 group-aria-checked/menu-radio:opacity-100"
+															class="w-3 shrink-0 text-center opacity-0 group-aria-checked/menu-radio:opacity-100"
+															aria-hidden="true">&bull;</media-menu-item-indicator
 														>
-															<media-icon family="scaffold" name="check" class={menuIcon}
-															></media-icon>
-														</media-menu-item-indicator>
+														<span
+															class={[
+																menuLink,
+																'group-aria-checked/menu-radio:font-bold group-aria-checked/menu-radio:text-black group-aria-checked/menu-radio:no-underline',
+																'in-data-highlighted:text-white!'
+															]}
+														>
+															{#if submenu.key === 'quality'}
+																<span data-part="label"></span><sup
+																	data-part="tier"
+																	class="ps-0.5 text-[10px] leading-none empty:hidden"
+																></sup>
+															{:else}
+																<span data-part="label"></span>
+															{/if}
+														</span>
+														{#if submenu.key === 'quality' || submenu.key === 'captions'}
+															<span
+																data-part="badge"
+																class={[menuBadge, 'ms-auto ps-3 empty:hidden']}
+															></span>
+														{/if}
 													</media-menu-radio-item>
 												</template>
 											</svelte:element>
@@ -649,8 +549,118 @@
 									{/each}
 								</media-menu-content>
 							</media-menu>
+
+							<media-pip-button id={id('pip')} class={[button, 'group/pip media-max-sm:hidden']}>
+								{#snippet pip()}
+									<span class="group-data-pip/pip:hidden">PiP</span>
+									<span class="hidden group-data-pip/pip:inline">Exit PiP</span>
+								{/snippet}
+								{@render link(pip)}
+							</media-pip-button>
+							{@render tooltip('pip')}
+
+							<media-fullscreen-button id={id('fullscreen')} class={[button, 'group/fullscreen']}>
+								{#snippet fullscreen()}
+									<span class="hidden group-not-data-fullscreen/fullscreen:inline"
+										>Full<span class="media-max-md:hidden">&nbsp;screen</span></span
+									>
+									<span class="hidden group-data-fullscreen/fullscreen:inline"
+										>Exit<span class="media-max-md:hidden">&nbsp;full screen</span></span
+									>
+								{/snippet}
+								{@render link(fullscreen)}
+							</media-fullscreen-button>
+							{@render tooltip('fullscreen')}
 						</media-controls-group>
 					</media-controls-group>
+
+					<!-- the underline: played = visited purple, buffered = link blue, the rest dotted -->
+					<media-time-slider
+						thumb-alignment="edge"
+						class={[
+							'group/slider relative flex h-3 w-full min-w-12 cursor-pointer items-center',
+							'data-disabled:cursor-not-allowed data-disabled:opacity-40 forced-colors:data-disabled:text-[GrayText] forced-colors:data-disabled:opacity-100'
+						]}
+					>
+						<media-time-slider-chapters
+							class={[
+								'hl-underline relative flex h-0.5 w-full items-center',
+								'transition-[height] duration-150 ease-out motion-reduce:transition-none',
+								'group-focus-within/slider:h-1.5 group-data-dragging/slider:h-1.5 group-data-pointing/slider:h-1.5'
+							]}
+						>
+							<template>
+								<div
+									class={[
+										'clip-media-chapter-x absolute inset-0 flex items-center',
+										'[--media-chapter-inset-end:0.75] [--media-chapter-inset-start:0.75]',
+										'first-of-type:[--media-chapter-inset-start:0] last-of-type:[--media-chapter-inset-end:0]'
+									]}
+								>
+									<media-slider-track class="absolute inset-0 isolate rounded-none">
+										<!-- not yet loaded: a dotted link -->
+										<span
+											aria-hidden="true"
+											class={[
+												'clip-media-chapter-track-x absolute inset-y-0',
+												'bg-[repeating-linear-gradient(90deg,var(--color-link)_0_2px,transparent_2px_4px)]',
+												'forced-colors:bg-[repeating-linear-gradient(90deg,LinkText_0_2px,transparent_2px_4px)] forced-colors:forced-color-adjust-none'
+											]}
+										></span>
+										<media-slider-buffer
+											class={[
+												'clip-media-x-[--media-slider-buffer] bg-link absolute inset-y-0 rounded-none',
+												'forced-colors:bg-[LinkText] forced-colors:forced-color-adjust-none'
+											]}
+										></media-slider-buffer>
+										<media-slider-fill
+											class={[
+												'clip-media-x-[--media-slider-fill] bg-visited absolute inset-y-0 rounded-none',
+												'transition-[right,background-color] duration-250 ease-linear motion-reduce:transition-none',
+												'group-data-dragging/slider:clip-media-x-[--media-slider-pointer] group-data-dragging/slider:bg-red group-data-dragging/slider:transition-none',
+												'forced-colors:bg-[VisitedText] forced-colors:forced-color-adjust-none'
+											]}
+										></media-slider-fill>
+									</media-slider-track>
+								</div>
+							</template>
+						</media-time-slider-chapters>
+						<!-- a text-cursor caret -->
+						<media-slider-thumb
+							class={[
+								'absolute left-[var(--media-slider-fill,0%)] h-3 w-0.5 transform-[translateX(-50%)] rounded-none bg-black',
+								'group-data-dragging/slider:left-(--media-slider-pointer)',
+								'opacity-0 group-data-dragging/slider:opacity-100 group-data-pointing/slider:opacity-100 focus-visible:opacity-100 pointer-coarse:opacity-100',
+								focusRing,
+								'focus-visible:outline-offset-2',
+								'forced-colors:bg-[CanvasText] forced-colors:forced-color-adjust-none'
+							]}
+						></media-slider-thumb>
+						<media-slider-preview
+							class={[
+								'pointer-events-none bottom-[calc(100%+var(--media-spacing)*10)] grid max-w-39 origin-bottom justify-items-center',
+								'opacity-0 group-data-disabled/slider:hidden',
+								'group-data-pointing/slider:opacity-100',
+								'group-data-dragging/slider:opacity-100'
+							]}
+						>
+							<media-slider-thumbnail
+								class="block max-w-39 overflow-hidden rounded-none border border-solid border-black bg-black"
+							>
+								<img alt="" aria-hidden="true" decoding="async" class="block" />
+							</media-slider-thumbnail>
+							<div
+								class={[box, '-mt-px flex max-w-full min-w-0 items-baseline gap-2 px-1.5 py-0.5']}
+							>
+								<media-slider-value
+									type="pointer"
+									class={[mono, 'shrink-0 text-[13px] tabular-nums']}
+								></media-slider-value>
+								<media-time-slider-chapter-title class="min-w-0 truncate italic empty:hidden"
+								></media-time-slider-chapter-title>
+							</div>
+						</media-slider-preview>
+					</media-time-slider>
 				</div>
 			</media-tooltip-group>
 		</media-controls-content>
@@ -675,66 +685,49 @@
 		aria-hidden="true"
 		class="pointer-events-none absolute inset-0 z-20 grid grid-cols-3 items-center justify-items-center forced-colors:z-40"
 	>
-		<media-volume-indicator
-			class={[indicator, 'group/volume-status col-start-2 row-start-1 mt-3.5 self-start']}
-		>
+		<media-volume-indicator class={[indicator, 'col-start-2 row-start-1 mt-3.5 self-start']}>
 			<media-volume-indicator-fill class="flex items-center gap-2 rtl:flex-row-reverse">
-				<media-icon
-					family="scaffold"
-					name="volume-high"
-					class="hidden size-4.5 shrink-0 group-data-[level=high]/volume-status:block"
-				></media-icon>
-				<media-icon
-					family="scaffold"
-					name="volume-low"
-					class="hidden size-4.5 shrink-0 group-data-[level=low]/volume-status:block"
-				></media-icon>
-				<media-icon
-					family="scaffold"
-					name="volume-off"
-					class="hidden size-4.5 shrink-0 group-data-[level=off]/volume-status:block"
-				></media-icon>
+				<span class={serif}>Volume:</span>
 				<media-volume-indicator-value class="tabular-nums"></media-volume-indicator-value>
 			</media-volume-indicator-fill>
 		</media-volume-indicator>
 
 		<media-status-indicator
 			actions="toggleSubtitles,toggleFullscreen,togglePictureInPicture"
-			class={[indicator, 'group/input-status col-start-2 row-start-1 mt-3 self-start']}
+			class={[indicator, serif, 'col-start-2 row-start-1 mt-3 self-start']}
 		>
-			{#each [['captions-on', 'captions-on'], ['captions-off', 'captions-off'], ['fullscreen-enter', 'fullscreen'], ['fullscreen-exit', 'exit-fullscreen'], ['pip-enter', 'pip'], ['pip-exit', 'exit-pip']] as [name, status] (name)}
-				<media-icon
-					family="scaffold"
-					{name}
-					class={[
-						'hidden size-4.5 shrink-0',
-						status === 'captions-on' && 'group-data-[status=captions-on]/input-status:block',
-						status === 'captions-off' && 'group-data-[status=captions-off]/input-status:block',
-						status === 'fullscreen' && 'group-data-[status=fullscreen]/input-status:block',
-						status === 'exit-fullscreen' &&
-							'group-data-[status=exit-fullscreen]/input-status:block',
-						status === 'pip' && 'group-data-[status=pip]/input-status:block',
-						status === 'exit-pip' && 'group-data-[status=exit-pip]/input-status:block'
-					]}
-				></media-icon>
-			{/each}
 			<media-status-indicator-value></media-status-indicator-value>
 		</media-status-indicator>
 
 		<media-seek-indicator
 			class={[
 				indicator,
-				'group/seek-status col-start-2 row-start-1 mx-3 flex-col justify-center gap-1!',
+				'group/seek-status col-start-2 row-start-1 mx-3 justify-center gap-1!',
 				'data-[direction=backward]:col-start-1 data-[direction=backward]:justify-self-start rtl:data-[direction=backward]:col-start-3 rtl:data-[direction=backward]:justify-self-end',
 				'data-[direction=forward]:col-start-3 data-[direction=forward]:justify-self-end rtl:data-[direction=forward]:col-start-1 rtl:data-[direction=forward]:justify-self-start'
 			]}
 		>
-			<media-icon
-				family="scaffold"
-				name="chevron"
-				class="size-4.5 group-data-[direction=backward]/seek-status:transform-[scaleX(-1)]"
-			></media-icon>
+			<span class="hidden group-data-[direction=backward]/seek-status:inline">&laquo;</span>
 			<media-seek-indicator-value class="tabular-nums"></media-seek-indicator-value>
+			<span class="hidden group-data-[direction=forward]/seek-status:inline">&raquo;</span>
 		</media-seek-indicator>
 	</div>
 </media-container>
+
+<style>
+	/*
+	 * Pointing at the underline makes it go wavy, like every other link on the site
+	 * (`hocus:decoration-wavy`). The colored layers inside show through a repeating wave mask.
+	 */
+	:global(.hyperlink-skin media-time-slider:is([data-pointing], [data-dragging], :focus-within))
+		:global(.hl-underline) {
+		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 6' preserveAspectRatio='none'%3E%3Cpath d='M0 4.5C2 4.5 2 1.5 4 1.5S6 4.5 8 4.5' fill='none' stroke='%23000' stroke-width='2.5'/%3E%3C/svg%3E");
+		mask-size: 8px 100%;
+		mask-repeat: repeat-x;
+	}
+	@media (forced-colors: active) {
+		:global(.hyperlink-skin .hl-underline) {
+			mask-image: none !important;
+		}
+	}
+</style>
