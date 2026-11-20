@@ -250,8 +250,8 @@
 
 {#snippet throbber()}
 	<!-- The Navigator throbber: a navy tile, a serif N, and a starfield that streams past in steps. -->
-	<div class={['grid place-items-center gap-1.5 bg-silver p-1.5 pb-1 text-black', raised]}>
-		<div class={['relative grid size-12 place-items-center overflow-hidden bg-navy', cellEdge]}>
+	<div class={['bg-silver grid place-items-center gap-1.5 p-1.5 pb-1 text-black', raised]}>
+		<div class={['bg-navy relative grid size-12 place-items-center overflow-hidden', cellEdge]}>
 			<div
 				class="ns-starfield absolute inset-0 motion-safe:animate-[ns-starfield_0.8s_steps(8)_infinite]"
 			></div>
@@ -270,14 +270,14 @@
 
 <media-container
 	class={[
-		'media-skin ns-skin',
+		'media-skin',
 		sans,
 		'@container/media-root relative block h-full w-full overflow-hidden rounded-none text-[13px] leading-4 text-black [--spacing:var(--media-spacing)]',
 		'[--media-accent:var(--color-navy)] [--media-background:var(--color-silver)] [--media-foreground:var(--color-black)]',
-		'[--media-popover:var(--color-silver)] [--media-popover-foreground:var(--color-black)] [--media-ring:var(--color-black)]',
+		'[--media-popover-foreground:var(--color-black)] [--media-popover:var(--color-silver)] [--media-ring:var(--color-black)]',
 		'forced-colors:[--media-accent:Highlight] forced-colors:[--media-background:Canvas] forced-colors:[--media-foreground:CanvasText]',
-		'forced-colors:[--media-popover:Canvas] forced-colors:[--media-popover-foreground:CanvasText]',
-		'outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue',
+		'forced-colors:[--media-popover-foreground:CanvasText] forced-colors:[--media-popover:Canvas]',
+		'focus-visible:outline-blue outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px]',
 		'bg-black',
 		className
 	]}
@@ -299,7 +299,7 @@
 		></media-dialog-backdrop>
 		<media-dialog-popup
 			class={[
-				'absolute top-1/2 left-1/2 z-50 grid max-h-[calc(100%-var(--media-spacing)*8)] w-[calc(100%-var(--media-spacing)*8)] max-w-80 transform-[translate(-50%,-50%)] gap-3 overflow-auto rounded-none bg-silver p-1 pb-3 text-black not-data-open:hidden',
+				'bg-silver absolute top-1/2 left-1/2 z-50 grid max-h-[calc(100%-var(--media-spacing)*8)] w-[calc(100%-var(--media-spacing)*8)] max-w-80 transform-[translate(-50%,-50%)] gap-3 overflow-auto rounded-none p-1 pb-3 text-black not-data-open:hidden',
 				raised,
 				'data-[scope=document]:fixed data-[scope=document]:max-h-[calc(100dvh-var(--media-spacing)*8)]',
 				'outline-none focus-visible:outline-1 focus-visible:outline-offset-[-4px] focus-visible:outline-dotted',
@@ -307,7 +307,7 @@
 			]}
 		>
 			<media-dialog-title
-				class="block bg-navy px-1.5 py-1 text-[13px] leading-4 font-bold text-white forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]"
+				class="bg-navy block px-1.5 py-1 text-[13px] leading-4 font-bold text-white forced-colors:bg-[Highlight] forced-colors:text-[HighlightText]"
 			></media-dialog-title>
 			<media-dialog-description class="px-3 text-[13px] leading-5"></media-dialog-description>
 			<media-dialog-close class={[button, 'me-2 h-6 w-auto min-w-18 justify-self-end px-3']}
@@ -330,14 +330,14 @@
 				<!-- top: a title bar, with the screen controls as its window buttons -->
 				<media-controls-group
 					class={[
-						'pointer-events-auto absolute inset-x-0 top-0 flex items-center justify-end gap-0.5 bg-navy py-1 ps-2 pe-1 text-white group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
+						'bg-navy pointer-events-auto absolute inset-x-0 top-0 flex items-center justify-end gap-0.5 py-1 ps-2 pe-1 text-white group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
 						'forced-colors:bg-[Canvas] forced-colors:text-[CanvasText]',
 						'group-not-data-visible/controls:opacity-0',
 						'not-data-started:[visibility:var(--media-controls-before-start,hidden)]'
 					]}
 				>
 					<media-title
-						class="pointer-events-none min-w-0 flex-1 truncate font-bold media-max-3xs:hidden not-data-visible:opacity-0"
+						class="media-max-3xs:hidden pointer-events-none min-w-0 flex-1 truncate font-bold not-data-visible:opacity-0"
 					></media-title>
 
 					<media-airplay-button id={id('airplay')} class={[button, titleButton, 'group/airplay']}>
@@ -415,7 +415,7 @@
 
 						<media-play-button
 							id={id('center-play')}
-							class={[button, 'group/play size-14! media-max-360:size-11!']}
+							class={[button, 'group/play media-max-360:size-11! size-14!']}
 						>
 							{@render playIcons('size-7! media-max-360:size-5.5!')}
 						</media-play-button>
@@ -431,7 +431,7 @@
 				<!-- bottom: the progress bar and a status bar -->
 				<div
 					class={[
-						'pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col gap-1.5 bg-silver p-1.5 group-not-data-visible/controls:pointer-events-none',
+						'bg-silver pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col gap-1.5 p-1.5 group-not-data-visible/controls:pointer-events-none',
 						raised,
 						'forced-colors:bg-[Canvas]',
 						'group-not-data-visible/controls:opacity-0',
@@ -453,7 +453,7 @@
 						]}
 					>
 						<media-time-slider-chapters
-							class={['relative block size-full bg-silver forced-colors:border', tableEdge]}
+							class={['bg-silver relative block size-full forced-colors:border', tableEdge]}
 						>
 							<template>
 								<div
@@ -477,7 +477,7 @@
 									>
 										<media-slider-buffer
 											class={[
-												'absolute inset-y-px left-[calc(var(--ns-l)+1px)] right-[max(calc(100%-var(--media-slider-buffer,0%)),calc(var(--ns-r)+1px))] block',
+												'absolute inset-y-px right-[max(calc(100%-var(--media-slider-buffer,0%)),calc(var(--ns-r)+1px))] left-[calc(var(--ns-l)+1px)] block',
 												'bg-[repeating-conic-gradient(var(--color-darkgray)_0_25%,transparent_0_50%)] bg-size-[2px_2px]',
 												'forced-colors:forced-color-adjust-none',
 												'forced-colors:bg-[repeating-linear-gradient(135deg,CanvasText_0px,CanvasText_1px,Canvas_1px,Canvas_3px)]'
@@ -502,10 +502,10 @@
 						<!-- a trackbar thumb, shown while pointing, dragging or focused -->
 						<media-slider-thumb
 							class={[
-								'absolute left-[var(--media-slider-fill,0%)] h-7 w-3 transform-[translateX(-50%)] rounded-none bg-silver',
+								'bg-silver absolute left-[var(--media-slider-fill,0%)] h-7 w-3 transform-[translateX(-50%)] rounded-none',
 								raised,
 								'group-data-dragging/slider:left-(--media-slider-pointer)',
-								'opacity-0 pointer-coarse:opacity-100 group-data-pointing/slider:opacity-100 group-data-dragging/slider:opacity-100 focus-visible:opacity-100',
+								'opacity-0 group-data-dragging/slider:opacity-100 group-data-pointing/slider:opacity-100 focus-visible:opacity-100 pointer-coarse:opacity-100',
 								'outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-dotted',
 								'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
 								'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
@@ -514,7 +514,7 @@
 						<!-- the preview: a framed snapshot with a Times caption -->
 						<media-slider-preview
 							class={[
-								'pointer-events-none bottom-[calc(100%+var(--media-spacing)*3)] grid max-w-[calc(var(--spacing)*39+8px)] origin-bottom justify-items-center gap-1 bg-silver p-1',
+								'bg-silver pointer-events-none bottom-[calc(100%+var(--media-spacing)*3)] grid max-w-[calc(var(--spacing)*39+8px)] origin-bottom justify-items-center gap-1 p-1',
 								raised,
 								'opacity-0 group-data-disabled/slider:hidden',
 								'group-data-pointing/slider:opacity-100',
@@ -539,7 +539,7 @@
 									<media-slider-value type="pointer" class="shrink-0 tabular-nums"
 									></media-slider-value>
 									<media-time-slider-chapter-title
-										class="min-w-0 truncate italic empty:hidden before:not-italic before:content-['—_']"
+										class="min-w-0 truncate italic before:not-italic before:content-['—_'] empty:hidden"
 									></media-time-slider-chapter-title>
 								</div>
 							</div>
@@ -577,7 +577,7 @@
 							side="top"
 							class={[
 								popup,
-								'z-20 h-28 w-8 rounded-none bg-silver px-1.5 py-2',
+								'bg-silver z-20 h-28 w-8 rounded-none px-1.5 py-2',
 								raised,
 								'[--media-popover-side-offset:calc(var(--media-spacing)*10)] [--media-popup-side-offset:var(--media-popover-side-offset)]'
 							]}
@@ -591,7 +591,7 @@
 									class={[
 										'absolute inset-y-0 left-1/2 block w-3 transform-[translateX(-50%)] overflow-hidden rounded-none bg-white',
 										cellEdge,
-										'forced-colors:forced-color-adjust-none forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText] forced-colors:bg-[Canvas]'
+										'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText] forced-colors:bg-[Canvas] forced-colors:forced-color-adjust-none'
 									]}
 								>
 									<media-slider-fill
@@ -604,7 +604,7 @@
 								</media-slider-track>
 								<media-slider-thumb
 									class={[
-										'absolute bottom-[var(--media-slider-fill,0%)] left-1/2 h-2.5 w-5 transform-[translate(-50%,50%)] rounded-none bg-silver',
+										'bg-silver absolute bottom-[var(--media-slider-fill,0%)] left-1/2 h-2.5 w-5 transform-[translate(-50%,50%)] rounded-none',
 										raised,
 										'outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-dotted',
 										'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
@@ -615,56 +615,55 @@
 						</media-volume-popover>
 
 						<!-- status bar: what the browser is doing, then the time -->
-						<div
-							aria-hidden="true"
-							class={[statusPane, 'ms-1 flex-1 media-max-xs:invisible']}
-						>
-							<span class="hidden truncate [media-controls-content:not(:has(media-play-button[data-started])):not(:has(media-buffering-indicator[data-visible]))_&]:inline">
+						<div aria-hidden="true" class={[statusPane, 'media-max-xs:invisible ms-1 flex-1']}>
+							<span
+								class="hidden truncate [media-controls-content:not(:has(media-play-button[data-started])):not(:has(media-buffering-indicator[data-visible]))_&]:inline"
+							>
 								Ready.
 							</span>
-							<span class="hidden truncate [media-controls-content:has(media-buffering-indicator[data-visible])_&]:inline">
+							<span
+								class="hidden truncate [media-controls-content:has(media-buffering-indicator[data-visible])_&]:inline"
+							>
 								Host contacted. Waiting for reply&hellip;
 							</span>
-							<span class="hidden truncate [media-controls-content:has(media-play-button[data-started]:not([data-paused]):not([data-ended])):not(:has(media-buffering-indicator[data-visible]))_&]:inline">
+							<span
+								class="hidden truncate [media-controls-content:has(media-play-button[data-started]:not([data-paused]):not([data-ended])):not(:has(media-buffering-indicator[data-visible]))_&]:inline"
+							>
 								Playing&hellip;
 							</span>
-							<span class="hidden truncate [media-controls-content:has(media-play-button[data-started][data-paused]:not([data-ended])):not(:has(media-buffering-indicator[data-visible]))_&]:inline">
+							<span
+								class="hidden truncate [media-controls-content:has(media-play-button[data-started][data-paused]:not([data-ended])):not(:has(media-buffering-indicator[data-visible]))_&]:inline"
+							>
 								Paused.
 							</span>
-							<span class="hidden truncate [media-controls-content:has(media-play-button[data-ended]):not(:has(media-buffering-indicator[data-visible]))_&]:inline">
+							<span
+								class="hidden truncate [media-controls-content:has(media-play-button[data-ended]):not(:has(media-buffering-indicator[data-visible]))_&]:inline"
+							>
 								Document: Done
 							</span>
 						</div>
 						<media-time-group
-							class={[
-								statusPane,
-								'shrink-0 gap-1 tabular-nums rtl:flex-row-reverse'
-							]}
+							class={[statusPane, 'shrink-0 gap-1 tabular-nums rtl:flex-row-reverse']}
 						>
 							<media-time
 								type="current"
 								toggle
 								class={[
-									'cursor-default rounded-none outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-dotted media-xs:hidden',
+									'media-xs:hidden cursor-default rounded-none outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-dotted',
 									'data-disabled:cursor-not-allowed data-disabled:opacity-60 forced-colors:data-disabled:text-[GrayText] forced-colors:data-disabled:opacity-100'
 								]}
 							></media-time>
-							<media-time
-								type="current"
-								class="hidden media-xs:inline data-unavailable:text-gray"
+							<media-time type="current" class="media-xs:inline data-unavailable:text-gray hidden"
 							></media-time>
-							<media-time-separator
-								class="hidden media-xs:inline data-unavailable:text-gray"
+							<media-time-separator class="media-xs:inline data-unavailable:text-gray hidden"
 							></media-time-separator>
-							<media-time
-								type="duration"
-								class="hidden media-xs:inline data-unavailable:text-gray"
+							<media-time type="duration" class="media-xs:inline data-unavailable:text-gray hidden"
 							></media-time>
 						</media-time-group>
 
 						<media-captions-button
 							id={id('captions')}
-							class={[button, 'group/captions ms-1 media-max-3xs:hidden', latchedCaptions]}
+							class={[button, 'group/captions media-max-3xs:hidden ms-1', latchedCaptions]}
 						>
 							<media-icon
 								family="scaffold"
@@ -698,7 +697,7 @@
 							align="end"
 							class={[
 								popup,
-								'z-20 m-0 max-w-(--media-menu-available-width) min-w-44 overflow-hidden! rounded-none bg-silver p-0 text-black',
+								'bg-silver z-20 m-0 max-w-(--media-menu-available-width) min-w-44 overflow-hidden! rounded-none p-0 text-black',
 								// the bevel is drawn over the scrolling content so items never cover it
 								'after:pointer-events-none after:absolute after:inset-0 after:z-20',
 								'after:shadow-[inset_-1px_-1px_0_var(--color-black),inset_1px_1px_0_var(--color-white),inset_-2px_-2px_0_var(--color-gray),inset_2px_2px_0_var(--color-gainsboro)]',
@@ -726,7 +725,7 @@
 										</media-menu-item>
 										<!-- an etched rule, as in every Windows menu -->
 										<media-menu-separator
-											class="mx-0.5 my-[3px] block h-0.5 shrink-0 border-t border-b border-solid border-t-gray border-b-white"
+											class="border-t-gray mx-0.5 my-[3px] block h-0.5 shrink-0 border-t border-b border-solid border-b-white"
 										></media-menu-separator>
 										<svelte:element this={submenu.group} class="flex flex-col">
 											<template>
@@ -750,7 +749,8 @@
 														<span data-part="label"></span>
 													{/if}
 													{#if submenu.key === 'quality' || submenu.key === 'captions'}
-														<span data-part="badge" class={[menuBadge, 'ms-auto empty:hidden']}></span>
+														<span data-part="badge" class={[menuBadge, 'ms-auto empty:hidden']}
+														></span>
 													{/if}
 												</media-menu-radio-item>
 											</template>
@@ -850,7 +850,7 @@
 
 <style>
 	/* A 40px tile of pixel stars; the throbber scrolls it one tile diagonally in 8 hard steps. */
-	:global(.ns-skin .ns-starfield) {
+	.ns-starfield {
 		background-image:
 			radial-gradient(circle at 6px 9px, white 1px, transparent 1.5px),
 			radial-gradient(circle at 27px 4px, white 0.75px, transparent 1.25px),
@@ -861,6 +861,7 @@
 			radial-gradient(circle at 2px 24px, aqua 0.75px, transparent 1.25px);
 		background-size: 40px 40px;
 	}
+	/* Global so Tailwind's `animate-[ns-starfield_…]` (generated outside this component) can name it. */
 	@keyframes -global-ns-starfield {
 		from {
 			background-position: 0 0;
