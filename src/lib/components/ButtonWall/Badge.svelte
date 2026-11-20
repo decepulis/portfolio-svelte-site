@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Badge } from './badges';
+	import type { BadgeSpec } from './badges';
 	import { H, W } from './pixel';
 
 	type Props = {
-		badge: Badge;
+		badge: BadgeSpec;
 		/** shared clock, ~16 ticks per second */
 		tick: number;
 		/** true once the pixel font has loaded */

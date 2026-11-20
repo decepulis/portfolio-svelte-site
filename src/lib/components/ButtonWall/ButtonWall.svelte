@@ -8,7 +8,7 @@
 
 	import Badge from './Badge.svelte';
 	import { extras, links } from './badges';
-	import { FONT, clearTextCache } from './pixel';
+	import { FONT } from './pixel';
 
 	/** total page views, baked in at build; null if unavailable */
 	const { visits }: { visits: number | null } = $props();
@@ -24,10 +24,7 @@
 		document.fonts
 			.load(`8px ${FONT}`)
 			.catch(() => {})
-			.finally(() => {
-				clearTextCache();
-				ready = true;
-			});
+			.finally(() => (ready = true));
 	});
 
 	// only animate while the wall is on screen
@@ -54,6 +51,9 @@
 		odometer.set(visits, { duration });
 	});
 
+	// two across on phones, up to 2× scale (176px) on wider screens
+	const cell = 'w-[min(11rem,calc(50%-0.25rem))]';
+
 	const visitLabel = $derived(
 		visits === null ? 'Visitor counter' : `${visits.toLocaleString('en-US')} visitors`
 	);
@@ -61,14 +61,20 @@
 
 <ul bind:this={wall} role="list" class="flex flex-wrap gap-2">
 	{#each links as badge (badge.id)}
-		<li class="w-[min(11rem,calc(50%-0.25rem))]">
+		<li class={cell}>
 			<Badge {badge} {tick} {ready} />
 		</li>
 	{/each}
-	<li class="w-[min(11rem,calc(50%-0.25rem))]">
-		<Badge badge={extras.counter} {tick} {ready} value={odometer.current} label={visitLabel} />
+	<li class={cell}>
+		<Badge
+			badge={extras.counter}
+			{tick}
+			{ready}
+			value={visits === null ? null : odometer.current}
+			label={visitLabel}
+		/>
 	</li>
-	<li class="w-[min(11rem,calc(50%-0.25rem))]">
+	<li class={cell}>
 		<Badge badge={extras.browser} {tick} {ready} />
 	</li>
 </ul>
