@@ -81,6 +81,9 @@
 	--width-prose: 40em;
 }
 
+/* After the site theme, whose `--color-*: initial` would otherwise clear the media colors. */
+@import '../lib/videojs/scaffold/tailwind.css';
+
 * {
 	outline-color: var(--color-blue);
 }
