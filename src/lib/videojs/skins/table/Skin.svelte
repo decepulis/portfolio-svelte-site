@@ -116,7 +116,7 @@
 	// (which replays on every press) re-stamps it. Its 100% keyframe is the resting transform below.
 	const banner = [
 		'pointer-events-none flex items-center gap-2 px-3 py-2 rounded-none',
-		'bg-(--t-face) text-(--t-text) font-serif text-[20px] leading-none font-bold',
+		'bg-(--t-face) text-(--t-text) font-serif text-[20px] leading-none font-bold media-max-md:px-2 media-max-md:py-1 media-max-md:text-[15px]',
 		'border-2 border-solid border-t-(--t-light) border-l-(--t-light) border-r-(--t-dark) border-b-(--t-dark)',
 		'shadow-[inset_-2px_-2px_var(--t-shadow),inset_2px_2px_var(--t-hilite),5px_5px_0_rgb(0_0_0/0.45)]',
 		'transform-[rotate(-2deg)] transition-opacity duration-200 ease-out',
@@ -129,7 +129,7 @@
 	/** The banner's inner `<td>`: a white inset cell like a `<td bgcolor=white>`. */
 	const bannerCell = [
 		insetWell,
-		'flex items-center gap-2 px-[8px] py-[5px] font-serif text-[20px] leading-none'
+		'flex items-center gap-2 px-[8px] py-[5px] font-serif text-[20px] leading-none media-max-md:px-[5px] media-max-md:py-[3px] media-max-md:text-[15px]'
 	];
 
 	// == menus ==
@@ -806,7 +806,7 @@
 		<media-volume-indicator
 			class={[
 				banner,
-				'group/volume-status col-span-full col-start-1 row-start-1 mt-[60px] self-start'
+				'group/volume-status media-max-md:mt-[44px] col-span-full col-start-1 row-start-1 mt-[60px] self-start'
 			]}
 		>
 			<media-volume-indicator-fill
@@ -838,7 +838,7 @@
 				<span
 					class={[
 						insetWell,
-						'media-max-xs:w-[64px] relative h-[24px] w-[124px] p-[2px]',
+						'media-max-md:h-[18px] media-max-md:w-[64px] relative h-[24px] w-[124px] p-[2px]',
 						'group-data-max/volume-status:border-maroon'
 					]}
 				>
@@ -858,7 +858,7 @@
 			actions="toggleSubtitles,toggleFullscreen,togglePictureInPicture"
 			class={[
 				banner,
-				'group/input-status col-span-full col-start-1 row-start-1 mt-[60px] self-start'
+				'group/input-status media-max-md:mt-[44px] col-span-full col-start-1 row-start-1 mt-[60px] self-start'
 			]}
 		>
 			<span class={bannerCell}>
