@@ -9,25 +9,22 @@
 
 {#snippet short()}
 	<P>
-		I make sure devs have a great experience with <A href="https://www.mux.com/">Mux</A>. I think
-		the web is pretty neat!
+		I help make sure devs have a great experience with <A href="https://www.mux.com/">Mux</A>.
 	</P>
 {/snippet}
 {#snippet medium()}
 	<P>
-		I'm a Senior Developer Experience Engineer at <A href="https://www.mux.com">Mux</A>. Team lead,
-		actually!
+		I'm an Engineering Manager at <A href="https://www.mux.com">Mux</A>, working with the Developer
+		Experience and Native teams.
 	</P>
 	<P>
-		In DevEx, we're doing anything we can to design and develop a better experience for devs. (Go
-		figure!) Handy <A href="https://videojs.org">components</A>, a delightful
-		<A href="https://www.mux.com">marketing site</A>, a better
-		<A href="https://dashboard.mux.com">dashboard</A>, useful
-		<A href="https://docs.mux.com">docs</A>, and some
-		<A href="https://www.mux.com/team/darius-cepulis">content</A> on the side.
-	</P>
-	<P>
-		Fun fact about me, I actually <i>like</i> writing CSS. Weird, huh?
+		In my time at Mux, I've been helping design and develop a better experience for devs. From
+		<A href="https://www.mux.com/team/darius-cepulis">blog posts</A> and
+		<A href="https://www.youtube.com/watch?v=dExasNlhVKM">talks</A>, to the
+		<A href="https://www.mux.com">marketing site</A> and <A href="https://www.mux.com/docs">docs</A
+		>, through to the
+		<A href="https://dashboard.mux.com">dashboard</A>, down to OSS SDKs like
+		<A href="https://videojs.org">Video.js v10</A>.
 	</P>
 {/snippet}
 {#snippet long()}
@@ -37,24 +34,20 @@
 		could, as far as I could, to the web, where I found a home.
 	</P>
 	<P>
-		When my dad asked me about why I ended up in web development, I told him that it's a lot like
-		the deck that he built in his back yard. It's building a space that serves a practical use. But
-		it's also more than that. It's also thinking about how the user will move through that space,
-		from beginning to destination. Also how that space will fulfill its purpose without getting in
-		the way. How the user will enjoy that space. The details that will delight them. How that space
-		will work for all the different kinds of people who will interact with it.
+		What I loved about working in web development wasn't JavaScript, I'll tell you that. It's that
+		there were so many ways to guide a user's journey. To help people get stuff done. From
+		<A href="https://www.mux.com/team/darius-cepulis">blog posts</A> and
+		<A href="https://www.youtube.com/watch?v=dExasNlhVKM">talks</A> for other devs, to delightful and
+		helpful
+		<A href="https://www.mux.com">marketing</A> and <A href="https://www.mux.com/docs">docs</A> sites,
+		through the
+		<A href="https://dashboard.mux.com">dashboard</A>, down to OSS SDKs like
+		<A href="https://videojs.org">Video.js v10</A>.
 	</P>
 	<P>
-		Lately, I've been realizing that the design skills I learned making static web pages work across
-		all of developer experience. From
-		<A href="https://videojs.org">components</A>, to a
-		<A href="https://www.mux.com">marketing site</A>, a
-		<A href="https://dashboard.mux.com">dashboard</A>,
-		<A href="https://docs.mux.com">docs</A>, even some
-		<A href="https://www.mux.com/team/darius-cepulis">content</A>&hellip; It's all just ways to
-		lower the bar for users trying to get stuff done. That's the kind of stuff I get to design and
-		develop as a Senior Developer Experience Engineer at Mux. And as a team lead, I'm helping other
-		folks do that, too.
+		It's all just ways to lower the bar for users trying to get stuff done. And now, as an
+		Engineering Manager for the Developer Experience and Native teams, I get to help a whole crew
+		build it.
 	</P>
 {/snippet}
 

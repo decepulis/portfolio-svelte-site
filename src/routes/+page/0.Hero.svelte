@@ -10,5 +10,7 @@
 	<h1 class="text-5xl font-bold sm:text-6xl">
 		<RadText>Darius Cepulis</RadText>
 	</h1>
-	<p class="mt-4">I make great <span class="whitespace-nowrap">web experiences.</span></p>
+	<p class="mt-4">
+		I help make great <span class="whitespace-nowrap">developer experiences.</span>
+	</p>
 </section>
