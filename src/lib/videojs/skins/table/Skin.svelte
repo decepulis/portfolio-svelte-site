@@ -25,14 +25,15 @@
 
 	// == bevel palette ==
 	// --t-face: button face / table background; --t-light & --t-hilite: lit edges;
-	// --t-shadow & --t-dark: shaded edges; --t-text: text on the face; --t-well: inset wells (time, listbox).
+	// --t-shadow & --t-dark: shaded edges; --t-text: text on the face; --t-well: inset wells (time, listbox);
+	// --t-select: the selected listbox row and slider fill; --t-buffer: buffered-range stripes.
 	const palette = [
 		'[--t-face:var(--color-silver)] [--t-light:var(--color-white)] [--t-hilite:var(--color-gainsboro)]',
 		'[--t-shadow:var(--color-gray)] [--t-dark:var(--color-black)] [--t-text:var(--color-black)]',
-		'[--t-well:var(--color-white)] [--t-well-text:var(--color-black)] [--t-select:var(--color-navy)]',
+		'[--t-well:var(--color-white)] [--t-well-text:var(--color-black)] [--t-select:var(--color-navy)] [--t-buffer:var(--color-gainsboro)]',
 		'dark:[--t-face:var(--color-gray)] dark:[--t-light:var(--color-darkgray)] dark:[--t-hilite:var(--color-silver)]',
 		'dark:[--t-shadow:#404040] dark:[--t-dark:var(--color-black)] dark:[--t-text:var(--color-white)]',
-		'dark:[--t-well:var(--color-black)] dark:[--t-well-text:var(--color-white)] dark:[--t-select:var(--color-teal)]'
+		'dark:[--t-well:var(--color-black)] dark:[--t-well-text:var(--color-white)] dark:[--t-select:var(--color-teal)] dark:[--t-buffer:#333]'
 	];
 
 	// == bevels ==
@@ -179,7 +180,7 @@
 	const radioItem = [
 		'group/menu-radio flex cursor-pointer items-center justify-between gap-3 rounded-none min-h-[18px] w-full shrink-0 px-[3px] py-[2px] leading-[14px]',
 		'outline-none data-highlighted:outline-1 data-highlighted:outline-dotted data-highlighted:outline-offset-[-1px] data-highlighted:outline-(color:--t-well-text)!',
-		'aria-checked:bg-(--t-select) aria-checked:text-white aria-checked:data-highlighted:outline-[#ffffe1]',
+		'aria-checked:bg-(--t-select) aria-checked:text-white aria-checked:data-highlighted:outline-[#ffffe1]!',
 		'forced-colors:aria-checked:bg-[Highlight] forced-colors:aria-checked:text-[HighlightText]',
 		'data-custom:italic'
 	];
@@ -517,7 +518,7 @@
 											<media-slider-buffer
 												class={[
 													'clip-media-x-[--media-slider-buffer] absolute inset-y-[1px] rounded-none',
-													'bg-[repeating-linear-gradient(90deg,var(--t-hilite)_0_3px,transparent_3px_4px)]',
+													'bg-[repeating-linear-gradient(90deg,var(--t-buffer)_0_3px,transparent_3px_4px)]',
 													'forced-colors:opacity-100! forced-colors:forced-color-adjust-none',
 													'forced-colors:bg-[repeating-linear-gradient(135deg,CanvasText_0px,CanvasText_1px,Canvas_1px,Canvas_3px)]'
 												]}
@@ -651,7 +652,7 @@
 									type="current"
 									toggle
 									class={[
-										'media-xs:hidden cursor-pointer rounded-none outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-current focus-visible:outline-dotted',
+										'media-xs:hidden cursor-pointer rounded-none outline-none focus-visible:outline-1 focus-visible:outline-offset-1 focus-visible:outline-current! focus-visible:outline-dotted',
 										'data-disabled:cursor-not-allowed data-disabled:opacity-40 forced-colors:data-disabled:text-[GrayText] forced-colors:data-disabled:opacity-100'
 									]}
 								></media-time>
