@@ -23,33 +23,35 @@
 	const id = (name: string) => `${uid}-${name}`;
 
 	// == shared classes ==
+	// Buttons are the inactive tabs from $lib/components/Tabs.svelte: flat gainsboro, silver border,
+	// white on hover/focus. An expanded button becomes the *active* tab: page-colored, with its top
+	// border opened up so it joins the panel (menu/volume popover) that opens above it.
 	const button = [
-		'relative grid size-8 shrink-0 cursor-pointer place-items-center rounded-none bg-media-background p-0 text-inherit',
+		'relative grid size-8 shrink-0 cursor-pointer place-items-center rounded-none p-0',
+		'border border-solid border-silver bg-gainsboro text-black dark:border-gray dark:bg-silver',
 		"pointer-coarse:before:absolute pointer-coarse:before:-inset-[3px] pointer-coarse:before:content-['']",
-		'hover:bg-(--media-button-highlight) focus-visible:bg-(--media-button-highlight) aria-expanded:bg-(--media-button-highlight)',
-		'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-media-ring',
-		'outline-none aria-disabled:cursor-not-allowed aria-disabled:opacity-40 disabled:cursor-not-allowed disabled:opacity-40',
-		'media-high-contrast:hover:bg-media-foreground media-high-contrast:hover:text-media-background media-high-contrast:focus-visible:bg-media-foreground media-high-contrast:focus-visible:text-media-background',
-		'media-high-contrast:aria-expanded:bg-media-foreground media-high-contrast:aria-expanded:text-media-background',
-		'forced-colors:border forced-colors:border-solid forced-colors:border-[ButtonText] forced-colors:bg-[ButtonFace] forced-colors:text-[ButtonText]',
+		'hover:bg-white focus-visible:bg-white dark:hover:bg-gainsboro dark:focus-visible:bg-gainsboro',
+		'aria-expanded:border-t-white aria-expanded:bg-white dark:aria-expanded:border-t-gainsboro dark:aria-expanded:bg-gainsboro',
+		'outline-none -outline-offset-4 focus-visible:outline-2 focus-visible:outline-blue',
+		'aria-disabled:cursor-not-allowed aria-disabled:text-gray disabled:cursor-not-allowed disabled:text-gray',
+		'forced-colors:border-[ButtonText] forced-colors:bg-[ButtonFace] forced-colors:text-[ButtonText]',
 		'forced-colors:forced-color-adjust-none',
 		'forced-colors:hover:bg-[Highlight] forced-colors:hover:text-[HighlightText] forced-colors:focus-visible:bg-[Highlight] forced-colors:focus-visible:text-[HighlightText]',
 		'forced-colors:aria-expanded:bg-[Highlight] forced-colors:aria-expanded:text-[HighlightText] forced-colors:aria-disabled:text-[GrayText] forced-colors:aria-disabled:opacity-100',
 		'data-hidden:hidden'
 	];
-	const centerButton = [
-		'm-0! bg-media-popover/40! media-high-contrast:bg-media-background! forced-colors:bg-[ButtonFace]!',
-		'hover:bg-media-popover/60! focus-visible:bg-media-popover/60! aria-expanded:bg-media-popover/60!',
-		'media-high-contrast:hover:bg-media-foreground! media-high-contrast:focus-visible:bg-media-foreground! media-high-contrast:aria-expanded:bg-media-foreground!',
-		'forced-colors:hover:bg-[Highlight]! forced-colors:focus-visible:bg-[Highlight]! forced-colors:aria-expanded:bg-[Highlight]!'
-	];
+	// The big buttons over the picture are the same tabs, just larger.
+	const centerButton = 'm-0! -outline-offset-6!';
 	const centerSeek = [
 		centerButton,
-		'hidden size-8! pointer-fine:grid media-max-360:hidden! group-not-data-started/controls:hidden!'
+		'hidden size-10! pointer-fine:grid media-max-360:hidden! group-not-data-started/controls:hidden!'
 	];
 	const icon = 'col-start-1 row-start-1 size-4.5';
+	// The panel an expanded button opens: page-colored with a silver frame, like a tab panel.
+	const panel =
+		'border border-solid border-silver bg-white text-black dark:border-gray dark:bg-gainsboro';
 	const popup = [
-		'm-0 overflow-visible border-0 text-inherit',
+		'm-0 overflow-visible text-inherit',
 		'media-transitioning:opacity-0 media-transitioning:blur-media-hidden-popup media-transitioning:scale-media-hidden-popup',
 		'data-starting-style:transform-[translate(var(--media-popup-translate-x-distance,0),var(--media-popup-translate-y-distance,0))]',
 		'data-ending-style:transform-none',
@@ -67,50 +69,56 @@
 		'data-[side=left]:before:w-(--media-popup-side-offset) data-[side=right]:before:w-(--media-popup-side-offset)',
 		'media-high-contrast:outline forced-colors:outline'
 	];
+	// Classic Windows tooltips: #ffffe1 with a 1px black border, whatever the page theme.
+	const tooltipBox =
+		'rounded-none border border-solid border-black bg-[#ffffe1] px-1 py-px font-sans text-media-sm leading-tight text-black shadow-none';
 	const tooltipPopup = [
 		popup,
-		'pointer-events-none z-20 whitespace-nowrap rounded-none bg-media-popover px-1.5 py-0.5 text-media-popover-foreground',
-		'shadow-none [--media-popup-side-offset:var(--media-tooltip-side-offset)] [--media-tooltip-side-offset:calc(var(--media-spacing)*9)]',
+		tooltipBox,
+		'pointer-events-none z-20 whitespace-nowrap',
+		'[--media-popup-side-offset:var(--media-tooltip-side-offset)] [--media-tooltip-side-offset:calc(var(--media-spacing)*9)]',
 		'data-open:flex data-open:items-center data-open:gap-1'
 	];
 	const screenTooltipPopup = [
 		tooltipPopup,
-		'[--media-tooltip-side-offset:calc(var(--media-spacing)*3)]!'
+		'[--media-tooltip-side-offset:calc(var(--media-spacing)*2)]!'
 	];
 	const tooltipShortcut =
-		'min-w-[1.5em] bg-white/10 p-[0.1em] text-center text-media-sm [font-family:inherit] leading-tight';
+		'min-w-[1.5em] border border-solid border-gray bg-white px-0.5 text-center font-mono text-media-xs leading-tight empty:hidden';
 	const indicator = [
-		'pointer-events-none flex items-center gap-2 rounded-none bg-media-background px-2.5 py-1',
-		'media-high-contrast:bg-media-background media-high-contrast:outline media-high-contrast:outline-current',
+		'pointer-events-none flex items-center gap-2 rounded-none px-2 py-0.5 font-mono',
+		panel,
 		'forced-colors:bg-[Canvas] forced-colors:text-[CanvasText] forced-colors:outline forced-colors:outline-[CanvasText]'
 	];
+	// Menu rows are a vertical tab list: a highlighted row turns into a gainsboro tab with a silver edge.
 	const menuRow = [
-		'flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-none min-h-8 w-full shrink-0 bg-media-background bg-clip-padding px-2 py-0 text-start',
-		'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-current',
-		'data-highlighted:bg-(--media-button-highlight) media-high-contrast:data-highlighted:highlight-media forced-colors:data-highlighted:highlight-media'
+		'flex min-h-7 w-full shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap rounded-none px-2 py-0 text-start',
+		'border border-solid border-transparent',
+		'data-highlighted:border-silver data-highlighted:bg-gainsboro dark:data-highlighted:border-gray dark:data-highlighted:bg-silver',
+		'outline-none -outline-offset-4 focus-visible:outline-2 focus-visible:outline-blue',
+		'forced-colors:data-highlighted:highlight-media'
 	];
 	const menuTrigger = [
 		menuRow,
 		'data-[availability=unavailable]:hidden data-[availability=unsupported]:hidden'
 	];
+	// The flourish: panels move exactly like Tabs.svelte panels: a 25% nudge plus a fade, while the
+	// popup's width and height ease to the incoming panel's size.
 	const menuContent = [
-		'absolute max-h-full overflow-auto overscroll-none outline-hidden',
-		'[clip-path:inset(0)]',
-		'flex flex-col gap-2! p-2 not-data-submenu:inset-x-0 not-data-submenu:top-0',
-		'not-data-submenu:data-child-open:transform-[translateX(-100%)]',
-		'not-data-submenu:data-child-open:rtl:transform-[translateX(100%)]',
-		'not-data-submenu:data-child-open:[clip-path:inset(0_0_0_100%)] not-data-submenu:data-child-open:rtl:[clip-path:inset(0_100%_0_0)]',
-		'data-submenu:inset-x-0 data-submenu:top-0 data-submenu:z-10'
+		'absolute inset-x-0 top-0 max-h-full overflow-auto overscroll-none outline-hidden',
+		'flex flex-col p-1',
+		'transform-gpu transition-[transform,opacity] duration-300 ease-out motion-reduce:duration-0',
+		'not-data-submenu:data-child-open:transform-[translateX(-25%)] not-data-submenu:data-child-open:opacity-0',
+		'not-data-submenu:data-child-open:rtl:transform-[translateX(25%)]',
+		'data-submenu:z-10',
+		'data-submenu:media-transitioning:transform-[translateX(25%)] data-submenu:media-transitioning:opacity-0',
+		'data-submenu:media-transitioning:rtl:transform-[translateX(-25%)] data-submenu:media-transitioning:pointer-events-none'
 	];
-	const radioItem = [
-		'group/menu-radio flex cursor-pointer items-center justify-between gap-3 rounded-none min-h-8 w-full shrink-0 bg-media-background bg-clip-padding px-2 py-0',
-		'focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-current',
-		'data-highlighted:bg-(--media-button-highlight) media-high-contrast:data-highlighted:highlight-media forced-colors:data-highlighted:highlight-media',
-		'data-custom:italic'
-	];
-	const menuHint = 'ms-auto inline-flex min-w-0 items-center gap-1 ps-2 opacity-70';
-	const menuBadge = 'rounded-none bg-media-muted px-1.5 text-media-sm';
-	const menuIcon = 'size-4.5 shrink-0 opacity-70';
+	const radioItem = [menuRow, 'group/menu-radio justify-between gap-4 data-custom:italic'];
+	const menuHint = 'ms-auto inline-flex min-w-0 items-center gap-1 ps-3 font-mono text-gray';
+	const menuBadge =
+		'border border-solid border-silver bg-gainsboro px-1 font-mono text-media-xs leading-tight dark:border-gray dark:bg-silver';
+	const menuIcon = 'size-4 shrink-0';
 
 	const submenus = [
 		{ key: 'quality', icon: 'switches', group: 'media-quality-radio-group' },
@@ -210,16 +218,17 @@
 		family="scaffold"
 		name="chevron"
 		class={back
-			? 'size-4 shrink-0 transform-[rotate(180deg)] opacity-70 rtl:transform-none'
-			: 'size-4 shrink-0 opacity-70 rtl:transform-[scaleX(-1)]'}
+			? 'size-4 shrink-0 transform-[rotate(180deg)] rtl:transform-none'
+			: 'size-4 shrink-0 text-black rtl:transform-[scaleX(-1)]'}
 	></media-icon>
 {/snippet}
 
 <media-container
 	class={[
 		'media-skin',
-		'rounded-media-player text-media text-media-foreground @container/media-root relative block h-full w-full overflow-hidden [font-family:var(--media-font-family,inherit)] [--spacing:var(--media-spacing)]',
-		'focus-visible:outline-media-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px]',
+		'rounded-media-player text-media @container/media-root relative block h-full w-full overflow-hidden font-sans text-white [--spacing:var(--media-spacing)]',
+		'[--media-accent:var(--color-blue)] [--media-ring:var(--color-blue)]',
+		'outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue',
 		'bg-black',
 		className
 	]}
@@ -237,30 +246,29 @@
 	<!-- error dialog -->
 	<media-error-dialog>
 		<media-dialog-backdrop
-			class="absolute inset-0 z-40 bg-black not-data-open:hidden data-[scope=document]:fixed"
+			class="absolute inset-0 z-40 bg-black/60 not-data-open:hidden data-[scope=document]:fixed"
 		></media-dialog-backdrop>
 		<media-dialog-popup
 			class={[
-				'bg-media-popover text-media-popover-foreground absolute top-1/2 left-1/2 z-50 grid max-h-[calc(100%-var(--media-spacing)*8)] w-[calc(100%-var(--media-spacing)*8)] max-w-80 transform-[translate(-50%,-50%)] gap-3 overflow-auto rounded-none p-5 not-data-open:hidden',
+				panel,
+				'absolute top-1/2 left-1/2 z-50 grid max-h-[calc(100%-var(--media-spacing)*8)] w-[calc(100%-var(--media-spacing)*8)] max-w-80 transform-[translate(-50%,-50%)] gap-3 overflow-auto rounded-none p-4 not-data-open:hidden',
 				'data-[scope=document]:fixed data-[scope=document]:max-h-[calc(100dvh-var(--media-spacing)*8)]',
-				'focus-visible:outline-media-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px]',
-				'media-high-contrast:border media-high-contrast:border-solid media-high-contrast:border-current forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
+				'outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-blue',
+				'forced-colors:border-[CanvasText]'
 			]}
 		>
-			<media-dialog-title class="text-[calc(var(--media-spacing)*4.5)] leading-7"
+			<media-dialog-title class="font-serif text-[calc(var(--media-spacing)*5)] leading-7"
 			></media-dialog-title>
 			<media-dialog-description class="text-[calc(var(--media-spacing)*3.5)]"
 			></media-dialog-description>
-			<media-dialog-close
-				class={[button, 'h-8 w-auto justify-self-end border! border-solid border-current px-3']}
-			></media-dialog-close>
+			<media-dialog-close class={[button, 'h-8 w-auto justify-self-end px-4']}></media-dialog-close>
 		</media-dialog-popup>
 	</media-error-dialog>
 
 	<media-controls>
 		<media-controls-backdrop
 			class={[
-				'pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/0.5),transparent_40%,transparent_60%,rgb(0_0_0/0.4))] not-data-visible:hidden forced-colors:bg-none',
+				'pointer-events-none absolute inset-0 not-data-visible:hidden',
 				'not-data-started:[visibility:var(--media-controls-before-start,hidden)]'
 			]}
 		></media-controls-backdrop>
@@ -279,20 +287,23 @@
 				<!-- top: title and screen controls -->
 				<media-controls-group
 					class={[
-						'pointer-events-auto absolute inset-x-0 top-0 flex items-center justify-end gap-2 p-3 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
-						'media-high-contrast:rounded-none media-high-contrast:bg-media-background forced-colors:rounded-none forced-colors:bg-[Canvas]',
-						'forced-colors:inset-x-0 forced-colors:inset-e-0 forced-colors:top-0 forced-colors:justify-end forced-colors:rounded-none!',
-						'group-not-data-visible/controls:opacity-0',
+						'pointer-events-auto absolute inset-x-0 top-0 flex items-start justify-end gap-1 p-2 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
+						'forced-colors:bg-[Canvas]',
+						'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 motion-reduce:duration-0',
 						'not-data-started:[visibility:var(--media-controls-before-start,hidden)]'
 					]}
 				>
-					<media-title
-						class={[
-							'bg-media-background text-media-foreground media-max-3xs:hidden pointer-events-none min-w-0 flex-1 truncate px-2 text-[calc(var(--media-spacing)*4)]',
-							'media-high-contrast:bg-media-background forced-colors:z-40 forced-colors:bg-transparent! forced-colors:text-[CanvasText]',
-							'not-data-visible:opacity-0'
-						]}
-					></media-title>
+					<!-- the title hangs off the top edge like a label tab -->
+					<div class="me-auto flex min-w-0 flex-1">
+						<media-title
+							class={[
+								panel,
+								'media-max-3xs:hidden pointer-events-none max-w-full min-w-0 truncate px-2 py-0.5 font-serif text-[calc(var(--media-spacing)*4)] leading-snug empty:hidden',
+								'forced-colors:z-40 forced-colors:bg-transparent! forced-colors:text-[CanvasText]',
+								'not-data-visible:opacity-0'
+							]}
+						></media-title>
+					</div>
 
 					<media-airplay-button id={id('airplay')} class={[button, 'group/airplay']}>
 						<media-icon
@@ -356,8 +367,8 @@
 					<media-controls-group
 						class={[
 							'pointer-events-auto absolute top-1/2 left-1/2 flex transform-[translate(-50%,-50%)] items-center gap-2 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
-							'media-high-contrast:rounded-none media-high-contrast:bg-media-background media-high-contrast:px-2 forced-colors:bg-transparent!',
-							'group-not-data-visible/controls:opacity-0 group-data-visible/center-buffering:hidden!'
+							'forced-colors:bg-transparent!',
+							'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 motion-reduce:duration-0 group-data-visible/center-buffering:hidden!'
 						]}
 					>
 						<media-seek-button seconds={-10} id={id('center-back')} class={[button, centerSeek]}>
@@ -367,9 +378,9 @@
 
 						<media-play-button
 							id={id('center-play')}
-							class={[button, centerButton, 'group/play media-max-360:size-11! size-14.5!']}
+							class={[button, centerButton, 'group/play media-max-360:size-11! size-14!']}
 						>
-							{@render playIcons('size-7! media-max-360:size-5.5!')}
+							{@render playIcons('size-6! media-max-360:size-5!')}
 						</media-play-button>
 						{@render tooltip('center-play', { disabled: true })}
 
@@ -380,13 +391,14 @@
 					</media-controls-group>
 				</media-buffering-indicator>
 
-				<!-- bottom: time slider and control row -->
+				<!-- bottom: a page-colored strip framed in silver, like the panel under a row of tabs -->
 				<div
 					class={[
-						'bg-media-background pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col gap-2 p-3 group-not-data-visible/controls:pointer-events-none',
-						'media-high-contrast:rounded-none media-high-contrast:bg-media-background forced-colors:rounded-none forced-colors:bg-[Canvas]',
-						'group-not-data-visible/controls:opacity-0',
-						'group-not-data-started/controls:[visibility:var(--media-controls-before-start,hidden)] forced-colors:inset-x-0 forced-colors:bottom-0 forced-colors:rounded-none!'
+						'pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col gap-1.5 px-2 pt-1.5 pb-2 group-not-data-visible/controls:pointer-events-none',
+						'border border-solid border-silver bg-white text-black dark:border-gray dark:bg-gainsboro',
+						'forced-colors:bg-[Canvas] forced-colors:text-[CanvasText]',
+						'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 motion-reduce:duration-0',
+						'group-not-data-started/controls:[visibility:var(--media-controls-before-start,hidden)]'
 					]}
 				>
 					<div class="w-full">
@@ -406,24 +418,25 @@
 											'first-of-type:[--media-chapter-inset-start:0] last-of-type:[--media-chapter-inset-end:0]'
 										]}
 									>
+										<!-- a silver groove with a hard 1px edge; buffered = gainsboro, played = blue -->
 										<media-slider-track
 											class={[
-												'absolute inset-x-0 isolate h-1.5 rounded-none forced-colors:h-1.5',
-												'before:clip-media-chapter-track-x before:absolute before:inset-y-0 before:rounded-none before:bg-white/10',
+												'absolute inset-x-0 isolate h-2 rounded-none',
+												'before:clip-media-chapter-track-x before:absolute before:inset-y-0 before:rounded-none before:border before:border-solid before:border-silver before:bg-gainsboro dark:before:border-gray dark:before:bg-silver',
 												'forced-colors:before:bg-[Canvas] forced-colors:before:opacity-100! forced-colors:before:forced-color-adjust-none',
-												'forced-colors:before:border forced-colors:before:border-solid forced-colors:before:border-[CanvasText]'
+												'forced-colors:before:border-[CanvasText]'
 											]}
 										>
 											<media-slider-buffer
 												class={[
-													'clip-media-x-[--media-slider-buffer] absolute inset-y-0 rounded-none bg-white/10',
+													'clip-media-x-[--media-slider-buffer] absolute inset-y-px rounded-none bg-silver dark:bg-darkgray',
 													'forced-colors:opacity-100! forced-colors:forced-color-adjust-none',
 													'forced-colors:bg-[repeating-linear-gradient(135deg,CanvasText_0px,CanvasText_1px,Canvas_1px,Canvas_3px)]'
 												]}
 											></media-slider-buffer>
 											<media-slider-fill
 												class={[
-													'clip-media-x-[--media-slider-fill] bg-media-accent absolute inset-y-0 rounded-none forced-colors:forced-color-adjust-none',
+													'clip-media-x-[--media-slider-fill] absolute inset-y-0 rounded-none bg-blue forced-colors:forced-color-adjust-none',
 													'group-data-dragging/slider:clip-media-x-[--media-slider-pointer]',
 													'forced-colors:bg-[Canvas] forced-colors:bg-[linear-gradient(Highlight,Highlight)]'
 												]}
@@ -432,45 +445,43 @@
 									</div>
 								</template>
 							</media-time-slider-chapters>
+							<!-- the thumb is a tiny tab button -->
 							<media-slider-thumb
 								class={[
-									'border-media-foreground bg-media-foreground absolute left-[var(--media-slider-fill,0%)] size-3 transform-[translateX(-50%)] rounded-none border border-solid',
+									'absolute left-[var(--media-slider-fill,0%)] h-4 w-2.5 transform-[translateX(-50%)] rounded-none',
+									'border border-solid border-gray bg-gainsboro dark:bg-silver',
+									'group-hover/slider:bg-white group-data-dragging/slider:bg-white dark:group-hover/slider:bg-gainsboro dark:group-data-dragging/slider:bg-gainsboro',
 									'group-data-dragging/slider:left-(--media-slider-pointer)',
-									'outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current',
+									'outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue',
 									'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
-									'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
+									'forced-colors:border-[CanvasText]'
 								]}
 							></media-slider-thumb>
 							<media-slider-preview
 								class={[
-									'pointer-events-none bottom-[calc(100%+var(--media-spacing)*3)] grid max-w-39 origin-bottom justify-items-center gap-1',
+									'pointer-events-none bottom-[calc(100%+var(--media-spacing)*3)] grid max-w-39 origin-bottom justify-items-center',
 									'opacity-0 group-data-disabled/slider:hidden',
 									'group-data-pointing/slider:opacity-100',
 									'group-data-dragging/slider:opacity-100'
 								]}
 							>
 								<media-slider-thumbnail
-									class="bg-media-background block max-w-39 overflow-hidden rounded-none"
+									class="border-silver dark:border-gray block max-w-39 overflow-hidden rounded-none border border-b-0 border-solid bg-black"
 								>
 									<img alt="" aria-hidden="true" decoding="async" class="block" />
 								</media-slider-thumbnail>
-								<div class="flex w-full min-w-0 justify-center px-2 py-1">
-									<div class="flex max-w-full min-w-0 items-center gap-2">
-										<media-slider-value type="pointer" class="shrink-0 tabular-nums"
-										></media-slider-value>
-										<media-time-slider-chapter-title
-											class="min-w-0 truncate opacity-70 empty:hidden"
-										></media-time-slider-chapter-title>
-									</div>
+								<div class={[tooltipBox, 'flex max-w-full min-w-0 items-center gap-2']}>
+									<media-slider-value type="pointer" class="shrink-0 font-mono tabular-nums"
+									></media-slider-value>
+									<media-time-slider-chapter-title class="min-w-0 truncate empty:hidden"
+									></media-time-slider-chapter-title>
 								</div>
 							</media-slider-preview>
 						</media-time-slider>
 					</div>
 
-					<media-controls-group
-						class="flex items-center justify-between gap-2 rtl:flex-row-reverse"
-					>
-						<media-controls-group class="flex min-w-0 items-center gap-2 rtl:flex-row-reverse">
+					<media-controls-group class="flex items-center justify-between gap-1 rtl:flex-row-reverse">
+						<media-controls-group class="flex min-w-0 items-center gap-1 rtl:flex-row-reverse">
 							<media-play-button id={id('play')} class={[button, 'group/play']}>
 								{@render playIcons()}
 							</media-play-button>
@@ -493,73 +504,84 @@
 								></media-icon>
 							</media-mute-button>
 							{@render tooltip('mute', { delay: 0, disabled: true, sticky: true })}
+							<!-- the volume popover is the mute button's tab panel: same width, joined at the seam -->
 							<media-volume-popover
 								id={id('volume')}
 								open-on-hover
 								delay={200}
 								close-delay={100}
 								side="top"
+								align="center"
 								class={[
 									popup,
-									'bg-media-popover text-media-popover-foreground z-20 h-24 w-7 rounded-none px-3.5 py-2.5',
-									'shadow-none [--media-popover-side-offset:calc(var(--media-spacing)*9)] [--media-popup-side-offset:var(--media-popover-side-offset)]'
+									panel,
+									'z-20 box-border h-28 w-8 rounded-none px-0 py-2',
+									'data-[side=top]:border-b-0',
+									'shadow-none [--media-popover-side-offset:0px] [--media-popup-side-offset:var(--media-popover-side-offset)]',
+									'[--media-hidden-popup-blur:0px] [--media-hidden-popup-scale:1] [--media-popup-translate-distance:0px]'
 								]}
 							>
 								<media-volume-slider
 									orientation="vertical"
 									thumb-alignment="edge"
-									class="relative flex size-full cursor-pointer justify-center [--media-accent:var(--media-accent-color,var(--media-popover-foreground))] data-disabled:cursor-not-allowed data-disabled:opacity-40"
+									class="group/volume relative flex size-full cursor-pointer justify-center data-disabled:cursor-not-allowed data-disabled:opacity-40"
 								>
 									<media-slider-track
 										class={[
-											'absolute bottom-0 left-1/2 h-full w-1 transform-[translateX(-50%)] overflow-hidden rounded-none bg-[#808080] forced-colors:forced-color-adjust-none',
-											'forced-colors:w-1.5 forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText] forced-colors:bg-[Canvas]'
+											'absolute bottom-0 left-1/2 h-full w-2 transform-[translateX(-50%)] overflow-hidden rounded-none forced-colors:forced-color-adjust-none',
+											'border-silver bg-gainsboro dark:border-gray dark:bg-silver border border-solid',
+											'forced-colors:border-[CanvasText] forced-colors:bg-[Canvas]'
 										]}
 									>
 										<media-slider-fill
-											class="bg-media-accent absolute bottom-0 left-0 h-[var(--media-slider-fill,0%)] w-full rounded-none forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none"
+											class="bg-blue absolute bottom-0 left-0 h-[var(--media-slider-fill,0%)] w-full rounded-none forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none"
 										></media-slider-fill>
 									</media-slider-track>
 									<media-slider-thumb
 										class={[
-											'bg-media-popover-foreground absolute bottom-[var(--media-slider-fill,0%)] left-1/2 size-3 transform-[translate(-50%,50%)] rounded-none',
-											'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current',
+											'absolute bottom-[var(--media-slider-fill,0%)] left-1/2 h-2.5 w-4 transform-[translate(-50%,50%)] rounded-none',
+											'border-gray bg-gainsboro dark:bg-silver border border-solid',
+											'group-hover/volume:bg-white dark:group-hover/volume:bg-gainsboro',
+											'outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue',
 											'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
-											'forced-colors:border forced-colors:border-solid forced-colors:border-[CanvasText]'
+											'forced-colors:border-[CanvasText]'
 										]}
 									></media-slider-thumb>
 								</media-volume-slider>
 							</media-volume-popover>
 
 							<media-time-group
-								class="flex h-4 shrink-0 items-center gap-1 px-1 leading-none tabular-nums rtl:flex-row-reverse"
+								class="flex h-8 shrink-0 items-center gap-1 px-1.5 font-mono leading-none tabular-nums rtl:flex-row-reverse"
 							>
 								<media-time
 									type="current"
 									toggle
 									class={[
-										'focus-visible:outline-media-ring media-xs:hidden cursor-pointer rounded-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2',
+										'media-xs:hidden cursor-pointer rounded-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue',
 										'data-disabled:cursor-not-allowed data-disabled:opacity-40 forced-colors:data-disabled:text-[GrayText] forced-colors:data-disabled:opacity-100'
 									]}
 								></media-time>
-								<media-time
-									type="current"
-									class="media-xs:inline hidden data-unavailable:opacity-50"
+								<media-time type="current" class="media-xs:inline data-unavailable:text-gray hidden"
 								></media-time>
 								<media-time-separator
-									class="media-xs:inline hidden opacity-70 data-unavailable:opacity-50"
+									class="media-xs:inline text-gray data-unavailable:text-gray hidden"
 								></media-time-separator>
 								<media-time
 									type="duration"
-									class="media-xs:inline hidden opacity-70 data-unavailable:opacity-50"
+									class="media-xs:inline data-unavailable:text-gray hidden"
 								></media-time>
 							</media-time-group>
 						</media-controls-group>
 
-						<media-controls-group class="flex items-center gap-2 rtl:flex-row-reverse">
+						<media-controls-group class="flex items-center gap-1 rtl:flex-row-reverse">
 							<media-captions-button
 								id={id('captions')}
-								class={[button, 'group/captions media-max-3xs:hidden']}
+								class={[
+									button,
+									'group/captions media-max-3xs:hidden',
+									// an active toggle stays "pressed": white, like the selected tab
+									'data-active:bg-white dark:data-active:bg-gainsboro'
+								]}
 							>
 								<media-icon
 									family="scaffold"
@@ -587,16 +609,28 @@
 								<media-text token="menu.settings">Settings</media-text>
 							</media-tooltip>
 
+							<!--
+								The settings menu is the gear button's tab panel. It opens flush against the button
+								(side offset 0, aligned to its end), the button opens its top border, and the panel's
+								bottom border is drawn by ::after with a button-wide gap, so the two read as one shape.
+							-->
 							<media-menu
 								id={id('menu')}
 								side="top"
-								align="center"
+								align="end"
 								class={[
 									popup,
-									'bg-media-popover text-media-popover-foreground z-20 m-0 max-w-(--media-menu-available-width) min-w-44 overflow-hidden! rounded-none p-0',
-									'shadow-none [--media-popover-side-offset:calc(var(--media-spacing)*9)] [--media-popup-side-offset:var(--media-popover-side-offset)]',
+									panel,
+									'z-20 m-0 box-content max-w-(--media-menu-available-width) min-w-44 overflow-hidden! rounded-none p-0',
+									'shadow-none [--media-popover-side-offset:0px] [--media-popup-side-offset:var(--media-popover-side-offset)]',
+									'[--media-hidden-popup-blur:0px] [--media-hidden-popup-scale:1] [--media-popup-translate-distance:0px] [--media-popover-boundary-offset:0px]',
 									'max-h-[min(var(--media-menu-available-height,--spacing(56)),--spacing(56))] overscroll-none',
-									'h-(--media-menu-height) w-(--media-menu-width)'
+									'h-(--media-menu-height) w-(--media-menu-width)',
+									'transition-[opacity,width,height] duration-300 ease-out motion-reduce:duration-0',
+									'data-[side=top]:border-b-0',
+									'after:pointer-events-none after:absolute after:start-0 after:bottom-0 after:z-20 after:hidden after:h-px after:bg-silver dark:after:bg-gray',
+									'after:end-[calc(--spacing(8)-2px)] data-[side=top]:after:block',
+									'forced-colors:after:bg-[CanvasText]'
 								]}
 							>
 								<media-menu-content class={menuContent}>
@@ -613,12 +647,19 @@
 											</span>
 										</media-menu-item>
 										<media-menu-content id={contentId} class={menuContent}>
-											<media-menu-item class={menuRow}>
+											<!-- the back row is the submenu's heading, ruled off like a tab strip -->
+											<media-menu-item
+												class={[
+													menuRow,
+													'mb-1 font-bold',
+													'not-data-highlighted:border-b-silver dark:not-data-highlighted:border-b-gray'
+												]}
+											>
 												{@render chevron(true)}
 												<media-text token="menu.{submenu.key}">{label}</media-text>
 											</media-menu-item>
 											<media-menu-separator class="hidden"></media-menu-separator>
-											<svelte:element this={submenu.group} class="flex flex-col gap-2">
+											<svelte:element this={submenu.group} class="flex flex-col">
 												<template>
 													<media-menu-radio-item class={radioItem}>
 														{#if submenu.key === 'quality'}
@@ -626,7 +667,7 @@
 																<span data-part="label"></span>
 																<sup
 																	data-part="tier"
-																	class="text-media-sm ps-0.5 pt-px leading-none opacity-70 empty:hidden"
+																	class="text-media-xs ps-0.5 pt-px leading-none empty:hidden"
 																></sup>
 															</span>
 														{:else}
@@ -637,7 +678,7 @@
 														{/if}
 														<media-menu-item-indicator
 															force-mount
-															class="ms-auto -me-1 shrink-0 opacity-0 group-aria-checked/menu-radio:opacity-100"
+															class="ms-auto -me-0.5 shrink-0 opacity-0 group-aria-checked/menu-radio:opacity-100"
 														>
 															<media-icon family="scaffold" name="check" class={menuIcon}
 															></media-icon>
