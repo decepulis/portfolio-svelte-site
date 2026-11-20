@@ -1,9 +1,10 @@
 import type { Component, Snippet } from 'svelte';
 
 import ScaffoldSkin from '$lib/videojs/scaffold/ScaffoldSkin.svelte';
-import HyperlinkSkin from '$lib/videojs/skins/hyperlink/Skin.svelte';
-import NetscapeSkin from '$lib/videojs/skins/netscape/Skin.svelte';
+import TablePlainSkin from '$lib/videojs/skins/table-plain/Skin.svelte';
+import TableTabsSkin from '$lib/videojs/skins/table-tabs/Skin.svelte';
 import TableSkin from '$lib/videojs/skins/table/Skin.svelte';
+import TabsTableSkin from '$lib/videojs/skins/tabs-table/Skin.svelte';
 import TabsSkin from '$lib/videojs/skins/tabs/Skin.svelte';
 
 export type LabSkin = {
@@ -12,35 +13,42 @@ export type LabSkin = {
 	Skin: Component<{ children?: Snippet; class?: string }>;
 };
 
+/** Ordered along the gradient from the HTML 3.2 table skin to the Tabs sibling skin. */
 export const skins = {
 	scaffold: {
 		title: 'Scaffold (baseline)',
 		description: 'The Video.js scaffold skin, ported to Tailwind. Every direction forks this.',
 		Skin: ScaffoldSkin
 	},
+	table: {
+		title: 'A. HTML 3.2 table',
+		description:
+			'The control bar as a bevelled table with cellpadding, menus as select and fieldset/legend, and feedback indicators that stamp in like rubber stamps.',
+		Skin: TableSkin
+	},
+	'table-plain': {
+		title: 'B. Table, minus Windows',
+		description:
+			'The table skin with the operating system taken out: what a browser drew, not what Windows drew.',
+		Skin: TablePlainSkin
+	},
+	'table-tabs': {
+		title: 'C. Halfway',
+		description:
+			'Table structure and fieldset menus, with the flat bordered controls and sliding panels of the homepage tabs.',
+		Skin: TableTabsSkin
+	},
+	'tabs-table': {
+		title: 'D. Tabs, with table bones',
+		description:
+			'The Tabs sibling, borrowing just the table skin’s grid, select-style lists and a calmer stamp.',
+		Skin: TabsTableSkin
+	},
 	tabs: {
-		title: '1. The Tabs sibling',
+		title: 'E. The Tabs sibling',
 		description:
 			'A cousin of the homepage tabs: flat gainsboro buttons with silver borders, the open-bottom active border, and a settings menu that slides between panels like tab panels.',
 		Skin: TabsSkin
-	},
-	netscape: {
-		title: '2. Netscape progress bar',
-		description:
-			'Plain controls; the flourish is the timeline. Chunky block fill, dithered buffer, table-cell chapters, a framed thumbnail with a Times caption, and a stepped throbber.',
-		Skin: NetscapeSkin
-	},
-	hyperlink: {
-		title: '3. Hyperlink controls',
-		description:
-			'Controls are text links: [Play] [Mute] [CC] in link blue, time in Courier, watched chapters in visited purple, and an underline that grows with playback.',
-		Skin: HyperlinkSkin
-	},
-	table: {
-		title: '4. HTML 3.2 table layout',
-		description:
-			'The control bar as a bordered table with cellpadding, menus as select and fieldset/legend, and feedback indicators that stamp in like banners.',
-		Skin: TableSkin
 	}
 } satisfies Record<string, LabSkin>;
 
