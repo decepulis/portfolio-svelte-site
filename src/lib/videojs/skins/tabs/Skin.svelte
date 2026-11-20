@@ -228,7 +228,7 @@
 		'media-skin',
 		'rounded-media-player text-media @container/media-root relative block h-full w-full overflow-hidden font-sans text-white [--spacing:var(--media-spacing)]',
 		'[--media-accent:var(--color-blue)] [--media-ring:var(--color-blue)]',
-		'outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue',
+		'focus-visible:outline-blue outline-none focus-visible:outline-2 focus-visible:-outline-offset-2',
 		'bg-black',
 		className
 	]}
@@ -253,7 +253,7 @@
 				panel,
 				'absolute top-1/2 left-1/2 z-50 grid max-h-[calc(100%-var(--media-spacing)*8)] w-[calc(100%-var(--media-spacing)*8)] max-w-80 transform-[translate(-50%,-50%)] gap-3 overflow-auto rounded-none p-4 not-data-open:hidden',
 				'data-[scope=document]:fixed data-[scope=document]:max-h-[calc(100dvh-var(--media-spacing)*8)]',
-				'outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-blue',
+				'focus-visible:outline-blue outline-none focus-visible:outline-2 focus-visible:-outline-offset-4',
 				'forced-colors:border-[CanvasText]'
 			]}
 		>
@@ -368,7 +368,7 @@
 						class={[
 							'pointer-events-auto absolute top-1/2 left-1/2 flex transform-[translate(-50%,-50%)] items-center gap-2 group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
 							'forced-colors:bg-transparent!',
-							'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 motion-reduce:duration-0 group-data-visible/center-buffering:hidden!'
+							'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 group-data-visible/center-buffering:hidden! motion-reduce:duration-0'
 						]}
 					>
 						<media-seek-button seconds={-10} id={id('center-back')} class={[button, centerSeek]}>
@@ -395,7 +395,7 @@
 				<div
 					class={[
 						'pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col gap-1.5 px-2 pt-1.5 pb-2 group-not-data-visible/controls:pointer-events-none',
-						'border border-solid border-silver bg-white text-black dark:border-gray dark:bg-gainsboro',
+						'border-silver dark:border-gray dark:bg-gainsboro border border-solid bg-white text-black',
 						'forced-colors:bg-[Canvas] forced-colors:text-[CanvasText]',
 						'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 motion-reduce:duration-0',
 						'group-not-data-started/controls:[visibility:var(--media-controls-before-start,hidden)]'
@@ -422,21 +422,21 @@
 										<media-slider-track
 											class={[
 												'absolute inset-x-0 isolate h-2 rounded-none',
-												'before:clip-media-chapter-track-x before:absolute before:inset-y-0 before:rounded-none before:border before:border-solid before:border-silver before:bg-gainsboro dark:before:border-gray dark:before:bg-silver',
+												'before:clip-media-chapter-track-x before:border-silver before:bg-gainsboro dark:before:border-gray dark:before:bg-silver before:absolute before:inset-y-0 before:rounded-none before:border before:border-solid',
 												'forced-colors:before:bg-[Canvas] forced-colors:before:opacity-100! forced-colors:before:forced-color-adjust-none',
 												'forced-colors:before:border-[CanvasText]'
 											]}
 										>
 											<media-slider-buffer
 												class={[
-													'clip-media-x-[--media-slider-buffer] absolute inset-y-px rounded-none bg-silver dark:bg-darkgray',
+													'clip-media-x-[--media-slider-buffer] bg-silver dark:bg-darkgray absolute inset-y-px rounded-none',
 													'forced-colors:opacity-100! forced-colors:forced-color-adjust-none',
 													'forced-colors:bg-[repeating-linear-gradient(135deg,CanvasText_0px,CanvasText_1px,Canvas_1px,Canvas_3px)]'
 												]}
 											></media-slider-buffer>
 											<media-slider-fill
 												class={[
-													'clip-media-x-[--media-slider-fill] absolute inset-y-0 rounded-none bg-blue forced-colors:forced-color-adjust-none',
+													'clip-media-x-[--media-slider-fill] bg-blue absolute inset-y-0 rounded-none forced-colors:forced-color-adjust-none',
 													'group-data-dragging/slider:clip-media-x-[--media-slider-pointer]',
 													'forced-colors:bg-[Canvas] forced-colors:bg-[linear-gradient(Highlight,Highlight)]'
 												]}
@@ -449,10 +449,10 @@
 							<media-slider-thumb
 								class={[
 									'absolute left-[var(--media-slider-fill,0%)] h-4 w-2.5 transform-[translateX(-50%)] rounded-none',
-									'border border-solid border-gray bg-gainsboro dark:bg-silver',
-									'group-hover/slider:bg-white group-data-dragging/slider:bg-white dark:group-hover/slider:bg-gainsboro dark:group-data-dragging/slider:bg-gainsboro',
+									'border-gray bg-gainsboro dark:bg-silver border border-solid',
+									'dark:group-hover/slider:bg-gainsboro dark:group-data-dragging/slider:bg-gainsboro group-hover/slider:bg-white group-data-dragging/slider:bg-white',
 									'group-data-dragging/slider:left-(--media-slider-pointer)',
-									'outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue',
+									'focus-visible:outline-blue outline-none focus-visible:outline-2 focus-visible:outline-offset-1',
 									'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
 									'forced-colors:border-[CanvasText]'
 								]}
@@ -480,7 +480,9 @@
 						</media-time-slider>
 					</div>
 
-					<media-controls-group class="flex items-center justify-between gap-1 rtl:flex-row-reverse">
+					<media-controls-group
+						class="flex items-center justify-between gap-1 rtl:flex-row-reverse"
+					>
 						<media-controls-group class="flex min-w-0 items-center gap-1 rtl:flex-row-reverse">
 							<media-play-button id={id('play')} class={[button, 'group/play']}>
 								{@render playIcons()}
@@ -541,8 +543,8 @@
 										class={[
 											'absolute bottom-[var(--media-slider-fill,0%)] left-1/2 h-2.5 w-4 transform-[translate(-50%,50%)] rounded-none',
 											'border-gray bg-gainsboro dark:bg-silver border border-solid',
-											'group-hover/volume:bg-white dark:group-hover/volume:bg-gainsboro',
-											'outline-none focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue',
+											'dark:group-hover/volume:bg-gainsboro group-hover/volume:bg-white',
+											'focus-visible:outline-blue outline-none focus-visible:outline-2 focus-visible:outline-offset-1',
 											'forced-colors:bg-[Highlight] forced-colors:forced-color-adjust-none',
 											'forced-colors:border-[CanvasText]'
 										]}
@@ -557,7 +559,7 @@
 									type="current"
 									toggle
 									class={[
-										'media-xs:hidden cursor-pointer rounded-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue',
+										'media-xs:hidden focus-visible:outline-blue cursor-pointer rounded-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2',
 										'data-disabled:cursor-not-allowed data-disabled:opacity-40 forced-colors:data-disabled:text-[GrayText] forced-colors:data-disabled:opacity-100'
 									]}
 								></media-time>
@@ -580,7 +582,7 @@
 									button,
 									'group/captions media-max-3xs:hidden',
 									// an active toggle stays "pressed": white, like the selected tab
-									'data-active:bg-white dark:data-active:bg-gainsboro'
+									'dark:data-active:bg-gainsboro data-active:bg-white'
 								]}
 							>
 								<media-icon
@@ -623,12 +625,12 @@
 									panel,
 									'z-20 m-0 box-content max-w-(--media-menu-available-width) min-w-44 overflow-hidden! rounded-none p-0',
 									'shadow-none [--media-popover-side-offset:0px] [--media-popup-side-offset:var(--media-popover-side-offset)]',
-									'[--media-hidden-popup-blur:0px] [--media-hidden-popup-scale:1] [--media-popup-translate-distance:0px] [--media-popover-boundary-offset:0px]',
+									'[--media-hidden-popup-blur:0px] [--media-hidden-popup-scale:1] [--media-popover-boundary-offset:0px] [--media-popup-translate-distance:0px]',
 									'max-h-[min(var(--media-menu-available-height,--spacing(56)),--spacing(56))] overscroll-none',
 									'h-(--media-menu-height) w-(--media-menu-width)',
 									'transition-[opacity,width,height] duration-300 ease-out motion-reduce:duration-0',
 									'data-[side=top]:border-b-0',
-									'after:pointer-events-none after:absolute after:start-0 after:bottom-0 after:z-20 after:hidden after:h-px after:bg-silver dark:after:bg-gray',
+									'after:bg-silver dark:after:bg-gray after:pointer-events-none after:absolute after:start-0 after:bottom-0 after:z-20 after:hidden after:h-px',
 									'after:end-[calc(--spacing(8)-2px)] data-[side=top]:after:block',
 									'forced-colors:after:bg-[CanvasText]'
 								]}
