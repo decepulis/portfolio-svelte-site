@@ -10,11 +10,13 @@
 	import { extras, links } from './badges';
 	import { FONT, clearTextCache } from './pixel';
 
+	/** total page views, baked in at build; null if unavailable */
+	const { visits }: { visits: number | null } = $props();
+
 	let wall: HTMLUListElement;
 	let tick = $state(0);
 	let ready = $state(false);
 	let inView = $state(false);
-	let visits = $state<number | null>(null);
 	const odometer = new Tween(0, { easing: cubicOut });
 
 	// the canvas needs the pixel font before it can draw text
@@ -43,17 +45,7 @@
 		return () => clearInterval(id);
 	});
 
-	// count this visit (the server counts each visitor once a day) and get the total
-	$effect(() => {
-		fetch('/api/visits', { method: 'POST' })
-			.then((res) => (res.ok ? res.json() : null))
-			.then((data: { count: number } | null) => {
-				if (data && typeof data.count === 'number') visits = data.count;
-			})
-			.catch(() => {});
-	});
-
-	// roll the odometer up once we have a number and someone is looking
+	// roll the odometer up the first time someone scrolls to it
 	let rolled = false;
 	$effect(() => {
 		if (visits === null || !inView || rolled) return;
