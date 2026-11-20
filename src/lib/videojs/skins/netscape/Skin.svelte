@@ -699,7 +699,9 @@
 							class={[
 								popup,
 								'z-20 m-0 max-w-(--media-menu-available-width) min-w-44 overflow-hidden! rounded-none bg-silver p-0 text-black',
-								raised,
+								// the bevel is drawn over the scrolling content so items never cover it
+								'after:pointer-events-none after:absolute after:inset-0 after:z-20',
+								'after:shadow-[inset_-1px_-1px_0_var(--color-black),inset_1px_1px_0_var(--color-white),inset_-2px_-2px_0_var(--color-gray),inset_2px_2px_0_var(--color-gainsboro)]',
 								'[--media-popover-side-offset:calc(var(--media-spacing)*10)] [--media-popup-side-offset:var(--media-popover-side-offset)]',
 								'max-h-[min(var(--media-menu-available-height,--spacing(56)),--spacing(56))] overscroll-none',
 								'h-(--media-menu-height) w-(--media-menu-width)'
