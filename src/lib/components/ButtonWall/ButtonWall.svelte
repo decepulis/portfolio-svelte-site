@@ -51,21 +51,27 @@
 		odometer.set(visits, { duration });
 	});
 
-	// two across on phones, up to 2× scale (176px) on wider screens
-	const cell = 'w-[min(11rem,calc(50%-0.25rem))]';
-
 	const visitLabel = $derived(
 		visits === null ? 'Visitor counter' : `${visits.toLocaleString('en-US')} visitors`
 	);
 </script>
 
-<ul bind:this={wall} role="list" class="flex flex-wrap gap-2">
+<!--
+	Eight badges, so 2 or 4 columns always fill every row. Change the count and
+	revisit this. Columns top out at 176px, exactly 2× the 88px canvas, in px on purpose:
+	this is about canvas pixels, and the root font size here is 18px.
+-->
+<ul
+	bind:this={wall}
+	role="list"
+	class="grid grid-cols-[repeat(2,minmax(0,176px))] gap-2 md:grid-cols-[repeat(4,176px)]"
+>
 	{#each links as badge (badge.id)}
-		<li class={cell}>
+		<li>
 			<Badge {badge} {tick} {ready} />
 		</li>
 	{/each}
-	<li class={cell}>
+	<li>
 		<Badge
 			badge={extras.counter}
 			{tick}
@@ -74,7 +80,7 @@
 			label={visitLabel}
 		/>
 	</li>
-	<li class={cell}>
+	<li>
 		<Badge badge={extras.browser} {tick} {ready} />
 	</li>
 </ul>
