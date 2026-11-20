@@ -5,7 +5,7 @@
 //   node ./scripts/format-mdoc.mjs                 # format all posts
 //   node ./scripts/format-mdoc.mjs <file> [file…]  # format given files (lint-staged)
 import Markdoc from '@markdoc/markdoc';
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const POSTS_DIR = 'src/posts';
