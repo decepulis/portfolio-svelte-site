@@ -33,18 +33,16 @@
 </script>
 
 <figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
-	<div style:aspect-ratio="{width}/{height}" class="bg-gray relative w-full">
-		<video-player content-title={title}>
-			<VideoSkin class="absolute inset-0">
-				{#if mediaReady}
-					<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
-					></mux-video>
-					<mux-data metadata={{ video_title: title }}></mux-data>
-					<google-cast></google-cast>
-				{/if}
-			</VideoSkin>
-		</video-player>
-	</div>
+	<video-player content-title={title}>
+		<VideoSkin aspectRatio="{width}/{height}">
+			{#if mediaReady}
+				<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
+				></mux-video>
+				<mux-data metadata={{ video_title: title }}></mux-data>
+				<google-cast></google-cast>
+			{/if}
+		</VideoSkin>
+	</video-player>
 	{#if caption}
 		<figcaption class="mt-2 text-sm italic">{caption}</figcaption>
 	{/if}

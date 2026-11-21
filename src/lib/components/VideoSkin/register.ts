@@ -8,8 +8,6 @@ import '@videojs/html/icons/element/scaffold';
 import '@videojs/html/ui/container';
 import '@videojs/html/ui/poster';
 import '@videojs/html/ui/buffering-indicator';
-import '@videojs/html/ui/controls';
-import '@videojs/html/ui/controls-content';
 import '@videojs/html/ui/controls-group';
 import '@videojs/html/ui/title';
 import '@videojs/html/ui/tooltip-group';
