@@ -742,7 +742,7 @@
 									'transition-[opacity,width,height] duration-300 ease-out motion-reduce:duration-0',
 									'data-[side=top]:border-b-0',
 									'after:bg-silver dark:after:bg-gray after:pointer-events-none after:absolute after:start-0 after:bottom-0 after:z-20 after:hidden after:h-px',
-									'after:end-(--spacing(10)) data-[side=top]:after:block',
+									'after:end-10 data-[side=top]:after:block',
 									'forced-colors:after:bg-[CanvasText]'
 								]}
 							>
