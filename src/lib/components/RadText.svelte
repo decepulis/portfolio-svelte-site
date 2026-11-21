@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { spring } from 'svelte/motion';
+	import { Spring } from 'svelte/motion';
 
 	import ui from '$lib/stores/ui.svelte';
 
@@ -11,118 +11,60 @@
 
 	const { shouldReduceMotion } = $derived(ui);
 
+	// Slowest first, so the quickest layer is drawn nearest the text.
+	const layers = [
+		{ color: 'text-red', spring: new Spring(0, { stiffness: 0.05, damping: 1 }) },
+		{ color: 'text-yellow', spring: new Spring(0, { stiffness: 0.075, damping: 1 }) },
+		{ color: 'text-lime', spring: new Spring(0, { stiffness: 0.1, damping: 1 }) },
+		{ color: 'text-green', spring: new Spring(0, { stiffness: 0.15, damping: 1 }) },
+		{ color: 'text-blue', spring: new Spring(0, { stiffness: 0.2, damping: 1 }) }
+	];
+
+	let wrapper: HTMLElement | undefined = $state();
 	let scrollY = $state(0);
 	let isSpringing = $state(false);
+	let box = $state({ top: 0, left: 0, width: 0 });
 
-	// Read scrollY every frame while scrolling, rather than trusting scroll events:
-	// iOS can batch those during momentum scrolling, leaving scrollY stale for
-	// several frames while the page keeps moving, which makes the layers snap.
-	// A scroll event only wakes the loop; it sleeps once scrolling settles.
+	// The layers are fixed to the viewport and placed only by their springs.
+	// iOS scrolls the page off the main thread and can leave scrollY stale for
+	// ~100ms; if the layers scrolled with the page and were offset by
+	// scrollY - spring, that stale value would land on screen as a snap.
+	// Here it only nudges a spring's target, and springs move smoothly.
 	$effect(() => {
-		let frame = 0;
-		let idleFrames = 0;
-		const read = () => {
-			const y = window.scrollY;
-			if (y === scrollY) idleFrames++;
-			else {
-				scrollY = y;
-				idleFrames = 0;
-			}
-			frame = idleFrames < 10 ? requestAnimationFrame(read) : 0;
-		};
-		const wake = () => {
-			idleFrames = 0;
-			if (!frame) frame = requestAnimationFrame(read);
-		};
-		scrollY = window.scrollY;
-		addEventListener('scroll', wake, { passive: true });
-		return () => {
-			removeEventListener('scroll', wake);
-			cancelAnimationFrame(frame);
-		};
-	});
+		if (shouldReduceMotion || !wrapper) return;
+		let top = 0;
+		for (let el: HTMLElement | null = wrapper; el; el = el.offsetParent as HTMLElement | null) {
+			top += el.offsetTop;
+		}
+		box = { top, left: wrapper.getBoundingClientRect().left, width: wrapper.offsetWidth };
 
-	const scrollSpring0 = spring({ scrollY: 0 }, { stiffness: 0.05, damping: 1 });
-	const scrollSpring1 = spring({ scrollY: 0 }, { stiffness: 0.075, damping: 1 });
-	const scrollSpring2 = spring({ scrollY: 0 }, { stiffness: 0.1, damping: 1 });
-	const scrollSpring3 = spring({ scrollY: 0 }, { stiffness: 0.15, damping: 1 });
-	const scrollSpring4 = spring({ scrollY: 0 }, { stiffness: 0.2, damping: 1 });
-
-	$effect(() => {
-		if (shouldReduceMotion) return;
 		isSpringing = true;
-		scrollSpring0.set({ scrollY }).then(() => (isSpringing = false));
-		scrollSpring1.set({ scrollY });
-		scrollSpring2.set({ scrollY });
-		scrollSpring3.set({ scrollY });
-		scrollSpring4.set({ scrollY });
+		const [slowest, ...rest] = layers;
+		slowest.spring.set(scrollY).then(() => (isSpringing = false));
+		rest.forEach(({ spring }) => spring.set(scrollY));
 	});
 </script>
 
-<span
-	class="wrapper relative block"
-	style:--translate0={scrollY - $scrollSpring0.scrollY}
-	style:--translate1={scrollY - $scrollSpring1.scrollY}
-	style:--translate2={scrollY - $scrollSpring2.scrollY}
-	style:--translate3={scrollY - $scrollSpring3.scrollY}
-	style:--translate4={scrollY - $scrollSpring4.scrollY}
-	style:--opacity={isSpringing || shouldReduceMotion ? 1 : 0}
->
-	<span
-		class="text-red pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
-		aria-hidden="true"
-		data-nosnippet="true"
-		style:transform={shouldReduceMotion
-			? 'translate3d(5px,5px,0)'
-			: `translateY(calc(1px * var(--translate0)))`}
-		style:opacity="var(--opacity)"
-	>
-		{@render children()}
-	</span>
-	<span
-		class="text-yellow pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
-		aria-hidden="true"
-		data-nosnippet="true"
-		style:transform={shouldReduceMotion
-			? 'translate3d(4px,4px,0)'
-			: `translateY(calc(1px * var(--translate1)))`}
-		style:opacity="var(--opacity)"
-	>
-		{@render children()}
-	</span>
-	<span
-		class="text-lime pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
-		aria-hidden="true"
-		data-nosnippet="true"
-		style:transform={shouldReduceMotion
-			? 'translate3d(3px,3px,0)'
-			: `translateY(calc(1px * var(--translate2)))`}
-		style:opacity="var(--opacity)"
-	>
-		{@render children()}
-	</span>
-	<span
-		class="text-green pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
-		aria-hidden="true"
-		data-nosnippet="true"
-		style:transform={shouldReduceMotion
-			? 'translate3d(2px,2px,0)'
-			: `translateY(calc(1px * var(--translate3)))`}
-		style:opacity="var(--opacity)"
-	>
-		{@render children()}
-	</span>
-	<span
-		class="text-blue pointer-events-none absolute inset-0 transition-opacity duration-100 ease-in-out will-change-transform"
-		aria-hidden="true"
-		data-nosnippet="true"
-		style:transform={shouldReduceMotion
-			? 'translate3d(1px,1px,0)'
-			: `translateY(calc(1px * var(--translate4)))`}
-		style:opacity="var(--opacity)"
-	>
-		{@render children()}
-	</span>
+<svelte:window bind:scrollY />
+
+<span bind:this={wrapper} class="relative block">
+	{#each layers as { color, spring }, i (color)}
+		<span
+			class="{color} pointer-events-none transition-opacity duration-100 ease-in-out will-change-transform {shouldReduceMotion
+				? 'absolute inset-0'
+				: 'fixed top-0'}"
+			aria-hidden="true"
+			data-nosnippet="true"
+			style:left={shouldReduceMotion ? null : `${box.left}px`}
+			style:width={shouldReduceMotion ? null : `${box.width}px`}
+			style:transform={shouldReduceMotion
+				? `translate3d(${5 - i}px,${5 - i}px,0)`
+				: `translateY(${box.top - spring.current}px)`}
+			style:opacity={isSpringing || shouldReduceMotion ? 1 : 0}
+		>
+			{@render children()}
+		</span>
+	{/each}
 	<span class="relative">
 		{@render children()}
 	</span>
