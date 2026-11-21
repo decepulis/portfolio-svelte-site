@@ -88,7 +88,7 @@ The homepage will automatically include the new post via `getPosts()` in [src/ro
 - **Code blocks**: Automatically syntax highlighted with Shiki. Supports `[!code highlight]`, `[!code ++]`, `[!code --]`, `[!code error]`, `[!code warning]` annotations
 - **Grid layout**: `{% grid %}...{% /grid %}` for side-by-side content
 - **Color**: `{% color color="#hex" %}` for inline color display
-- **Video**: `{% video playbackId="..." title="..." width=N height=N %}` for Mux-hosted videos, rendered by [Video.js 10](https://videojs.org/docs/framework/html) (`@videojs/html`) in [src/lib/markdoc/components/Video.svelte](src/lib/markdoc/components/Video.svelte). The player UI is the site's own skin, [src/lib/videojs/skin/VideoSkin.svelte](src/lib/videojs/skin/VideoSkin.svelte): the Video.js scaffold skin's markup styled with Tailwind. Its elements are registered in `register.ts`, and the Video.js Tailwind theme (`bg-media-*`, `clip-media-*`, `media-*` variants) is in `tailwind.css`, imported by `src/routes/layout.css` after the site theme
+- **Video**: `{% video playbackId="..." title="..." width=N height=N %}` for Mux-hosted videos, rendered by [Video.js 10](https://videojs.org/docs/framework/html) (`@videojs/html`) in [src/lib/markdoc/components/Video.svelte](src/lib/markdoc/components/Video.svelte). The player UI is the site's own skin in [src/lib/components/VideoSkin/](src/lib/components/VideoSkin/), built from Video.js's unstyled UI elements (registered in `register.ts`)
 
 ## Important Implementation Details
 
