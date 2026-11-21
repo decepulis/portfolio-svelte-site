@@ -21,16 +21,13 @@
 		playback: { maxResolution: '1080p' },
 		poster: { time: 0 }
 	});
-	// Play the published copy on YouTube until YouTube says it's gone, then the Mux backup.
-	let youtubeGone = $state(false);
-	const fromYouTube = $derived(youtube && !youtubeGone);
 	let mediaReady = $state(false);
 
 	$effect(() => {
 		let cancelled = false;
 
 		// Keep the playback engines, Mux Data and Google Cast out of the initial bundle.
-		const imports = fromYouTube
+		const imports = youtube
 			? [import('@videojs/html/media/youtube-video')]
 			: [
 					import('@videojs/html/media/mux-video/spf'),
@@ -50,7 +47,7 @@
 <figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
 	<video-player content-title={title}>
 		<VideoSkin aspectRatio="{width}/{height}">
-			{#if mediaReady && fromYouTube}
+			{#if mediaReady && youtube}
 				<!-- loads nothing from YouTube until it's played, so it shows the backup's poster -->
 				<youtube-video
 					src={youtube}
@@ -60,7 +57,6 @@
 					{loop}
 					{autoplay}
 					{muted}
-					onerror={() => (youtubeGone = true)}
 				></youtube-video>
 			{:else if mediaReady}
 				<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
