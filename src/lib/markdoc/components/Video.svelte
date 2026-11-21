@@ -4,8 +4,17 @@
 
 	import VideoSkin from '$lib/components/VideoSkin/index.svelte';
 
-	const { title, caption, playbackId, width, height, loop, autoplay, muted }: Tag['attributes'] =
-		$props();
+	const {
+		title,
+		caption,
+		playbackId,
+		youtube,
+		width,
+		height,
+		loop,
+		autoplay,
+		muted
+	}: Tag['attributes'] = $props();
 
 	const source: MuxSource = $derived({
 		playbackId,
@@ -17,12 +26,15 @@
 	$effect(() => {
 		let cancelled = false;
 
-		// Keep the playback engine, Mux Data and Google Cast out of the initial bundle.
-		void Promise.all([
-			import('@videojs/html/media/mux-video/spf'),
-			import('@videojs/html/extensions/mux-data'),
-			import('@videojs/html/extensions/google-cast')
-		]).then(() => {
+		// Keep the playback engines, Mux Data and Google Cast out of the initial bundle.
+		const imports = youtube
+			? [import('@videojs/html/media/youtube-video')]
+			: [
+					import('@videojs/html/media/mux-video/spf'),
+					import('@videojs/html/extensions/mux-data'),
+					import('@videojs/html/extensions/google-cast')
+				];
+		void Promise.all(imports).then(() => {
 			if (!cancelled) mediaReady = true;
 		});
 
@@ -35,7 +47,18 @@
 <figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
 	<video-player content-title={title}>
 		<VideoSkin aspectRatio="{width}/{height}">
-			{#if mediaReady}
+			{#if mediaReady && youtube}
+				<!-- loads nothing from YouTube until it's played, so it shows the backup's poster -->
+				<youtube-video
+					src={youtube}
+					poster="https://image.mux.com/{playbackId}/thumbnail.webp?time=0"
+					preload="none"
+					playsinline
+					{loop}
+					{autoplay}
+					{muted}
+				></youtube-video>
+			{:else if mediaReady}
 				<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
 				></mux-video>
 				<mux-data metadata={{ video_title: title }}></mux-data>

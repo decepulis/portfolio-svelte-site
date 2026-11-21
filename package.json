@@ -59,6 +59,7 @@
 		"@videojs/html": "10.6.0",
 		"@videojs/mux-data": "10.6.0",
 		"@videojs/mux-video": "10.6.0",
+		"@videojs/youtube-video": "10.6.0",
 		"just-throttle": "^4.2.0"
 	},
 	"pnpm": {
