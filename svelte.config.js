@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -11,8 +11,8 @@ const config = {
 	},
 
 	kit: {
-		// every page is prerendered (see src/routes/+layout.ts);
-		// the Vercel adapter lets /api/visits run as a function
+		// leave this blank for zero-config on vercel
+		// https://kit.svelte.dev/docs/adapter-static#zero-config-support
 		adapter: adapter()
 	}
 };
