@@ -10,8 +10,8 @@
 	- The control bar is docked to the bottom edge, like the QuickTime plug-in's controller strip
 	  (`<embed controller=true>`): a table row attached beneath the movie, not a floating toolbar.
 	- Menus are `<fieldset>`/`<legend>` with `<select size=N>` listboxes, ruled with engraved `<hr>`s.
-	Flourish: the settings menu slides between fieldsets like Tabs.svelte panels (25% nudge, fade,
-	eased size); feedback indicators press in like a calm rubber stamp.
+	Flourish: the settings menu slides between fieldsets while easing to the new size; feedback
+	indicators press in like a calm rubber stamp. Nothing fades: things appear, move, or vanish.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -32,7 +32,8 @@
 	const id = (name: string) => `${uid}-${name}`;
 
 	// == fonts ==
-	// Copy is the browser's default serif; form controls are the system sans; data is Courier.
+	// Copy is the browser's default serif; form controls (and their numbers) are the system sans;
+	// keyboard shortcuts and badges are Courier.
 	// Spelled out rather than font-serif/font-sans/font-mono until the site theme defines those.
 	const serif = "[font-family:Times,'Times_New_Roman',serif]";
 	const sans = '[font-family:Helvetica,Arial,sans-serif]';
@@ -41,11 +42,11 @@
 	// == palette ==
 	// --br-page: the page (and a copy cell); --br-face: a form control; --br-hi / --br-lo: the light
 	// and dark edges of the table's bas-relief; --br-sel: an unfocused `<select>`'s selected row;
-	// --br-played: the timeline ("visited"); --br-mark: volume (link blue).
+	// --br-mark: played time and volume (web-safe blue).
 	const palette = [
 		'[--br-page:var(--color-white)] [--br-face:var(--color-gainsboro)] [--br-ink:var(--color-black)]',
 		'[--br-hi:var(--color-silver)] [--br-lo:var(--color-gray)] [--br-sel:var(--color-silver)]',
-		'[--br-played:var(--color-visited)] [--br-mark:var(--color-link)] [--br-buffer:var(--color-gainsboro)]',
+		'[--br-mark:var(--color-blue)] [--br-buffer:var(--color-gainsboro)]',
 		'dark:[--br-page:var(--color-gainsboro)] dark:[--br-face:var(--color-silver)] dark:[--br-hi:var(--color-white)]',
 		'dark:[--br-sel:var(--color-darkgray)] dark:[--br-buffer:var(--color-silver)]',
 		'[--media-accent:var(--color-blue)] [--media-ring:var(--color-blue)]'
@@ -81,7 +82,6 @@
 		'hover:bg-(--br-page) focus-visible:bg-(--br-page) aria-expanded:bg-(--br-page)',
 		'outline-none -outline-offset-4 focus-visible:outline-2 focus-visible:outline-blue',
 		'aria-disabled:cursor-not-allowed aria-disabled:text-(--br-lo)',
-		'transition-colors duration-150 motion-reduce:transition-none',
 		'forced-colors:bg-[ButtonFace] forced-colors:text-[ButtonText] forced-colors:forced-color-adjust-none',
 		'forced-colors:hover:bg-[Highlight] forced-colors:hover:text-[HighlightText] forced-colors:focus-visible:bg-[Highlight] forced-colors:focus-visible:text-[HighlightText]',
 		'forced-colors:aria-expanded:bg-[Highlight] forced-colors:aria-expanded:text-[HighlightText] forced-colors:aria-disabled:text-[GrayText]',
@@ -107,7 +107,6 @@
 	// spacing, the 28px timeline row, 2px spacing, the bar's 1px frame); plus the 2px gap: 36px.
 	const popup = [
 		'm-0 overflow-visible text-inherit',
-		'media-transitioning:opacity-0',
 		'data-[side=top]:origin-bottom data-[side=bottom]:origin-top data-[side=left]:origin-right data-[side=right]:origin-left',
 		'before:pointer-events-auto before:absolute',
 		'data-[side=top]:before:inset-x-0 data-[side=top]:before:top-full',
@@ -136,7 +135,6 @@
 		tipBox,
 		'pointer-events-none z-20 whitespace-nowrap',
 		'[--media-popup-side-offset:var(--media-tooltip-side-offset)] [--media-tooltip-side-offset:38px]',
-		'transition-opacity duration-150 motion-reduce:transition-none',
 		'data-open:flex data-open:items-center data-open:gap-[5px]',
 		'forced-colors:border-[CanvasText] forced-colors:bg-[Canvas] forced-colors:text-[CanvasText]'
 	];
@@ -155,8 +153,7 @@
 		table,
 		serif,
 		'pointer-events-none flex items-stretch gap-[2px] rounded-none',
-		'transform-[rotate(-1deg)] transition-opacity duration-200 ease-out',
-		'data-starting-style:opacity-0 data-ending-style:opacity-0 data-ending-style:duration-300',
+		'transform-[rotate(-1deg)] data-starting-style:invisible',
 		'not-data-starting-style:animate-[bas-relief-stamp_400ms_cubic-bezier(0.2,0.8,0.3,1)]',
 		'motion-reduce:animate-none! motion-reduce:transform-none',
 		'media-high-contrast:outline media-high-contrast:outline-current',
@@ -172,19 +169,19 @@
 	// == menus ==
 	/**
 	 * Each panel is a `<fieldset>` (its 2px groove drawn by ::before, the legend sat on it). Panels
-	 * move like Tabs.svelte panels: a 25% nudge plus a fade while the menu eases to the incoming size.
+	 * slide all the way across, clipped by the menu, while the menu eases to the incoming size.
 	 */
 	const menuContent = [
 		'absolute inset-x-0 top-0 max-h-full overflow-auto overscroll-none outline-hidden',
 		'flex flex-col gap-[7px] px-[14px] pt-[22px] pb-[14px]',
 		"before:pointer-events-none before:absolute before:inset-x-[5px] before:top-[11px] before:bottom-[5px] before:content-['']",
 		'before:border-2 before:[border-style:groove] before:border-(--br-hi) forced-colors:before:border-[CanvasText]',
-		'transform-gpu transition-[transform,opacity] duration-300 ease-out motion-reduce:duration-0',
-		'not-data-submenu:data-child-open:transform-[translateX(-25%)] not-data-submenu:data-child-open:opacity-0',
-		'not-data-submenu:data-child-open:rtl:transform-[translateX(25%)]',
+		'transform-gpu transition-transform duration-300 ease-out motion-reduce:duration-0',
+		'not-data-submenu:data-child-open:transform-[translateX(-100%)]',
+		'not-data-submenu:data-child-open:rtl:transform-[translateX(100%)]',
 		'data-submenu:z-10',
-		'data-submenu:media-transitioning:transform-[translateX(25%)] data-submenu:media-transitioning:opacity-0',
-		'data-submenu:media-transitioning:rtl:transform-[translateX(-25%)] data-submenu:media-transitioning:pointer-events-none'
+		'data-submenu:media-transitioning:transform-[translateX(100%)]',
+		'data-submenu:media-transitioning:rtl:transform-[translateX(-100%)] data-submenu:media-transitioning:pointer-events-none'
 	];
 	/** The `<legend>`: page copy, so Times. */
 	const legend = [
@@ -382,7 +379,7 @@
 				<media-controls-group
 					class={[
 						'absolute inset-x-[8px] top-[8px] flex items-start justify-between gap-[8px] rtl:flex-row-reverse',
-						'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 motion-reduce:duration-0',
+						'group-not-data-visible/controls:opacity-0',
 						'not-data-started:[visibility:var(--media-controls-before-start,hidden)]'
 					]}
 				>
@@ -478,7 +475,7 @@
 						class={[
 							table,
 							'pointer-events-auto absolute top-1/2 left-1/2 flex transform-[translate(-50%,-50%)] items-stretch gap-[2px] group-not-data-visible/controls:pointer-events-none rtl:flex-row-reverse',
-							'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 group-data-visible/center-buffering:hidden! motion-reduce:duration-0'
+							'group-not-data-visible/controls:opacity-0 group-data-visible/center-buffering:hidden!'
 						]}
 					>
 						<div class={centerSeekCell}>
@@ -541,7 +538,7 @@
 					class={[
 						table,
 						'pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col gap-[2px] group-not-data-visible/controls:pointer-events-none',
-						'transition-opacity duration-200 group-not-data-visible/controls:opacity-0 motion-reduce:duration-0',
+						'group-not-data-visible/controls:opacity-0',
 						'group-not-data-started/controls:[visibility:var(--media-controls-before-start,hidden)]'
 					]}
 				>
@@ -563,7 +560,7 @@
 											'first-of-type:[--media-chapter-inset-start:0] last-of-type:[--media-chapter-inset-end:0]'
 										]}
 									>
-										<!-- an inset groove; buffered = gray stripes; played = visited purple -->
+										<!-- an inset groove; buffered = gray stripes; played = blue -->
 										<media-slider-track
 											class={[
 												'absolute inset-x-0 isolate h-[10px] rounded-none',
@@ -583,7 +580,7 @@
 											></media-slider-buffer>
 											<media-slider-fill
 												class={[
-													'clip-media-x-[--media-slider-fill] absolute inset-y-[2px] rounded-none bg-(--br-played) forced-colors:forced-color-adjust-none',
+													'clip-media-x-[--media-slider-fill] absolute inset-y-[2px] rounded-none bg-(--br-mark) forced-colors:forced-color-adjust-none',
 													'group-data-dragging/slider:clip-media-x-[--media-slider-pointer]',
 													'forced-colors:bg-[Canvas] forced-colors:bg-[linear-gradient(Highlight,Highlight)]'
 												]}
@@ -617,7 +614,7 @@
 									<img alt="" aria-hidden="true" decoding="async" class={[inset, 'block']} />
 								</media-slider-thumbnail>
 								<div class={[tipBox, '-mt-px flex max-w-full min-w-0 items-center gap-2']}>
-									<media-slider-value type="pointer" class={[mono, 'shrink-0 tabular-nums']}
+									<media-slider-value type="pointer" class="shrink-0 tabular-nums"
 									></media-slider-value>
 									<media-time-slider-chapter-title class="min-w-0 truncate empty:hidden"
 									></media-time-slider-chapter-title>
@@ -693,13 +690,10 @@
 							</media-volume-popover>
 						</div>
 
-						<!-- the time: data, in its own page-colored <td>, in Courier -->
+						<!-- the time: data, in its own page-colored <td> -->
 						<div class={[cell, 'min-w-0 flex-1 items-center']}>
 							<media-time-group
-								class={[
-									mono,
-									'flex shrink-0 items-center gap-[6px] px-[6px] text-[13px] leading-none tabular-nums rtl:flex-row-reverse'
-								]}
+								class="flex shrink-0 items-center gap-[6px] px-[6px] text-[13px] leading-none tabular-nums rtl:flex-row-reverse"
 							>
 								<media-time
 									type="current"
@@ -783,7 +777,7 @@
 									'[--media-popover-boundary-offset:0px]',
 									'max-h-[min(var(--media-menu-available-height,--spacing(64)),--spacing(64))] overscroll-none',
 									'h-(--media-menu-height) w-(--media-menu-width)',
-									'transition-[opacity,width,height] duration-300 ease-out motion-reduce:duration-0'
+									'transition-[width,height] duration-300 ease-out motion-reduce:duration-0'
 								]}
 							>
 								<media-menu-content class={menuContent}>
@@ -973,11 +967,9 @@
 	 */
 	@keyframes -global-bas-relief-stamp {
 		0% {
-			opacity: 0;
 			transform: scale(1.45) rotate(var(--bas-relief-stamp-tilt, -5deg));
 		}
 		45% {
-			opacity: 1;
 			transform: scale(0.96) rotate(0deg);
 		}
 		70% {
