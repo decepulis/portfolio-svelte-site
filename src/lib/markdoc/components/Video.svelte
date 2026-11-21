@@ -33,7 +33,7 @@
 </script>
 
 <figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
-	<video-player content-title={title}>
+	<video-player>
 		<VideoSkin aspectRatio="{width}/{height}">
 			{#if mediaReady}
 				<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}

@@ -3,6 +3,8 @@
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 
+	import { sunken } from './bevel';
+
 	type Props = {
 		/** The control's element, e.g. `media-play-button`. */
 		as: string;
@@ -21,10 +23,13 @@
 	this={as}
 	{id}
 	class={[
-		'sunken bg-gainsboro dark:bg-silver flex h-6 min-w-7 cursor-pointer items-center justify-center gap-1 px-1.5 text-xs',
-		// flat, like a button in the browser's toolbar, until the pointer finds it; then it rises out of
-		// its cell, and sinks in while held or while its popup is open
-		'hover:button-up active:button-down aria-expanded:button-down active:*:translate-px aria-expanded:*:translate-px',
+		sunken,
+		'bg-gainsboro dark:bg-silver flex h-6 min-w-7 cursor-pointer items-center justify-center gap-1 px-1.5 text-xs',
+		// flat, like a button in the browser's toolbar, until it's pointed at or focused; then it rises
+		// out of its cell, and sinks in, face and all, while held or while its popup is open
+		'hocus:shadow-[inset_1px_1px_var(--color-white),inset_-1px_-1px_var(--color-gray)]',
+		'active:shadow-[inset_1px_1px_var(--color-gray),inset_-1px_-1px_var(--color-white)] active:*:translate-px',
+		'aria-expanded:shadow-[inset_1px_1px_var(--color-gray),inset_-1px_-1px_var(--color-white)] aria-expanded:*:translate-px',
 		'aria-disabled:text-gray aria-disabled:cursor-not-allowed aria-disabled:shadow-none aria-disabled:*:translate-none',
 		'-outline-offset-4 focus-visible:outline-2',
 		className
