@@ -21,10 +21,10 @@
 	aria-label="Footnote {index}"
 	onclick={() => (open = !open)}
 	onkeydown={handleKeydown}
-	class="relative"
+	class="group relative"
 	style:anchor-name="--footnote-{uid}"
 >
-	<sup class="text-link hocus:no-underline cursor-help underline">[{index}]</sup>
+	<sup class="text-link group-hocus:no-underline cursor-help underline">[{index}]</sup>
 </button>
 <span
 	id={uid}

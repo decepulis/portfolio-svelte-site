@@ -12,9 +12,9 @@
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 
-	import { raised, sunken } from './bevel';
 	import Control from './Control.svelte';
 	import SettingsMenu from './SettingsMenu.svelte';
+	import { raised, sunken } from './bevel';
 	import './register';
 
 	type Props = {
@@ -212,7 +212,7 @@
 						></media-slider-fill>
 					</media-slider-track>
 					<media-slider-thumb
-						class="border-gray bg-gainsboro group-hocus/slider:bg-white absolute left-(--media-slider-fill) h-4 w-2 -translate-x-1/2 border outline-offset-1 group-data-dragging/slider:left-(--media-slider-pointer) focus-visible:outline-2"
+						class="border-gray bg-gainsboro group-hocus/slider:bg-white absolute left-(--media-slider-fill) h-4 w-2 -translate-x-1/2 border outline-offset-1 group-data-dragging/slider:left-(--media-slider-pointer) focus-visible:bg-white"
 					></media-slider-thumb>
 					<media-slider-preview
 						class="pointer-events-none invisible bottom-[calc(100%+--spacing(3))] flex flex-col items-center group-data-dragging/slider:visible group-data-pointing/slider:visible"
@@ -260,7 +260,7 @@
 								></media-slider-fill>
 							</media-slider-track>
 							<media-slider-thumb
-								class="border-gray bg-gainsboro group-hocus/volume:bg-white absolute bottom-(--media-slider-fill) left-1/2 h-2 w-4 -translate-x-1/2 translate-y-1/2 border outline-offset-1 focus-visible:outline-2"
+								class="border-gray bg-gainsboro group-hocus/volume:bg-white absolute bottom-(--media-slider-fill) left-1/2 h-2 w-4 -translate-x-1/2 translate-y-1/2 border outline-offset-1 focus-visible:bg-white"
 							></media-slider-thumb>
 						</media-volume-slider>
 					</div>

@@ -81,16 +81,13 @@
 	</div>
 	<p class="mt-8">
 		{#if isInternalNavigation}
-			<button
-				class="text-link dark:text-link-dark group cursor-pointer"
-				onclick={() => history.back()}
-			>
+			<button class="text-link group cursor-pointer" onclick={() => history.back()}>
 				← <span class="group-hocus:decoration-wavy underline">back</span>
 			</button>
 		{:else}
 			<!-- resolve() can't take a #hash, so it's added after (see workHref) -->
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-			<a class="text-link dark:text-link-dark group" href={workHref}>
+			<a class="text-link group" href={workHref}>
 				← <span class="group-hocus:decoration-wavy underline">back</span>
 			</a>
 		{/if}

@@ -1,8 +1,42 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:is([data-theme='dark'] *));
-@custom-variant hocus (&:hover, &:focus);
-@custom-variant hocus-within (&:hover, &:focus-within);
+/*
+	hocus: pointed at, or focused from the keyboard. Never plain :focus, which a mouse click
+	also sets, and which stays after the pointer leaves. any-hover (not Tailwind's hover: hover)
+	so an iPad with a trackpad gets hover too.
+*/
+@custom-variant hocus {
+	@media (any-hover: hover) {
+		&:hover {
+			@slot;
+		}
+	}
+	&:focus-visible {
+		@slot;
+	}
+}
+@custom-variant hocus-within {
+	@media (any-hover: hover) {
+		&:hover {
+			@slot;
+		}
+	}
+	&:has(:focus-visible) {
+		@slot;
+	}
+}
+
+/* the keyboard's focus rectangle, as Windows 95 drew it, at 2px */
+@utility focus-ring {
+	outline: 2px dotted var(--color-blue);
+}
+@layer base {
+	:focus-visible {
+		@apply focus-ring;
+		outline-offset: 2px;
+	}
+}
 @theme {
 	--font-serif: Times, serif;
 	--font-sans: Helvetica, Arial, sans-serif;

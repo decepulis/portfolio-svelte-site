@@ -45,7 +45,7 @@
 	<a
 		{href}
 		aria-label={label}
-		class="block outline-offset-2 focus-visible:outline-2 active:translate-x-px active:translate-y-px"
+		class="block outline-offset-2 active:translate-x-px active:translate-y-px"
 	>
 		{@render art()}
 	</a>
