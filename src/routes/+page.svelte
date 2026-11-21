@@ -15,5 +15,5 @@
 	<Nav />
 	<About />
 	<Work posts={data.posts} />
-	<Contact />
+	<Contact visits={data.visits} />
 </main>
