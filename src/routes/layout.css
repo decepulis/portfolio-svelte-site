@@ -79,8 +79,24 @@
 	--text-9xl--line-height: 1;
 }
 
-/* After the site theme, whose `--color-*: initial` would otherwise clear the media colors. */
-@import '../lib/videojs/skin/tailwind.css';
+/*
+ * HTML 3.2 tables are "rendered in bas-relief, raised up with the outer border as a bevel, and
+ * individual cells inset into this raised surface."
+ */
+@utility raised {
+	border: 1px solid;
+	border-color: var(--color-silver) var(--color-gray) var(--color-gray) var(--color-silver);
+	@variant dark {
+		border-color: var(--color-white) var(--color-gray) var(--color-gray) var(--color-white);
+	}
+}
+@utility sunken {
+	border: 1px solid;
+	border-color: var(--color-gray) var(--color-silver) var(--color-silver) var(--color-gray);
+	@variant dark {
+		border-color: var(--color-gray) var(--color-white) var(--color-white) var(--color-gray);
+	}
+}
 
 * {
 	outline-color: var(--color-blue);
