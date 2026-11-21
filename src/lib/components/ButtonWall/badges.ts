@@ -8,7 +8,12 @@ export type BadgeSpec = {
 	id: string;
 	label: string;
 	href?: string;
+	/** the animated badge, called once per frame */
 	draw: Draw;
+	/** a still "lit" version shown on hover, like an old onMouseOver image swap */
+	lit?: (ctx: CanvasRenderingContext2D) => void;
+	/** what the status bar says while this badge is hovered */
+	status?: string;
 };
 
 const BUTTERFLY_UP = [
@@ -67,7 +72,25 @@ const email: BadgeSpec = {
 		text(ctx, 'MAIL', 33, 14, '#FFFF00');
 		text(ctx, 'ME!', 33, 25, f % 2 ? '#00FFFF' : '#FFFFFF');
 		edge(ctx);
-	}
+	},
+	lit(ctx) {
+		rect(ctx, '#FFFF00', 0, 0, W, H);
+		// an open envelope with the letter sliding out
+		rect(ctx, '#000000', 8, 3, 16, 13);
+		rect(ctx, '#FFFFFF', 9, 4, 14, 12);
+		for (const y of [6, 8, 10]) rect(ctx, '#999999', 11, y, 10, 1);
+		rect(ctx, '#000000', 5, 13, 22, 13);
+		rect(ctx, '#FFFFFF', 6, 14, 20, 11);
+		for (let i = 0; i < 10; i++) {
+			const y = 14 + Math.floor(i * 0.5);
+			rect(ctx, '#000000', 6 + i, y, 1, 1);
+			rect(ctx, '#000000', 25 - i, y, 1, 1);
+		}
+		text(ctx, 'SEND', 33, 14, '#000099');
+		text(ctx, 'MAIL!', 33, 25, '#000099');
+		edge(ctx, '#FFFFFF', '#999900');
+	},
+	status: 'Write to me at darius@cepulis.net'
 };
 
 const github: BadgeSpec = {
@@ -89,7 +112,16 @@ const github: BadgeSpec = {
 		text(ctx, 'decepulis', scroll + 72, 25, '#999999');
 		ctx.restore();
 		edge(ctx, '#FFFFFF', '#666666');
-	}
+	},
+	lit(ctx) {
+		rect(ctx, '#00FF00', 0, 0, W, H);
+		rect(ctx, '#000000', 0, 0, 27, H);
+		text(ctx, '</>', 14, 19, '#00FF00', { align: 'center' });
+		text(ctx, 'READ MY', 31, 14, '#000000');
+		text(ctx, 'CODE >', 31, 25, '#000000');
+		edge(ctx, '#FFFFFF', '#006600');
+	},
+	status: 'Read my code at github.com/decepulis'
 };
 
 const linkedin: BadgeSpec = {
@@ -103,7 +135,16 @@ const linkedin: BadgeSpec = {
 		text(ctx, 'HIRE', 34, 14, '#000000');
 		text(ctx, f % 6 < 3 ? 'ME?' : 'ME!', 34, 25, '#0066CC');
 		edge(ctx, '#CCCCCC', '#000000');
-	}
+	},
+	lit(ctx) {
+		rect(ctx, '#0066CC', 0, 0, W, H);
+		rect(ctx, '#FFFFFF', 2, 2, 27, 27);
+		text(ctx, 'in', 15, 21, '#0066CC', { size: 16, align: 'center' });
+		text(ctx, 'HIRE', 34, 14, '#FFFFFF');
+		text(ctx, 'ME!', 34, 25, '#FFFF00');
+		edge(ctx, '#99CCFF', '#000066');
+	},
+	status: "See where I've worked at linkedin.com/in/decepulis"
 };
 
 const bluesky: BadgeSpec = {
@@ -124,7 +165,15 @@ const bluesky: BadgeSpec = {
 		// butterfly, flapping
 		sprite(ctx, f % 2 ? BUTTERFLY_UP : BUTTERFLY_DOWN, 64, 8, '#000066');
 		edge(ctx);
-	}
+	},
+	lit(ctx) {
+		rect(ctx, '#000066', 0, 0, W, H);
+		text(ctx, 'FOLLOW', 6, 14, '#FFFFFF');
+		text(ctx, 'ME >', 6, 25, '#99FFFF');
+		sprite(ctx, BUTTERFLY_UP, 64, 12, '#99FFFF');
+		edge(ctx, '#3399FF', '#000000');
+	},
+	status: 'Follow me on Bluesky at @darius.place'
 };
 
 const instagram: BadgeSpec = {
@@ -138,7 +187,15 @@ const instagram: BadgeSpec = {
 			text(ctx, ch, 10 + i * 12, 20 + bounce, RAINBOW[(i + f) % RAINBOW.length]);
 		});
 		edge(ctx, '#999999', '#333333');
-	}
+	},
+	lit(ctx) {
+		// the rainbow moves out of the letters and into the background
+		const band = Math.ceil(W / RAINBOW.length);
+		RAINBOW.forEach((c, i) => rect(ctx, c, i * band, 0, band, H));
+		'PHOTOS'.split('').forEach((ch, i) => text(ctx, ch, 10 + i * 12, 20, '#000000'));
+		edge(ctx, '#FFFFFF', '#000000');
+	},
+	status: 'See my photos at instagram.com/darius_cepulis'
 };
 
 const xDotCom: BadgeSpec = {
@@ -150,7 +207,14 @@ const xDotCom: BadgeSpec = {
 		text(ctx, 'X.COM', W / 2, 14, '#000000', { align: 'center' });
 		text(ctx, f % 8 < 4 ? 'FOLLOW' : 'ME!', W / 2, 25, '#990000', { align: 'center' });
 		edge(ctx);
-	}
+	},
+	lit(ctx) {
+		rect(ctx, '#000000', 0, 0, W, H);
+		text(ctx, 'X.COM', W / 2, 14, '#FFFFFF', { align: 'center' });
+		text(ctx, 'FOLLOW ME', W / 2, 25, '#FF3333', { align: 'center' });
+		edge(ctx, '#666666', '#333333');
+	},
+	status: 'Find me on X at @darius_cepulis'
 };
 
 /**
@@ -203,7 +267,8 @@ const browser: BadgeSpec = {
 		text(ctx, 'BEST VIEWED', W / 2, 13, '#000000', { align: 'center' });
 		text(ctx, 'ANY BROWSER', W / 2, 24, f % 4 < 2 ? '#FF0000' : '#0000FF', { align: 'center' });
 		edge(ctx, '#FFFFFF', '#999900');
-	}
+	},
+	status: 'Any browser. Seriously, any of them.'
 };
 
 export const links = [email, github, linkedin, bluesky, instagram, xDotCom];
