@@ -7,7 +7,8 @@
 	import ui from '$lib/stores/ui.svelte';
 
 	import Badge from './Badge.svelte';
-	import { extras, links } from './badges';
+	import StatusBar from './StatusBar.svelte';
+	import { type BadgeSpec, extras, links } from './badges';
 	import { FONT } from './pixel';
 
 	/** total page views, baked in at build; null if unavailable */
@@ -36,9 +37,10 @@
 		return () => observer.disconnect();
 	});
 
+	// 8fps: the choppy rate of an animated GIF
 	$effect(() => {
 		if (!inView || ui.shouldReduceMotion) return;
-		const id = setInterval(() => tick++, 1000 / 16);
+		const id = setInterval(() => tick++, 1000 / 8);
 		return () => clearInterval(id);
 	});
 
@@ -51,9 +53,28 @@
 		odometer.set(visits, { duration });
 	});
 
-	const visitLabel = $derived(
-		visits === null ? 'Visitor counter' : `${visits.toLocaleString('en-US')} visitors`
-	);
+	const visitCount = $derived(visits?.toLocaleString('en-US'));
+	const visitLabel = $derived(visitCount ? `${visitCount} visitors` : 'Visitor counter');
+
+	// the badge under the pointer (or keyboard focus), for the status bar
+	// raw, so it holds the badge itself rather than a proxy (we compare by identity)
+	let hot = $state.raw<BadgeSpec | null>(null);
+	const hotChange = (badge: BadgeSpec) => (on: boolean) => {
+		if (on) hot = badge;
+		else if (hot === badge) hot = null;
+	};
+
+	const status = $derived.by(() => {
+		if (hot === extras.counter) {
+			return visitCount
+				? `${visitCount} page views since 2023, counted at the last deploy`
+				: 'The visit count is unavailable right now';
+		}
+		if (hot?.status) return hot.status;
+		return visitCount
+			? `Thanks for stopping by! You're visitor number ${visitCount}.`
+			: 'Document: Done';
+	});
 </script>
 
 <!--
@@ -61,31 +82,30 @@
 	revisit this. Columns top out at 176px, exactly 2× the 88px canvas, in px on purpose:
 	this is about canvas pixels, and the root font size here is 18px.
 -->
-<ul
-	bind:this={wall}
-	role="list"
-	class="grid grid-cols-[repeat(2,minmax(0,176px))] gap-2 md:grid-cols-[repeat(4,176px)]"
->
-	{#each links as badge (badge.id)}
+<div class="w-fit max-w-full">
+	<ul
+		bind:this={wall}
+		role="list"
+		class="grid grid-cols-[repeat(2,minmax(0,176px))] gap-2 md:grid-cols-[repeat(4,176px)]"
+	>
+		{#each links as badge (badge.id)}
+			<li>
+				<Badge {badge} {tick} {ready} onhotchange={hotChange(badge)} />
+			</li>
+		{/each}
 		<li>
-			<Badge {badge} {tick} {ready} />
+			<Badge
+				badge={extras.counter}
+				{tick}
+				{ready}
+				value={visits === null ? null : odometer.current}
+				label={visitLabel}
+				onhotchange={hotChange(extras.counter)}
+			/>
 		</li>
-	{/each}
-	<li>
-		<Badge
-			badge={extras.counter}
-			{tick}
-			{ready}
-			value={visits === null ? null : odometer.current}
-			label={visitLabel}
-		/>
-	</li>
-	<li>
-		<Badge badge={extras.browser} {tick} {ready} />
-	</li>
-</ul>
-{#if visits !== null}
-	<p class="mt-4 font-serif">
-		Thanks for stopping by! You're visitor number {visits.toLocaleString('en-US')}.
-	</p>
-{/if}
+		<li>
+			<Badge badge={extras.browser} {tick} {ready} onhotchange={hotChange(extras.browser)} />
+		</li>
+	</ul>
+	<StatusBar message={status} />
+</div>

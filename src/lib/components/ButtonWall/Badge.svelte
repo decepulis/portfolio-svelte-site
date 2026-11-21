@@ -4,7 +4,7 @@
 
 	type Props = {
 		badge: BadgeSpec;
-		/** shared clock, ~16 ticks per second */
+		/** shared clock; each tick is one animation frame */
 		tick: number;
 		/** true once the pixel font has loaded */
 		ready: boolean;
@@ -12,29 +12,38 @@
 		value?: number | null;
 		/** accessible label, overriding the badge's own */
 		label?: string;
+		/** called when the badge is hovered or focused, and when it stops being */
+		onhotchange?: (hot: boolean) => void;
 	};
-	const { badge, tick, ready, value = null, label }: Props = $props();
+	const { badge, tick, ready, value = null, label, onhotchange }: Props = $props();
 
 	let canvas: HTMLCanvasElement;
-	// these drive drawing but shouldn't trigger it, so they stay plain variables
+	let hot = $state(false);
+	// frame only advances while the badge is animating, so it stays a plain variable
 	let frame = 0;
 	let lastTick = 0;
-	let hot = false;
 
 	$effect(() => {
 		if (!ready) return;
-		// at rest a badge animates at 8fps like a GIF; hovered, at the full 16fps
-		if (tick !== lastTick) {
-			if (hot || tick % 2 === 0) frame++;
-			lastTick = tick;
-		}
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 		ctx.clearRect(0, 0, W, H);
+		// hovered, a badge holds still on its lit image, like a rollover
+		if (hot && badge.lit) {
+			badge.lit(ctx);
+			return;
+		}
+		if (tick !== lastTick) {
+			frame++;
+			lastTick = tick;
+		}
 		badge.draw(ctx, frame, value);
 	});
 
-	const heat = (on: boolean) => () => (hot = on);
+	const heat = (on: boolean) => () => {
+		hot = on;
+		onhotchange?.(on);
+	};
 </script>
 
 {#snippet art()}
