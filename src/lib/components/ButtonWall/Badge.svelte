@@ -12,10 +12,8 @@
 		value?: number | null;
 		/** accessible label, overriding the badge's own */
 		label?: string;
-		/** called when the badge is hovered or focused, and when it stops being */
-		onhotchange?: (hot: boolean) => void;
 	};
-	const { badge, tick, ready, value = null, label, onhotchange }: Props = $props();
+	const { badge, tick, ready, value = null, label }: Props = $props();
 
 	let canvas: HTMLCanvasElement;
 	let hot = $state(false);
@@ -40,10 +38,7 @@
 		badge.draw(ctx, frame, value);
 	});
 
-	const heat = (on: boolean) => () => {
-		hot = on;
-		onhotchange?.(on);
-	};
+	const heat = (on: boolean) => () => (hot = on);
 </script>
 
 {#snippet art()}
@@ -72,12 +67,7 @@
 	</a>
 	<!-- eslint-enable svelte/no-navigation-without-resolve -->
 {:else}
-	<div
-		role="img"
-		aria-label={label ?? badge.label}
-		onpointerenter={heat(true)}
-		onpointerleave={heat(false)}
-	>
+	<div role="img" aria-label={label ?? badge.label}>
 		{@render art()}
 	</div>
 {/if}
