@@ -39,6 +39,9 @@
 	afterNavigate((navigation) => {
 		isInternalNavigation = navigation.type !== 'enter';
 	});
+
+	// the homepage, scrolled to the list of work
+	const workHref = `${resolve('/')}#work`;
 </script>
 
 <article class="mx-4 py-8" style:view-transition-name="container-{slug}">
@@ -85,7 +88,9 @@
 				← <span class="group-hocus:decoration-wavy underline">back</span>
 			</button>
 		{:else}
-			<a class="text-link dark:text-link-dark group" href={resolve('/#work', {})}>
+			<!-- resolve() can't take a #hash, so it's added after (see workHref) -->
+			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+			<a class="text-link dark:text-link-dark group" href={workHref}>
 				← <span class="group-hocus:decoration-wavy underline">back</span>
 			</a>
 		{/if}

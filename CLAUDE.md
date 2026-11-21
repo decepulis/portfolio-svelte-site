@@ -93,6 +93,8 @@ The homepage will automatically include the new post via `getPosts()` in [src/ro
 ## Important Implementation Details
 
 - **Prerendering**: All routes are prerendered (`prerender = true` in [src/routes/+layout.ts](src/routes/+layout.ts))
+- **Visit counter**: The total page view count comes from the Vercel Web Analytics API at build time ([src/lib/server/visits.ts](src/lib/server/visits.ts)), so it updates on each deploy. It needs `VERCEL_ACCESS_TOKEN` at build; without it the counter shows dashes
+- **Contact buttons**: The contact section is a wall of 88×31 badges in [src/lib/components/ButtonWall/](src/lib/components/ButtonWall/), one SVG component per badge in `badges/`. Each badge wraps its art in `BadgeFrame`, with an `idle` snippet (animated with CSS `steps()` keyframes for a GIF-like 8fps) and an optional still `lit` snippet shown on hover, like an old-school rollover. One SVG unit is one badge pixel; `Sprite` draws pixel art from rows of text and `Edge` draws the 1px border. Text uses the Silkscreen pixel font and must be placed by its left edge on whole pixels to stay crisp
 - **Direct URLs**: Posts with `directUrl` in frontmatter trigger a 307 redirect in [src/routes/posts/[slug]/+page.server.ts:34-36](src/routes/posts/[slug]/+page.server.ts#L34-L36)
 - **Image optimization**: Uses `vite-imagetools` for image processing and `@sveltejs/enhanced-img` for responsive images
 - **Analytics**: Vercel Analytics injected in [src/routes/+layout.ts](src/routes/+layout.ts)
