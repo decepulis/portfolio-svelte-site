@@ -48,15 +48,8 @@
 	<video-player poster="https://image.mux.com/{playbackId}/thumbnail.webp?time=0">
 		<VideoSkin aspectRatio="{width}/{height}">
 			{#if mediaReady && youtube}
-				<!-- loads nothing from YouTube until it's played, so it shows the backup's poster -->
-				<youtube-video
-					src={youtube}
-					poster="https://image.mux.com/{playbackId}/thumbnail.webp?time=0"
-					preload="none"
-					playsinline
-					{loop}
-					{autoplay}
-					{muted}
+				<!-- loads nothing from YouTube until it's played; the player shows the backup's poster -->
+				<youtube-video src={youtube} preload="none" playsinline {loop} {autoplay} {muted}
 				></youtube-video>
 			{:else if mediaReady}
 				<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
