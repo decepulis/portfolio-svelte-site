@@ -1,6 +1,17 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:is([data-theme='dark'] *));
+/*
+ * Tailwind only applies hover: when the primary pointer can hover, which leaves out an iPad with a
+ * trackpad. Any pointer that can hover will do.
+ */
+@custom-variant hover {
+	@media (any-hover: hover) {
+		&:hover {
+			@slot;
+		}
+	}
+}
 @custom-variant hocus (&:hover, &:focus);
 @custom-variant hocus-within (&:hover, &:focus-within);
 @theme {
