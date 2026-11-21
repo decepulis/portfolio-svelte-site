@@ -5,6 +5,10 @@
 	import H1 from '$lib/components/typography/H1.svelte';
 	import P from '$lib/components/typography/P.svelte';
 	import Section from '$lib/components/typography/Section.svelte';
+
+	import { resolve } from '$app/paths';
+
+	const talk = resolve('/posts/[slug]', { slug: '2026-06-01-choosing-the-wrong-abstraction' });
 </script>
 
 {#snippet short()}
@@ -20,7 +24,7 @@
 	<P>
 		In my time at Mux, I've been helping design and develop a better experience for devs. From
 		<A href="https://www.mux.com/team/darius-cepulis">blog posts</A> and
-		<A href="https://www.youtube.com/watch?v=dExasNlhVKM">talks</A>, to the
+		<A href={talk}>talks</A>, to the
 		<A href="https://www.mux.com">marketing site</A> and <A href="https://www.mux.com/docs">docs</A
 		>, through to the
 		<A href="https://dashboard.mux.com">dashboard</A>, down to OSS SDKs like
@@ -37,8 +41,7 @@
 		What I loved about working in web development wasn't JavaScript, I'll tell you that. It's that
 		there were so many ways to guide a user's journey. To help people get stuff done. From
 		<A href="https://www.mux.com/team/darius-cepulis">blog posts</A> and
-		<A href="https://www.youtube.com/watch?v=dExasNlhVKM">talks</A> for other devs, to delightful and
-		helpful
+		<A href={talk}>talks</A> for other devs, to delightful and helpful
 		<A href="https://www.mux.com">marketing</A> and <A href="https://www.mux.com/docs">docs</A> sites,
 		through the
 		<A href="https://dashboard.mux.com">dashboard</A>, down to OSS SDKs like

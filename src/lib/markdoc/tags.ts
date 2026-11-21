@@ -23,6 +23,11 @@ export const video: Schema = {
 			required: true,
 			errorLevel: 'critical'
 		},
+		// Where the video is published; the Mux upload backs it up, and plays if this one is gone.
+		youtube: {
+			type: String,
+			required: false
+		},
 		title: {
 			type: String,
 			required: true,

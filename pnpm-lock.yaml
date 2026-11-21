@@ -19,11 +19,14 @@ importers:
         version: 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/html':
         specifier: 10.5.0
-        version: 10.5.0(@videojs/google-cast@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(react@19.0.0)
+        version: 10.5.0(@videojs/google-cast@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(@videojs/youtube-video@10.5.0)(react@19.0.0)
       '@videojs/mux-data':
         specifier: 10.5.0
         version: 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/mux-video':
+        specifier: 10.5.0
+        version: 10.5.0
+      '@videojs/youtube-video':
         specifier: 10.5.0
         version: 10.5.0
       just-throttle:
@@ -1162,6 +1165,9 @@ packages:
 
   '@videojs/utils@10.5.0':
     resolution: {integrity: sha512-hW/8JqUxjVfYlZskkTm73uOX4vtJKHABSp3Xtcrp59MqPU81mIISRkRUqKt1keUUJRHk9ZKhmN/o66lYbuXH9A==}
+
+  '@videojs/youtube-video@10.5.0':
+    resolution: {integrity: sha512-IJ3fnVMwyDMc/kVL3h903BqE/BbDqM+9YxWJ2JE7MrrQYC8hNnEvjYA1mlWhCVexagPwuXgfVy0vJtSFLrwXqA==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -3120,7 +3126,7 @@ snapshots:
       '@videojs/utils': 10.5.0
       hls.js: 1.7.4
 
-  '@videojs/html@10.5.0(@videojs/google-cast@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(react@19.0.0)':
+  '@videojs/html@10.5.0(@videojs/google-cast@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(@videojs/youtube-video@10.5.0)(react@19.0.0)':
     dependencies:
       '@videojs/core': 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/element': 10.5.0
@@ -3134,6 +3140,7 @@ snapshots:
       '@videojs/hlsjs-video': 10.5.0
       '@videojs/mux-data': 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/mux-video': 10.5.0
+      '@videojs/youtube-video': 10.5.0
     transitivePeerDependencies:
       - react
 
@@ -3181,6 +3188,11 @@ snapshots:
       react: 19.0.0
 
   '@videojs/utils@10.5.0': {}
+
+  '@videojs/youtube-video@10.5.0':
+    dependencies:
+      '@videojs/media': 10.5.0
+      '@videojs/utils': 10.5.0
 
   acorn-jsx@5.3.2(acorn@8.14.1):
     dependencies:
