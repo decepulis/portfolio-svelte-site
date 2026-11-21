@@ -1,6 +1,6 @@
 <!--
-	Lab skin: bas-relief ("B/C. Bas-relief"). Between table-plain (B) and table-tabs (C), built from
-	period sources rather than from either one.
+	The site's Video.js skin: the scaffold skin's markup (see ./register.ts), restyled from period
+	sources.
 	- The chrome is what a browser drew for `<table border=1 cellspacing=2>` (HTML 3.2: "rendered in
 	  bas-relief, raised up with the outer border as a bevel, and individual cells inset into this
 	  raised surface"): a 1px outset frame, every cell its own 1px inset box, 2px apart.
@@ -17,7 +17,7 @@
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 
-	import '$lib/videojs/scaffold/register';
+	import './register';
 
 	type Props = {
 		/** The media element (e.g. `<mux-video>`). */
@@ -31,8 +31,9 @@
 	const uid = $props.id();
 	const id = (name: string) => `${uid}-${name}`;
 
-	// == fonts (spelled out: the site's font-* utilities are being fixed separately) ==
+	// == fonts ==
 	// Copy is the browser's default serif; form controls are the system sans; data is Courier.
+	// Spelled out rather than font-serif/font-sans/font-mono until the site theme defines those.
 	const serif = "[font-family:Times,'Times_New_Roman',serif]";
 	const sans = '[font-family:Helvetica,Arial,sans-serif]';
 	const mono = "[font-family:'Courier_New',monospace]";
@@ -102,8 +103,8 @@
 	const icon = 'col-start-1 row-start-1 size-[16px]';
 
 	// == popups: each is its own small raised table, set 2px off the control bar ==
-	// The bar is 1px frame + 2px spacing + a 28px timeline row + 2px spacing + a 1px cell rule above
-	// the trigger: 34px from a bottom-row trigger's top to the bar's top edge.
+	// From a bottom-row trigger's top edge up to the bar's top edge is 34px (its cell's 1px rule, 2px
+	// spacing, the 28px timeline row, 2px spacing, the bar's 1px frame); plus the 2px gap: 36px.
 	const popup = [
 		'm-0 overflow-visible text-inherit',
 		'media-transitioning:opacity-0',
@@ -232,6 +233,16 @@
 		{ key: 'captions', group: 'media-captions-radio-group' }
 	] as const;
 	const menuLabels = { quality: 'Quality', audio: 'Audio', speed: 'Speed', captions: 'Captions' };
+
+	/** The status indicator's icon for each action it reports (full class names, for Tailwind). */
+	const statusIcons = [
+		{ name: 'captions-on', show: 'group-data-[status=captions-on]/input-status:block' },
+		{ name: 'captions-off', show: 'group-data-[status=captions-off]/input-status:block' },
+		{ name: 'fullscreen-enter', show: 'group-data-[status=fullscreen]/input-status:block' },
+		{ name: 'fullscreen-exit', show: 'group-data-[status=exit-fullscreen]/input-status:block' },
+		{ name: 'pip-enter', show: 'group-data-[status=pip]/input-status:block' },
+		{ name: 'pip-exit', show: 'group-data-[status=exit-pip]/input-status:block' }
+	];
 
 	const hotkeys: { keys: string; action: string; value?: string }[] = [
 		{ keys: 'Space', action: 'togglePaused' },
@@ -917,20 +928,8 @@
 			]}
 		>
 			<span class={bannerCell}>
-				{#each [['captions-on', 'captions-on'], ['captions-off', 'captions-off'], ['fullscreen-enter', 'fullscreen'], ['fullscreen-exit', 'exit-fullscreen'], ['pip-enter', 'pip'], ['pip-exit', 'exit-pip']] as [name, status] (name)}
-					<media-icon
-						family="scaffold"
-						{name}
-						class={[
-							'hidden size-[20px] shrink-0',
-							status === 'captions-on' && 'group-data-[status=captions-on]/input-status:block',
-							status === 'captions-off' && 'group-data-[status=captions-off]/input-status:block',
-							status === 'fullscreen' && 'group-data-[status=fullscreen]/input-status:block',
-							status === 'exit-fullscreen' &&
-								'group-data-[status=exit-fullscreen]/input-status:block',
-							status === 'pip' && 'group-data-[status=pip]/input-status:block',
-							status === 'exit-pip' && 'group-data-[status=exit-pip]/input-status:block'
-						]}
+				{#each statusIcons as { name, show } (name)}
+					<media-icon family="scaffold" {name} class={['hidden size-[20px] shrink-0', show]}
 					></media-icon>
 				{/each}
 				<media-status-indicator-value></media-status-indicator-value>
