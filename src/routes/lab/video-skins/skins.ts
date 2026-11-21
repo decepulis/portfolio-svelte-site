@@ -1,6 +1,7 @@
 import type { Component, Snippet } from 'svelte';
 
 import ScaffoldSkin from '$lib/videojs/scaffold/ScaffoldSkin.svelte';
+import BasReliefSkin from '$lib/videojs/skins/bas-relief/Skin.svelte';
 import TablePlainSkin from '$lib/videojs/skins/table-plain/Skin.svelte';
 import TableTabsSkin from '$lib/videojs/skins/table-tabs/Skin.svelte';
 import TableSkin from '$lib/videojs/skins/table/Skin.svelte';
@@ -31,6 +32,12 @@ export const skins = {
 		description:
 			'The table skin with the operating system taken out: what a browser drew, not what Windows drew.',
 		Skin: TablePlainSkin
+	},
+	'bas-relief': {
+		title: 'B/C. Bas-relief',
+		description:
+			'Between B and C, built from period sources: HTML 3.2 bas-relief tables, sans-serif form controls, serif copy.',
+		Skin: BasReliefSkin
 	},
 	'table-tabs': {
 		title: 'C. Halfway',
