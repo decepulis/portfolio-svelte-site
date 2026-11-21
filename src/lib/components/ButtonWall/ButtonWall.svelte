@@ -7,8 +7,7 @@
 	import ui from '$lib/stores/ui.svelte';
 
 	import Badge from './Badge.svelte';
-	import StatusBar from './StatusBar.svelte';
-	import { type BadgeSpec, extras, links } from './badges';
+	import { extras, links } from './badges';
 	import { FONT } from './pixel';
 
 	/** total page views, baked in at build; null if unavailable */
@@ -53,26 +52,9 @@
 		odometer.set(visits, { duration });
 	});
 
-	const visitCount = $derived(visits?.toLocaleString('en-US'));
-	const visitLabel = $derived(visitCount ? `${visitCount} visitors` : 'Visitor counter');
-
-	// the badge under the pointer (or keyboard focus), for the status bar
-	// raw, so it holds the badge itself rather than a proxy (we compare by identity)
-	let hot = $state.raw<BadgeSpec | null>(null);
-	const hotChange = (badge: BadgeSpec) => (on: boolean) => {
-		if (on) hot = badge;
-		else if (hot === badge) hot = null;
-	};
-
-	const status = $derived.by(() => {
-		if (hot === extras.counter) {
-			return visitCount
-				? `${visitCount} page views since 2023, counted at the last deploy`
-				: 'The visit count is unavailable right now';
-		}
-		// at rest, what a browser's status bar said once the page had loaded
-		return hot?.status ?? 'Document: Done';
-	});
+	const visitLabel = $derived(
+		visits === null ? 'Visitor counter' : `${visits.toLocaleString('en-US')} visitors`
+	);
 </script>
 
 <!--
@@ -80,30 +62,26 @@
 	revisit this. Columns top out at 176px, exactly 2× the 88px canvas, in px on purpose:
 	this is about canvas pixels, and the root font size here is 18px.
 -->
-<div class="w-fit max-w-full">
-	<ul
-		bind:this={wall}
-		role="list"
-		class="grid grid-cols-[repeat(2,minmax(0,176px))] gap-2 md:grid-cols-[repeat(4,176px)]"
-	>
-		{#each links as badge (badge.id)}
-			<li>
-				<Badge {badge} {tick} {ready} onhotchange={hotChange(badge)} />
-			</li>
-		{/each}
+<ul
+	bind:this={wall}
+	role="list"
+	class="grid grid-cols-[repeat(2,minmax(0,176px))] gap-2 md:grid-cols-[repeat(4,176px)]"
+>
+	{#each links as badge (badge.id)}
 		<li>
-			<Badge
-				badge={extras.counter}
-				{tick}
-				{ready}
-				value={visits === null ? null : odometer.current}
-				label={visitLabel}
-				onhotchange={hotChange(extras.counter)}
-			/>
+			<Badge {badge} {tick} {ready} />
 		</li>
-		<li>
-			<Badge badge={extras.browser} {tick} {ready} onhotchange={hotChange(extras.browser)} />
-		</li>
-	</ul>
-	<StatusBar message={status} />
-</div>
+	{/each}
+	<li>
+		<Badge
+			badge={extras.counter}
+			{tick}
+			{ready}
+			value={visits === null ? null : odometer.current}
+			label={visitLabel}
+		/>
+	</li>
+	<li>
+		<Badge badge={extras.browser} {tick} {ready} />
+	</li>
+</ul>

@@ -12,8 +12,6 @@ export type BadgeSpec = {
 	draw: Draw;
 	/** a still "lit" version shown on hover, like an old onMouseOver image swap */
 	lit?: (ctx: CanvasRenderingContext2D) => void;
-	/** what the status bar says while this badge is hovered */
-	status?: string;
 };
 
 const BUTTERFLY_UP = [
@@ -89,8 +87,7 @@ const email: BadgeSpec = {
 		text(ctx, 'SEND', 33, 14, '#000099');
 		text(ctx, 'MAIL!', 33, 25, '#000099');
 		edge(ctx, '#FFFFFF', '#999900');
-	},
-	status: 'Write to me at darius@cepulis.net'
+	}
 };
 
 const github: BadgeSpec = {
@@ -120,8 +117,7 @@ const github: BadgeSpec = {
 		text(ctx, 'READ MY', 31, 14, '#000000');
 		text(ctx, 'CODE >', 31, 25, '#000000');
 		edge(ctx, '#FFFFFF', '#006600');
-	},
-	status: 'Read my code at github.com/decepulis'
+	}
 };
 
 const linkedin: BadgeSpec = {
@@ -143,8 +139,7 @@ const linkedin: BadgeSpec = {
 		text(ctx, 'HIRE', 34, 14, '#FFFFFF');
 		text(ctx, 'ME!', 34, 25, '#FFFF00');
 		edge(ctx, '#99CCFF', '#000066');
-	},
-	status: "See where I've worked at linkedin.com/in/decepulis"
+	}
 };
 
 const bluesky: BadgeSpec = {
@@ -172,8 +167,7 @@ const bluesky: BadgeSpec = {
 		text(ctx, 'ME >', 6, 25, '#99FFFF');
 		sprite(ctx, BUTTERFLY_UP, 64, 12, '#99FFFF');
 		edge(ctx, '#3399FF', '#000000');
-	},
-	status: 'Follow me on Bluesky at @darius.place'
+	}
 };
 
 const instagram: BadgeSpec = {
@@ -194,8 +188,7 @@ const instagram: BadgeSpec = {
 		RAINBOW.forEach((c, i) => rect(ctx, c, i * band, 0, band, H));
 		'PHOTOS'.split('').forEach((ch, i) => text(ctx, ch, 10 + i * 12, 20, '#000000'));
 		edge(ctx, '#FFFFFF', '#000000');
-	},
-	status: 'See my photos at instagram.com/darius_cepulis'
+	}
 };
 
 const xDotCom: BadgeSpec = {
@@ -213,8 +206,7 @@ const xDotCom: BadgeSpec = {
 		text(ctx, 'X.COM', W / 2, 14, '#FFFFFF', { align: 'center' });
 		text(ctx, 'FOLLOW ME', W / 2, 25, '#FF3333', { align: 'center' });
 		edge(ctx, '#666666', '#333333');
-	},
-	status: 'Find me on X at @darius_cepulis'
+	}
 };
 
 /**
@@ -267,8 +259,7 @@ const browser: BadgeSpec = {
 		text(ctx, 'BEST VIEWED', W / 2, 13, '#000000', { align: 'center' });
 		text(ctx, 'ANY BROWSER', W / 2, 24, f % 4 < 2 ? '#FF0000' : '#0000FF', { align: 'center' });
 		edge(ctx, '#FFFFFF', '#999900');
-	},
-	status: 'Any browser. Seriously, any of them.'
+	}
 };
 
 export const links = [email, github, linkedin, bluesky, instagram, xDotCom];
