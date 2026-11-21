@@ -14,9 +14,12 @@ importers:
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(@sveltejs/kit@2.48.3(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.2)(vite@7.1.12(@types/node@22.18.13)(jiti@2.7.0)(lightningcss@1.33.0)(yaml@2.8.1)))(svelte@5.43.2)(vite@7.1.12(@types/node@22.18.13)(jiti@2.7.0)(lightningcss@1.33.0)(yaml@2.8.1)))(react@19.0.0)(svelte@5.43.2)
+      '@videojs/google-cast':
+        specifier: 10.5.0
+        version: 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/html':
         specifier: 10.5.0
-        version: 10.5.0(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(react@19.0.0)
+        version: 10.5.0(@videojs/google-cast@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(react@19.0.0)
       '@videojs/mux-data':
         specifier: 10.5.0
         version: 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
@@ -1062,6 +1065,9 @@ packages:
 
   '@videojs/element@10.5.0':
     resolution: {integrity: sha512-WS7j3Ym3FcmfuruGV6wssV/HduNWHm43j/tbB3DpSxDL9JgtCHAMrirDEOqdmqlj4/pAUjIyzuJ1xGH02ChU5A==}
+
+  '@videojs/google-cast@10.5.0':
+    resolution: {integrity: sha512-p5iozJHr1oaZYgfxAYBasAZL6Ku/L7MlktC4wQA15Nw57tkGnaD4bfOFoS0I+2a6CeXfVlYdAQ09026ow4XSig==}
 
   '@videojs/hlsjs-video@10.5.0':
     resolution: {integrity: sha512-X+laYuEFyQ1My99zeIpiA2xIElOBVbHawDmN/+LMcK24AzpugwWUsUaHYs0NrkKpLfF+3EPACl9tXkknXPrbQg==}
@@ -3097,6 +3103,15 @@ snapshots:
       '@lit/context': 1.1.6
       '@videojs/utils': 10.5.0
 
+  '@videojs/google-cast@10.5.0(@videojs/element@10.5.0)(react@19.0.0)':
+    dependencies:
+      '@videojs/core': 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
+      '@videojs/media': 10.5.0
+      '@videojs/utils': 10.5.0
+    transitivePeerDependencies:
+      - '@videojs/element'
+      - react
+
   '@videojs/hlsjs-video@10.5.0':
     dependencies:
       '@videojs/media': 10.5.0
@@ -3105,7 +3120,7 @@ snapshots:
       '@videojs/utils': 10.5.0
       hls.js: 1.7.4
 
-  '@videojs/html@10.5.0(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(react@19.0.0)':
+  '@videojs/html@10.5.0(@videojs/google-cast@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/hlsjs-video@10.5.0)(@videojs/mux-data@10.5.0(@videojs/element@10.5.0)(react@19.0.0))(@videojs/mux-video@10.5.0)(react@19.0.0)':
     dependencies:
       '@videojs/core': 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/element': 10.5.0
@@ -3115,6 +3130,7 @@ snapshots:
       '@videojs/store': 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/utils': 10.5.0
     optionalDependencies:
+      '@videojs/google-cast': 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/hlsjs-video': 10.5.0
       '@videojs/mux-data': 10.5.0(@videojs/element@10.5.0)(react@19.0.0)
       '@videojs/mux-video': 10.5.0

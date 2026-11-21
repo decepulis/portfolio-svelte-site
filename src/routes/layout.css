@@ -97,6 +97,17 @@
 		border-color: var(--color-gray) var(--color-white) var(--color-white) var(--color-gray);
 	}
 }
+/* A button's face, raised from its surface or pressed into it. */
+@utility button-up {
+	box-shadow:
+		inset 1px 1px var(--color-white),
+		inset -1px -1px var(--color-gray);
+}
+@utility button-down {
+	box-shadow:
+		inset 1px 1px var(--color-gray),
+		inset -1px -1px var(--color-white);
+}
 
 * {
 	outline-color: var(--color-blue);

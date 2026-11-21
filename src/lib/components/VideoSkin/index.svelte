@@ -2,6 +2,9 @@
 	The site's video player skin, drawn the way a browser drew an HTML 3.2 page: flat form buttons in
 	sunken table cells, grouped into raised tables. The control strip is docked under the movie like
 	the QuickTime plug-in's controller.
+
+	TODO: captions, audio tracks and chapters are missing. Restore them: a captions button and menu
+	panel, an audio track panel, and chapter marks and titles on the timeline.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
@@ -101,6 +104,17 @@
 						></media-title>
 					</div>
 					<div class={[table, 'pointer-events-auto flex']}>
+						<Control as="media-airplay-button" tooltip="bottom" class="group/airplay">
+							{@render icon('airplay-enter', 'group-data-[airplay-state=connected]/airplay:hidden')}
+							{@render icon(
+								'airplay-exit',
+								'not-group-data-[airplay-state=connected]/airplay:hidden'
+							)}
+						</Control>
+						<Control as="media-cast-button" tooltip="bottom" class="group/cast">
+							{@render icon('cast-enter', 'group-data-[cast-state=connected]/cast:hidden')}
+							{@render icon('cast-exit', 'not-group-data-[cast-state=connected]/cast:hidden')}
+						</Control>
 						<Control as="media-pip-button" tooltip="bottom" class="group/pip">
 							{@render icon('pip-enter', 'group-data-pip/pip:hidden')}
 							{@render icon('pip-exit', 'not-group-data-pip/pip:hidden')}
@@ -253,8 +267,10 @@
 			<media-dialog-title class="text-xl font-bold"></media-dialog-title>
 			<hr class="border-t-gray border-b border-b-white" />
 			<media-dialog-description></media-dialog-description>
-			<Control as="media-dialog-close" tooltip={false} class="justify-self-end px-4 font-sans"
-			></Control>
+			<!-- with copy of its own, the error dialog leaves it be and doesn't clobber hydration -->
+			<Control as="media-dialog-close" tooltip={false} class="justify-self-end px-4 font-sans">
+				OK
+			</Control>
 		</media-dialog-popup>
 	</media-error-dialog>
 

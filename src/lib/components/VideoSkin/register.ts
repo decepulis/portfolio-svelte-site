@@ -20,6 +20,8 @@ import '@videojs/html/ui/tooltip-shortcut';
 import '@videojs/html/ui/play-button';
 import '@videojs/html/ui/seek-button';
 import '@videojs/html/ui/mute-button';
+import '@videojs/html/ui/airplay-button';
+import '@videojs/html/ui/cast-button';
 import '@videojs/html/ui/pip-button';
 import '@videojs/html/ui/fullscreen-button';
 import '@videojs/html/ui/volume-popover';

@@ -1,7 +1,7 @@
 <!--
 	A settings button and its menu. Each panel is a <fieldset>: the root lists settings as closed
-	<select>s, and each setting opens as a <select size=N> listbox. Panels slide across while the
-	menu eases to the size of the next one.
+	<select>s, and each setting opens as a <select size=N> listbox. The menu keeps one width, so
+	panels slide straight across while it eases to the next one's height.
 -->
 <script lang="ts">
 	import Control from './Control.svelte';
@@ -14,19 +14,21 @@
 	];
 
 	const panel = [
-		'absolute top-0 left-0 max-h-full overflow-y-auto p-1.5',
+		'absolute inset-x-0 top-0 max-h-full overflow-y-auto p-1.5',
 		'transition-transform duration-300 ease-out motion-reduce:transition-none',
 		'data-child-open:-translate-x-full',
-		'data-submenu:data-starting-style:translate-x-full data-submenu:data-ending-style:translate-x-full'
+		'data-submenu:data-starting-style:translate-x-full data-submenu:data-ending-style:translate-x-full',
+		'data-starting-style:pointer-events-none data-ending-style:pointer-events-none'
 	];
 	const fieldset =
 		'grid gap-1.5 border-2 border-silver px-3 pt-1 pb-3 [border-style:groove] dark:border-white';
 	const legend = 'px-1 font-serif text-sm';
 </script>
 
-<Control as="button" type="button" commandfor={id} aria-label="Settings" class="px-2">
+<Control as="button" type="button" commandfor={id} aria-label="Settings" class="gap-1.5 px-2">
 	<media-icon family="scaffold" name="gear" class="block size-3.5"></media-icon>
-	<span aria-hidden="true" class="@max-sm:hidden">Settings&hellip;</span>
+	<!-- set a hair low, so the lowercase sits level with the cog -->
+	<span aria-hidden="true" class="relative top-px @max-sm:hidden">Settings&hellip;</span>
 </Control>
 
 <media-menu
@@ -34,10 +36,11 @@
 	side="top"
 	align="end"
 	class={[
-		'raised dark:bg-gainsboro m-0 box-content overflow-hidden bg-white p-0 text-xs text-black',
-		'h-(--media-menu-height) w-(--media-menu-width) transition-[width,height] duration-300 ease-out motion-reduce:transition-none',
-		// Video.js nudges a popup that doesn't fit rather than flipping it, so keep it narrow enough to
-		// stay aligned with its button. The menu's border sits outside --media-menu-width.
+		// text-start, because browsers still read align="end" as HTML 3.2's align attribute
+		'raised dark:bg-gainsboro m-0 box-content overflow-hidden bg-white p-0 text-start text-xs text-black',
+		'h-(--media-menu-height) w-56 transition-[height] duration-300 ease-out motion-reduce:transition-none',
+		// Video.js nudges a popup that doesn't fit rather than flipping it, so keep it small enough to
+		// stay aligned with its button. Its border sits outside the size Video.js measures.
 		'max-h-[calc(var(--media-menu-available-height)-2px)] max-w-[calc(var(--media-menu-available-width)-2px)]'
 	]}
 >

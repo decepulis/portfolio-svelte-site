@@ -17,10 +17,11 @@
 	$effect(() => {
 		let cancelled = false;
 
-		// Keep the hls.js-backed media implementation and the Mux Data SDK out of the initial bundle.
+		// Keep the playback engine, Mux Data and Google Cast out of the initial bundle.
 		void Promise.all([
-			import('@videojs/html/media/mux-video'),
-			import('@videojs/html/extensions/mux-data')
+			import('@videojs/html/media/mux-video/spf'),
+			import('@videojs/html/extensions/mux-data'),
+			import('@videojs/html/extensions/google-cast')
 		]).then(() => {
 			if (!cancelled) mediaReady = true;
 		});
@@ -39,6 +40,7 @@
 					<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
 					></mux-video>
 					<mux-data metadata={{ video_title: title }}></mux-data>
+					<google-cast></google-cast>
 				{/if}
 			</VideoSkin>
 		</video-player>

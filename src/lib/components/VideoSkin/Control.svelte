@@ -21,10 +21,12 @@
 	this={as}
 	{id}
 	class={[
-		'sunken flex h-6 min-w-7 cursor-pointer items-center justify-center gap-1 px-1.5 text-xs',
-		'bg-gainsboro hover:bg-white aria-expanded:bg-white',
-		'dark:bg-silver dark:hover:bg-gainsboro dark:aria-expanded:bg-gainsboro',
-		'aria-disabled:text-gray -outline-offset-4 focus-visible:outline-2 aria-disabled:cursor-not-allowed',
+		'sunken bg-gainsboro dark:bg-silver flex h-6 min-w-7 cursor-pointer items-center justify-center gap-1 px-1.5 text-xs',
+		// flat, like a button in the browser's toolbar, until the pointer finds it; then it rises out of
+		// its cell, and sinks in while held or while its popup is open
+		'hover:button-up active:button-down aria-expanded:button-down active:*:translate-px aria-expanded:*:translate-px',
+		'aria-disabled:text-gray aria-disabled:cursor-not-allowed aria-disabled:shadow-none aria-disabled:*:translate-none',
+		'-outline-offset-4 focus-visible:outline-2',
 		className
 	]}
 	{...attributes}
