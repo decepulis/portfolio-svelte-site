@@ -77,8 +77,6 @@
 	--text-9xl: 8rem;
 	--text-9xl: clamp(8rem, 7.5vw + 5rem, 11rem);
 	--text-9xl--line-height: 1;
-
-	--width-prose: 40em;
 }
 
 * {
