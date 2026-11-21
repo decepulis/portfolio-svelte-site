@@ -99,6 +99,16 @@ The homepage will automatically include the new post via `getPosts()` in [src/ro
 - **Image optimization**: Uses `vite-imagetools` for image processing and `@sveltejs/enhanced-img` for responsive images
 - **Analytics**: Vercel Analytics injected in [src/routes/+layout.ts](src/routes/+layout.ts)
 
+## Preferences
+
+- **Design ethos**: components look like they were built at the dawn of the web, plus one flourish that shows craft (see `Tabs.svelte`). Keep motion calm; one tasteful effect beats several.
+- **Every element earns its place**: don't repeat information or stack effects; cut before adding.
+- **Layouts are deliberate**: explicit column counts and balanced rows, never an orphan.
+- **Colors**: the 216-color web-safe palette.
+- **Static only**: no servers, endpoints, or runtime services. Fetch dynamic data at build time. Ask before changing adapters, deployment, or infrastructure.
+- **Legible over clever**: prefer declarative markup a person might write (HTML/SVG/CSS) to imperative drawing code.
+- **Commits**: author as `Darius Cepulis <de.cepulis@gmail.com>`, with Claude in a `Co-Authored-By` trailer.
+
 ## Available MCP Tools
 
 You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively
