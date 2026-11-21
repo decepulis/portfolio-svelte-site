@@ -32,24 +32,19 @@
 		'not-data-starting-style:animate-[video-stamp_400ms_cubic-bezier(0.2,0.8,0.3,1)] motion-reduce:animate-none'
 	];
 	/** The play button's three faces; each class names when that face is hidden. */
-	const playStates = [
-		{ icon: 'restart', label: 'Replay', hidden: 'not-group-data-ended/play:hidden' },
+	const playFaces = [
+		{ icon: 'restart', hidden: 'not-group-data-ended/play:hidden' },
 		{
 			icon: 'play',
-			label: 'Play',
 			hidden:
 				'group-data-ended/play:hidden group-data-started/play:not-group-data-paused/play:hidden'
 		},
 		{
 			icon: 'pause',
-			label: 'Pause',
 			hidden:
 				'not-group-data-started/play:hidden group-data-ended/play:hidden group-data-paused/play:hidden'
 		}
 	];
-	/** Skipping is for a mouse, with room to spare, once the video has started. */
-	const skip =
-		'h-auto px-2.5 @max-xs:hidden pointer-coarse:hidden group-not-data-started/controls:hidden';
 
 	const hotkeys = [
 		{ keys: 'Space', action: 'togglePaused' },
@@ -71,15 +66,6 @@
 	<media-icon family="scaffold" {name} class={['block', size, className]}></media-icon>
 {/snippet}
 
-{#snippet playFaces(size?: string, labelled = false)}
-	{#each playStates as { icon: name, label, hidden } (name)}
-		<span class={['flex items-center gap-2', hidden]}>
-			{@render icon(name, undefined, size)}
-			{#if labelled}<span aria-hidden="true">{label}</span>{/if}
-		</span>
-	{/each}
-{/snippet}
-
 <media-container
 	class={[
 		'@container relative block size-full overflow-hidden bg-black font-sans text-black',
@@ -97,7 +83,7 @@
 			<media-tooltip-group class="contents">
 				<!-- the title, as a bold, centered <th>, and the window controls -->
 				<media-controls-group
-					class="absolute inset-x-2 top-2 flex items-start justify-between gap-2 group-not-data-started/controls:invisible group-not-data-visible/controls:invisible"
+					class="absolute inset-x-2 top-2 flex items-start justify-between gap-2 group-not-data-visible/controls:invisible"
 				>
 					<div class={[table, 'flex min-w-0 has-[media-title:empty]:hidden']}>
 						<media-title class="sunken truncate px-2 py-0.5 text-center font-serif font-bold"
@@ -126,37 +112,10 @@
 					</div>
 				</media-controls-group>
 
-				<!-- play and skip, which give way to "Loading…" while buffering -->
-				<media-buffering-indicator class="group/buffering contents">
-					<div
-						class={[
-							table,
-							'absolute top-1/2 left-1/2 hidden -translate-1/2 group-data-visible/buffering:flex'
-						]}
-					>
-						<span class="sunken px-2 py-1 font-serif italic">Loading&hellip;</span>
-					</div>
-					<media-controls-group
-						class={[
-							table,
-							'pointer-events-auto absolute top-1/2 left-1/2 flex -translate-1/2 font-bold',
-							'group-not-data-visible/controls:invisible group-data-visible/buffering:hidden'
-						]}
-					>
-						<Control as="media-seek-button" seconds={-10} tooltip={false} class={skip}>
-							<span aria-hidden="true" class="text-[9px]">&#9664;&#9664;</span> 10
-						</Control>
-						<Control
-							as="media-play-button"
-							tooltip={false}
-							class="group/play h-11 gap-2 px-4 text-lg"
-						>
-							{@render playFaces('size-5', true)}
-						</Control>
-						<Control as="media-seek-button" seconds={10} tooltip={false} class={skip}>
-							10 <span aria-hidden="true" class="text-[9px]">&#9654;&#9654;</span>
-						</Control>
-					</media-controls-group>
+				<media-buffering-indicator
+					class={[table, 'absolute top-1/2 left-1/2 flex -translate-1/2 not-data-visible:hidden']}
+				>
+					<span class="sunken px-2 py-1 font-serif italic">Loading&hellip;</span>
 				</media-buffering-indicator>
 
 				<!--
@@ -167,7 +126,7 @@
 					class={[
 						table,
 						'pointer-events-auto absolute inset-x-0 bottom-0 flex flex-col',
-						'group-not-data-started/controls:invisible group-not-data-visible/controls:invisible',
+						'group-not-data-visible/controls:invisible',
 						'[--media-popover-side-offset:calc(--spacing(6)+8px)] [--media-tooltip-side-offset:calc(--spacing(6)+8px)]'
 					]}
 				>
@@ -204,7 +163,11 @@
 					</div>
 
 					<div class="flex gap-[2px]">
-						<Control as="media-play-button" class="group/play">{@render playFaces()}</Control>
+						<Control as="media-play-button" class="group/play">
+							{#each playFaces as { icon: name, hidden } (name)}
+								{@render icon(name, hidden)}
+							{/each}
+						</Control>
 
 						<Control
 							as="media-mute-button"

@@ -18,7 +18,6 @@ import '@videojs/html/ui/tooltip-label';
 import '@videojs/html/ui/tooltip-shortcut';
 
 import '@videojs/html/ui/play-button';
-import '@videojs/html/ui/seek-button';
 import '@videojs/html/ui/mute-button';
 import '@videojs/html/ui/airplay-button';
 import '@videojs/html/ui/cast-button';
