@@ -1,10 +1,11 @@
 import { getPosts } from '$lib/markdoc/server';
+import { getVisits } from '$lib/server/visits';
 import type { Metadata } from '$lib/types/metadata';
 
 import type { PageServerLoad } from './$types';
 
 export const load = (async () => {
-	const fullPosts = await getPosts();
+	const [fullPosts, visits] = await Promise.all([getPosts(), getVisits()]);
 	const posts = fullPosts.map(({ frontmatter }) => ({
 		// only pick the frontmatter that we're going to use
 		frontmatter: {
@@ -21,6 +22,7 @@ export const load = (async () => {
 
 	return {
 		posts,
+		visits,
 		metadata: {
 			pathname: `/`,
 			fullTitle: 'Darius Cepulis',

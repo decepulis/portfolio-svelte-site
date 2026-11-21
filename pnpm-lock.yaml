@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@fontsource/silkscreen':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(@sveltejs/kit@2.48.3(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.43.2)(vite@7.1.12(@types/node@22.18.13)(jiti@2.7.0)(lightningcss@1.33.0)(yaml@2.8.1)))(svelte@5.43.2)(vite@7.1.12(@types/node@22.18.13)(jiti@2.7.0)(lightningcss@1.33.0)(yaml@2.8.1)))(react@19.0.0)(svelte@5.43.2)
@@ -399,6 +402,9 @@ packages:
   '@eslint/plugin-kit@0.4.1':
     resolution: {integrity: sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@fontsource/silkscreen@5.3.0':
+    resolution: {integrity: sha512-M1NQ3LQH0LFNvyFPd/piHEGMImPPtpLglNnLC6Vdcq9kL0jNIOtTQmksAWCc4enbDnw1OnIpZtjNEfRqYm/QmA==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2493,6 +2499,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.17.0
       levn: 0.4.1
+
+  '@fontsource/silkscreen@5.3.0': {}
 
   '@humanfs/core@0.19.1': {}
 
