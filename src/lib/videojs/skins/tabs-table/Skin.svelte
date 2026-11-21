@@ -56,8 +56,8 @@
 		'aria-expanded:border-t-white dark:aria-expanded:border-t-gainsboro'
 	];
 	/**
-	 * A tab that *is* a table cell: the table's rules are its frame. When expanded, its popup
-	 * overlaps the rule above it by 1px, covering it over the button's width (the open top edge).
+	 * A tab that *is* a table cell: the table's rules are its frame. When expanded, its popup's
+	 * bottom row lies on the rule above it, covering it over the button's width (the open top edge).
 	 */
 	const cellButton = [buttonBase, 'h-8 w-10'];
 	/** Width of a cell button plus the rules on either side: the width of its joined popup. */
@@ -605,7 +605,7 @@
 								></media-icon>
 							</media-mute-button>
 							{@render tooltip('mute', { delay: 0, disabled: true, sticky: true })}
-							<!-- the volume popover is the mute button's tab panel: as wide as its cell, covering the rule above it -->
+							<!-- the volume popover is the mute button's tab panel: as wide as its cell, its white covering the rule above it -->
 							<media-volume-popover
 								id={id('volume')}
 								open-on-hover
@@ -619,7 +619,7 @@
 									cellPopupWidth,
 									'z-20 box-border h-28 rounded-none px-0 py-2',
 									'data-[side=top]:border-b-0',
-									'shadow-none [--media-popover-side-offset:-1px] [--media-popup-side-offset:var(--media-popover-side-offset)]',
+									'shadow-none [--media-popover-side-offset:0px] [--media-popup-side-offset:var(--media-popover-side-offset)]',
 									'[--media-hidden-popup-blur:0px] [--media-hidden-popup-scale:1] [--media-popup-translate-distance:0px]'
 								]}
 							>
@@ -715,8 +715,8 @@
 							</media-tooltip>
 
 							<!--
-								The settings menu is the gear cell's tab panel. It opens 1px low and 1px wide of the
-								cell's end, so its bottom and end edges lie on the table's rules; the bottom edge is drawn by
+								The settings menu is the gear cell's tab panel. It opens flush above the cell and 1px
+								past its end, so its bottom and end edges lie on the table's rules; the bottom edge is drawn by
 								::after with a button-wide gap, and the panel's white covers the rule over the gear, so
 								button and panel read as one shape.
 								The seam assumes the menu's end edge stays on the button's end edge, so the menu is
@@ -734,7 +734,7 @@
 									panel,
 									'z-20 m-0 box-content overflow-hidden! rounded-none p-0',
 									'max-w-[calc(var(--media-menu-available-width,100cqw)-2px)] min-w-[min(--spacing(44),calc(var(--media-menu-available-width,100cqw)-2px))]',
-									'shadow-none [--media-popover-side-offset:-1px] [--media-popup-side-offset:var(--media-popover-side-offset)]',
+									'shadow-none [--media-popover-side-offset:0px] [--media-popup-side-offset:var(--media-popover-side-offset)]',
 									'[--media-popover-align-offset:1px] rtl:[--media-popover-align-offset:-1px]',
 									'[--media-hidden-popup-blur:0px] [--media-hidden-popup-scale:1] [--media-popover-boundary-offset:0px] [--media-popup-translate-distance:0px]',
 									'max-h-[min(var(--media-menu-available-height,--spacing(56)),--spacing(56))] overscroll-none',
