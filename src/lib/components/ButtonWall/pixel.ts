@@ -14,10 +14,6 @@ const BASELINE = 22;
 const anchorX = { left: 4, center: CACHE_W / 2, right: CACHE_W - 4 };
 const cache = new Map<string, HTMLCanvasElement>();
 
-export function clearTextCache() {
-	cache.clear();
-}
-
 function rasterize(text: string, color: string, size: number, align: Align) {
 	const key = `${text}|${color}|${size}|${align}`;
 	const hit = cache.get(key);
@@ -49,7 +45,7 @@ export function text(
 	x: number,
 	y: number,
 	color: string,
-	{ size = 8, align = 'left' as Align } = {}
+	{ size = 8, align = 'left' }: { size?: number; align?: Align } = {}
 ) {
 	const c = rasterize(str, color, size, align);
 	ctx.drawImage(c, Math.round(x - anchorX[align]), Math.round(y - BASELINE));

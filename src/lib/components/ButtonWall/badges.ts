@@ -4,7 +4,7 @@ import { H, W, edge, rect, text } from './pixel';
 
 export type Draw = (ctx: CanvasRenderingContext2D, frame: number, value: number | null) => void;
 
-export type Badge = {
+export type BadgeSpec = {
 	id: string;
 	label: string;
 	href?: string;
@@ -45,7 +45,7 @@ function sprite(
 
 const RAINBOW = ['#FF0000', '#FF9900', '#FFFF00', '#00FF00', '#00FFFF', '#3399FF', '#FF00FF'];
 
-const email: Badge = {
+const email: BadgeSpec = {
 	id: 'email',
 	label: 'Email me at darius@cepulis.net',
 	href: 'mailto:darius@cepulis.net',
@@ -70,7 +70,7 @@ const email: Badge = {
 	}
 };
 
-const github: Badge = {
+const github: BadgeSpec = {
 	id: 'github',
 	label: 'GitHub',
 	href: 'https://github.com/decepulis',
@@ -84,15 +84,15 @@ const github: Badge = {
 		ctx.beginPath();
 		ctx.rect(28, 15, 59, 14);
 		ctx.clip();
-		const x = 31 - ((f * 2) % 72);
-		text(ctx, 'decepulis', x, 25, '#999999');
-		text(ctx, 'decepulis', x + 72, 25, '#999999');
+		const scroll = 31 - ((f * 2) % 72);
+		text(ctx, 'decepulis', scroll, 25, '#999999');
+		text(ctx, 'decepulis', scroll + 72, 25, '#999999');
 		ctx.restore();
 		edge(ctx, '#FFFFFF', '#666666');
 	}
 };
 
-const linkedin: Badge = {
+const linkedin: BadgeSpec = {
 	id: 'linkedin',
 	label: 'LinkedIn',
 	href: 'https://www.linkedin.com/in/decepulis/',
@@ -106,7 +106,7 @@ const linkedin: Badge = {
 	}
 };
 
-const bluesky: Badge = {
+const bluesky: BadgeSpec = {
 	id: 'bluesky',
 	label: 'Bluesky',
 	href: 'https://bsky.app/profile/darius.place',
@@ -127,7 +127,7 @@ const bluesky: Badge = {
 	}
 };
 
-const instagram: Badge = {
+const instagram: BadgeSpec = {
 	id: 'instagram',
 	label: 'Instagram',
 	href: 'https://www.instagram.com/darius_cepulis/',
@@ -141,7 +141,7 @@ const instagram: Badge = {
 	}
 };
 
-const x: Badge = {
+const xDotCom: BadgeSpec = {
 	id: 'x',
 	label: 'X',
 	href: 'https://x.com/darius_cepulis',
@@ -158,7 +158,7 @@ const x: Badge = {
  * each wheel turns only while the wheels to its right roll over, like a real one.
  */
 const DIGITS = 6;
-const counter: Badge = {
+const counter: BadgeSpec = {
 	id: 'counter',
 	label: 'Visitor counter',
 	draw(ctx, _f, value) {
@@ -195,7 +195,7 @@ const counter: Badge = {
 	}
 };
 
-const browser: Badge = {
+const browser: BadgeSpec = {
 	id: 'browser',
 	label: 'Best viewed in any browser',
 	draw(ctx, f) {
@@ -206,5 +206,5 @@ const browser: Badge = {
 	}
 };
 
-export const links = [email, github, linkedin, bluesky, instagram, x];
+export const links = [email, github, linkedin, bluesky, instagram, xDotCom];
 export const extras = { counter, browser };
