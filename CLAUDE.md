@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal portfolio site built with **SvelteKit 2** using **Svelte 5 runes mode**. The site is statically prerendered using `@sveltejs/adapter-static` and deployed to Vercel.
+This is a personal portfolio site built with **SvelteKit 2** using **Svelte 5 runes mode**. Every page is prerendered and deployed to Vercel with `@sveltejs/adapter-vercel`. The one server route is the visit counter at [src/routes/api/visits/+server.ts](src/routes/api/visits/+server.ts).
 
 ## Architecture
 
@@ -92,7 +92,9 @@ The homepage will automatically include the new post via `getPosts()` in [src/ro
 
 ## Important Implementation Details
 
-- **Prerendering**: All routes are prerendered (`prerender = true` in [src/routes/+layout.ts](src/routes/+layout.ts))
+- **Prerendering**: All pages are prerendered (`prerender = true` in [src/routes/+layout.ts](src/routes/+layout.ts)). `/api/visits` opts out and runs as a Vercel function
+- **Visit counter**: `/api/visits` counts each visitor once a day (by a daily-salted IP hash) in Upstash Redis, reading `KV_REST_API_URL`/`KV_REST_API_TOKEN` (or the `UPSTASH_REDIS_REST_*` equivalents). Without them it returns 503 and the counter shows dashes
+- **Contact buttons**: The contact section is a wall of 88×31 badges drawn on `<canvas>` in [src/lib/components/ButtonWall/](src/lib/components/ButtonWall/). Each badge is a `draw(ctx, frame, value)` function in `badges.ts`; text uses the Silkscreen pixel font with anti-aliasing snapped off
 - **Direct URLs**: Posts with `directUrl` in frontmatter trigger a 307 redirect in [src/routes/posts/[slug]/+page.server.ts:34-36](src/routes/posts/[slug]/+page.server.ts#L34-L36)
 - **Image optimization**: Uses `vite-imagetools` for image processing and `@sveltejs/enhanced-img` for responsive images
 - **Analytics**: Vercel Analytics injected in [src/routes/+layout.ts](src/routes/+layout.ts)
