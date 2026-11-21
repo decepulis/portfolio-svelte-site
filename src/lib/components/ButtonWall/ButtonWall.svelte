@@ -70,10 +70,8 @@
 				? `${visitCount} page views since 2023, counted at the last deploy`
 				: 'The visit count is unavailable right now';
 		}
-		if (hot?.status) return hot.status;
-		return visitCount
-			? `Thanks for stopping by! You're visitor number ${visitCount}.`
-			: 'Document: Done';
+		// at rest, what a browser's status bar said once the page had loaded
+		return hot?.status ?? 'Document: Done';
 	});
 </script>
 
