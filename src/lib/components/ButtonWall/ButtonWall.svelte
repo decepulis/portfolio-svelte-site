@@ -6,41 +6,29 @@
 
 	import ui from '$lib/stores/ui.svelte';
 
-	import Badge from './Badge.svelte';
-	import { extras, links } from './badges';
-	import { FONT } from './pixel';
+	import BestViewed from './badges/BestViewed.svelte';
+	import Bluesky from './badges/Bluesky.svelte';
+	import Counter from './badges/Counter.svelte';
+	import Email from './badges/Email.svelte';
+	import GitHub from './badges/GitHub.svelte';
+	import Instagram from './badges/Instagram.svelte';
+	import LinkedIn from './badges/LinkedIn.svelte';
+	import X from './badges/X.svelte';
 
 	/** total page views, baked in at build; null if unavailable */
 	const { visits }: { visits: number | null } = $props();
 
 	let wall: HTMLUListElement;
-	let tick = $state(0);
-	let ready = $state(false);
 	let inView = $state(false);
 	const odometer = new Tween(0, { easing: cubicOut });
 
-	// the canvas needs the pixel font before it can draw text
-	$effect(() => {
-		document.fonts
-			.load(`8px ${FONT}`)
-			.catch(() => {})
-			.finally(() => (ready = true));
-	});
-
-	// only animate while the wall is on screen
+	// pause the badges' animations while the wall is off screen
 	$effect(() => {
 		const observer = new IntersectionObserver(([entry]) => (inView = entry.isIntersecting), {
 			threshold: 0.25
 		});
 		observer.observe(wall);
 		return () => observer.disconnect();
-	});
-
-	// 8fps: the choppy rate of an animated GIF
-	$effect(() => {
-		if (!inView || ui.shouldReduceMotion) return;
-		const id = setInterval(() => tick++, 1000 / 8);
-		return () => clearInterval(id);
 	});
 
 	// roll the odometer up the first time someone scrolls to it
@@ -59,29 +47,33 @@
 
 <!--
 	Eight badges, so 2 or 4 columns always fill every row. Change the count and
-	revisit this. Columns top out at 176px, exactly 2× the 88px canvas, in px on purpose:
-	this is about canvas pixels, and the root font size here is 18px.
+	revisit this. Columns top out at 176px, exactly 2× the 88px badge, in px on purpose:
+	this is about badge pixels, and the root font size here is 18px.
 -->
 <ul
 	bind:this={wall}
 	role="list"
 	class="grid grid-cols-[repeat(2,minmax(0,176px))] gap-2 md:grid-cols-[repeat(4,176px)]"
+	class:paused={!inView}
 >
-	{#each links as badge (badge.id)}
-		<li>
-			<Badge {badge} {tick} {ready} />
-		</li>
-	{/each}
-	<li>
-		<Badge
-			badge={extras.counter}
-			{tick}
-			{ready}
-			value={visits === null ? null : odometer.current}
-			label={visitLabel}
-		/>
-	</li>
-	<li>
-		<Badge badge={extras.browser} {tick} {ready} />
-	</li>
+	<li><Email /></li>
+	<li><GitHub /></li>
+	<li><LinkedIn /></li>
+	<li><Bluesky /></li>
+	<li><Instagram /></li>
+	<li><X /></li>
+	<li><Counter value={visits === null ? null : odometer.current} label={visitLabel} /></li>
+	<li><BestViewed /></li>
 </ul>
+
+<style>
+	/* These override whatever animation each badge declares, hence !important. */
+	.paused :global(*) {
+		animation-play-state: paused !important;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		ul :global(*) {
+			animation: none !important;
+		}
+	}
+</style>
