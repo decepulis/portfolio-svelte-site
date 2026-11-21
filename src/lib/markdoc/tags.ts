@@ -23,6 +23,11 @@ export const video: Schema = {
 			required: true,
 			errorLevel: 'critical'
 		},
+		// Where the video is published, if not Mux. The Mux upload is its backup: drop this to play it.
+		youtube: {
+			type: String,
+			required: false
+		},
 		title: {
 			type: String,
 			required: true,
