@@ -42,6 +42,7 @@ directUrl?: string # redirects instead of rendering page
 pageUrl?: string
 githubUrl?: string
 documentUrl?: string
+youtubeUrl?: string # shown as a "Watch on YouTube" link
 priority?: number
 previewTitle?: string
 previewText?: string

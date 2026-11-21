@@ -19,6 +19,7 @@
 			pageUrl,
 			githubUrl,
 			documentUrl,
+			youtubeUrl,
 			todo,
 			previewText
 		},
@@ -66,6 +67,11 @@
 		{#if documentUrl}
 			<p>
 				<A decoration="📄" href={documentUrl}>View document</A>
+			</p>
+		{/if}
+		{#if youtubeUrl}
+			<p>
+				<A decoration="📺" href={youtubeUrl}>Watch on YouTube</A>
 			</p>
 		{/if}
 	</header>
