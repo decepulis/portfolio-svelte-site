@@ -9,7 +9,7 @@ import type { VideoPlayerElement } from '@videojs/html/video';
 declare module 'svelte/elements' {
 	export interface SvelteHTMLElements {
 		'video-player': HTMLAttributes<VideoPlayerElement> & {
-			'content-title'?: string | null;
+			poster?: string | null;
 		};
 		'mux-video': HTMLVideoAttributes & {
 			source?: MuxSource;

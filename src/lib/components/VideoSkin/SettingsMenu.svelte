@@ -4,6 +4,7 @@
 	panels slide straight across while it eases to the next one's height.
 -->
 <script lang="ts">
+	import { raised } from './bevel';
 	import Control from './Control.svelte';
 
 	const id = $props.id();
@@ -36,7 +37,8 @@
 	align="end"
 	class={[
 		// text-start, because browsers still read align="end" as HTML 3.2's align attribute
-		'raised dark:bg-gainsboro m-0 box-content overflow-hidden bg-white p-0 text-start text-xs text-black',
+		raised,
+		'dark:bg-gainsboro m-0 box-content overflow-hidden bg-white p-0 text-start text-xs text-black',
 		'h-(--media-menu-height) w-56 transition-[height] duration-300 ease-out motion-reduce:transition-none',
 		// Video.js nudges a popup that doesn't fit rather than flipping it, so keep it small enough to
 		// stay aligned with its button. Its border sits outside the size Video.js measures.
@@ -58,7 +60,7 @@
 						<span data-part="hint" class="flex flex-1 items-center px-1"></span>
 						<span
 							aria-hidden="true"
-							class="border-gray bg-gainsboro dark:bg-silver grid w-4 place-items-center border-l text-[8px] group-hover/item:bg-white"
+							class="border-gray bg-gainsboro dark:bg-silver group-hocus/item:bg-white grid w-4 place-items-center border-l text-[8px]"
 						>
 							&#9660;
 						</span>

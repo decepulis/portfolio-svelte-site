@@ -1,17 +1,6 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:is([data-theme='dark'] *));
-/*
- * Tailwind only applies hover: when the primary pointer can hover, which leaves out an iPad with a
- * trackpad. Any pointer that can hover will do.
- */
-@custom-variant hover {
-	@media (any-hover: hover) {
-		&:hover {
-			@slot;
-		}
-	}
-}
 @custom-variant hocus (&:hover, &:focus);
 @custom-variant hocus-within (&:hover, &:focus-within);
 @theme {
@@ -88,36 +77,6 @@
 	--text-9xl: 8rem;
 	--text-9xl: clamp(8rem, 7.5vw + 5rem, 11rem);
 	--text-9xl--line-height: 1;
-}
-
-/*
- * HTML 3.2 tables are "rendered in bas-relief, raised up with the outer border as a bevel, and
- * individual cells inset into this raised surface."
- */
-@utility raised {
-	border: 1px solid;
-	border-color: var(--color-silver) var(--color-gray) var(--color-gray) var(--color-silver);
-	@variant dark {
-		border-color: var(--color-white) var(--color-gray) var(--color-gray) var(--color-white);
-	}
-}
-@utility sunken {
-	border: 1px solid;
-	border-color: var(--color-gray) var(--color-silver) var(--color-silver) var(--color-gray);
-	@variant dark {
-		border-color: var(--color-gray) var(--color-white) var(--color-white) var(--color-gray);
-	}
-}
-/* A button's face, raised from its surface or pressed into it. */
-@utility button-up {
-	box-shadow:
-		inset 1px 1px var(--color-white),
-		inset -1px -1px var(--color-gray);
-}
-@utility button-down {
-	box-shadow:
-		inset 1px 1px var(--color-gray),
-		inset -1px -1px var(--color-white);
 }
 
 * {

@@ -12,6 +12,7 @@
 	import type { Snippet } from 'svelte';
 	import type { ClassValue } from 'svelte/elements';
 
+	import { raised, sunken } from './bevel';
 	import Control from './Control.svelte';
 	import SettingsMenu from './SettingsMenu.svelte';
 	import './register';
@@ -28,7 +29,7 @@
 	const id = $props.id();
 
 	/** `<table border=1 cellspacing=2>`: a raised frame with its cells 2px apart. */
-	const table = 'raised gap-[2px] bg-white p-[2px] dark:bg-gainsboro';
+	const table = [raised, 'gap-[2px] bg-white p-[2px] dark:bg-gainsboro'];
 	/** Feedback that presses into the page like a rubber stamp, then rests slightly askew. */
 	const stamp = [
 		table,
@@ -81,14 +82,20 @@
 	]}
 >
 	<div
-		class="sunken bg-gainsboro dark:bg-silver truncate px-2 py-0.5 font-serif font-bold in-[:fullscreen]:hidden has-[media-title:empty]:hidden"
+		class={[
+			sunken,
+			'bg-gainsboro dark:bg-silver truncate px-2 py-0.5 font-serif font-bold in-[:fullscreen]:hidden has-[media-title:empty]:hidden'
+		]}
 	>
 		<media-title></media-title>
 	</div>
 
 	<div
 		style:aspect-ratio={aspectRatio}
-		class="sunken relative overflow-hidden bg-black in-[:fullscreen]:flex-1 in-[:fullscreen]:border-0"
+		class={[
+			sunken,
+			'relative overflow-hidden bg-black in-[:fullscreen]:flex-1 in-[:fullscreen]:border-0'
+		]}
 	>
 		{@render children?.()}
 
@@ -99,7 +106,7 @@
 		<media-buffering-indicator
 			class={[table, 'absolute top-1/2 left-1/2 flex -translate-1/2 not-data-visible:hidden']}
 		>
-			<span class="sunken px-2 py-1 font-serif italic">Loading&hellip;</span>
+			<span class={[sunken, 'px-2 py-1 font-serif italic']}>Loading&hellip;</span>
 		</media-buffering-indicator>
 
 		<!-- the status announcer reads out the same events, so these stay quiet -->
@@ -116,14 +123,14 @@
 				<media-volume-indicator-fill
 					class="flex gap-[2px] group-data-max/volume:animate-[video-shake_300ms_linear] group-data-min/volume:animate-[video-shake_300ms_linear] motion-reduce:animate-none"
 				>
-					<span class="sunken flex w-24 items-center justify-center gap-2 py-1">
+					<span class={[sunken, 'flex w-24 items-center justify-center gap-2 py-1']}>
 						{@render icon('volume-high', 'not-group-data-[level=high]/volume:hidden', 'size-5')}
 						{@render icon('volume-low', 'not-group-data-[level=low]/volume:hidden', 'size-5')}
 						{@render icon('volume-off', 'not-group-data-[level=off]/volume:hidden', 'size-5')}
 						<media-volume-indicator-value class="tabular-nums"></media-volume-indicator-value>
 					</span>
 					<!-- a row of little cells, filled up to the level -->
-					<span class="sunken flex w-32 p-[3px] @max-md:w-16">
+					<span class={[sunken, 'flex w-32 p-[3px] @max-md:w-16']}>
 						<span
 							class="bg-gainsboro flex-1 [mask-image:repeating-linear-gradient(90deg,#000_0_4px,transparent_4px_6px)]"
 						>
@@ -142,7 +149,10 @@
 				]}
 			>
 				<span
-					class="sunken flex items-center gap-1.5 px-2 py-1 group-data-[direction=backward]/seek:flex-row-reverse"
+					class={[
+						sunken,
+						'flex items-center gap-1.5 px-2 py-1 group-data-[direction=backward]/seek:flex-row-reverse'
+					]}
 				>
 					<media-seek-indicator-value class="tabular-nums"></media-seek-indicator-value>
 					<span class="text-[11px] group-data-[direction=backward]/seek:hidden">&#9654;&#9654;</span
@@ -178,19 +188,21 @@
 		<media-controls-group
 			class={[
 				'flex flex-col gap-[2px]',
-				'in-[:fullscreen]:raised in-[:fullscreen]:absolute in-[:fullscreen]:inset-x-0 in-[:fullscreen]:bottom-0',
+				'in-[:fullscreen]:border-gray in-[:fullscreen]:border-t-silver in-[:fullscreen]:border-l-silver in-[:fullscreen]:border',
+				'dark:in-[:fullscreen]:border-t-white dark:in-[:fullscreen]:border-l-white',
+				'in-[:fullscreen]:absolute in-[:fullscreen]:inset-x-0 in-[:fullscreen]:bottom-0',
 				'dark:in-[:fullscreen]:bg-gainsboro in-[:fullscreen]:bg-white in-[:fullscreen]:p-[2px]',
 				'in-[:fullscreen]:group-not-data-controls-visible/player:invisible',
 				'[--media-popover-side-offset:calc(--spacing(6)+8px)] [--media-tooltip-side-offset:calc(--spacing(6)+8px)]'
 			]}
 		>
-			<div class="sunken flex h-6 items-center px-2">
+			<div class={[sunken, 'flex h-6 items-center px-2']}>
 				<media-time-slider
 					thumb-alignment="edge"
 					class="group/slider relative flex h-4 flex-1 cursor-pointer items-center"
 				>
 					<media-slider-track
-						class="sunken dark:bg-gainsboro relative h-2.5 w-full overflow-hidden bg-white"
+						class={[sunken, 'dark:bg-gainsboro relative h-2.5 w-full overflow-hidden bg-white']}
 					>
 						<media-slider-buffer
 							class="absolute inset-y-px left-0 w-(--media-slider-buffer) bg-[repeating-linear-gradient(90deg,var(--color-gainsboro)_0_3px,transparent_3px_4px)] dark:bg-[repeating-linear-gradient(90deg,var(--color-silver)_0_3px,transparent_3px_4px)]"
@@ -200,13 +212,13 @@
 						></media-slider-fill>
 					</media-slider-track>
 					<media-slider-thumb
-						class="border-gray bg-gainsboro absolute left-(--media-slider-fill) h-4 w-2 -translate-x-1/2 border outline-offset-1 group-hover/slider:bg-white group-data-dragging/slider:left-(--media-slider-pointer) focus-visible:outline-2"
+						class="border-gray bg-gainsboro group-hocus/slider:bg-white absolute left-(--media-slider-fill) h-4 w-2 -translate-x-1/2 border outline-offset-1 group-data-dragging/slider:left-(--media-slider-pointer) focus-visible:outline-2"
 					></media-slider-thumb>
 					<media-slider-preview
 						class="pointer-events-none invisible bottom-[calc(100%+--spacing(3))] flex flex-col items-center group-data-dragging/slider:visible group-data-pointing/slider:visible"
 					>
 						<media-slider-thumbnail class={[table, 'block max-w-40']}>
-							<img alt="" class="sunken block" />
+							<img alt="" class={[sunken, 'block']} />
 						</media-slider-thumbnail>
 						<media-slider-value
 							type="pointer"
@@ -236,25 +248,25 @@
 					side="top"
 					class={[table, 'm-0 h-28 w-(--media-popover-anchor-width)']}
 				>
-					<div class="sunken size-full py-2">
+					<div class={[sunken, 'size-full py-2']}>
 						<media-volume-slider
 							orientation="vertical"
 							thumb-alignment="edge"
 							class="group/volume relative flex size-full cursor-pointer justify-center"
 						>
-							<media-slider-track class="sunken dark:bg-gainsboro relative w-2 bg-white">
+							<media-slider-track class={[sunken, 'dark:bg-gainsboro relative w-2 bg-white']}>
 								<media-slider-fill
 									class="bg-blue absolute inset-x-0 bottom-0 h-(--media-slider-fill)"
 								></media-slider-fill>
 							</media-slider-track>
 							<media-slider-thumb
-								class="border-gray bg-gainsboro absolute bottom-(--media-slider-fill) left-1/2 h-2 w-4 -translate-x-1/2 translate-y-1/2 border outline-offset-1 group-hover/volume:bg-white focus-visible:outline-2"
+								class="border-gray bg-gainsboro group-hocus/volume:bg-white absolute bottom-(--media-slider-fill) left-1/2 h-2 w-4 -translate-x-1/2 translate-y-1/2 border outline-offset-1 focus-visible:outline-2"
 							></media-slider-thumb>
 						</media-volume-slider>
 					</div>
 				</media-volume-popover>
 
-				<div class="sunken flex flex-1 items-center px-2 text-xs tabular-nums">
+				<div class={[sunken, 'flex flex-1 items-center px-2 text-xs tabular-nums']}>
 					<media-time-group class="flex gap-1.5">
 						<media-time type="current"></media-time>
 						<media-time-separator class="text-gray @max-2xs:hidden"></media-time-separator>
