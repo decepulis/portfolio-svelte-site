@@ -2,6 +2,8 @@
 	The site's video player skin, drawn the way a browser drew an HTML 3.2 page: one raised table,
 	with the title in its first row, the movie in a sunken cell, and flat form buttons in the cells
 	beneath, docked under the picture like the QuickTime plug-in's controller and always showing.
+	Fullscreen is just the movie: the controller floats over its bottom edge and steps aside, with
+	the pointer, when it's left idle.
 
 	TODO: captions, audio tracks and chapters are missing. Restore them: a captions button and menu
 	panel, an audio track panel, and chapter marks and titles on the timeline.
@@ -65,22 +67,28 @@
 </script>
 
 {#snippet icon(name: string, className?: ClassValue, size = 'size-4')}
-	<media-icon family="scaffold" {name} class={['block', size, className]}></media-icon>
+	<!-- the icon draws an svg of a fixed size, so stretch it to the size asked for -->
+	<media-icon family="scaffold" {name} class={['block *:size-full', size, className]}></media-icon>
 {/snippet}
 
 <media-container
-	class={[table, '@container relative flex flex-col font-sans text-black', className]}
+	class={[
+		table,
+		'group/player @container relative flex flex-col font-sans text-black',
+		'[&:fullscreen]:border-0 [&:fullscreen]:bg-black [&:fullscreen]:p-0',
+		'[&:fullscreen]:not-data-controls-visible:cursor-none',
+		className
+	]}
 >
 	<div
-		class="sunken bg-gainsboro dark:bg-silver truncate px-2 py-0.5 font-serif font-bold has-[media-title:empty]:hidden"
+		class="sunken bg-gainsboro dark:bg-silver truncate px-2 py-0.5 font-serif font-bold in-[:fullscreen]:hidden has-[media-title:empty]:hidden"
 	>
 		<media-title></media-title>
 	</div>
 
-	<!-- in fullscreen, the movie takes whatever room the other rows leave -->
 	<div
 		style:aspect-ratio={aspectRatio}
-		class="sunken relative overflow-hidden bg-black in-[:fullscreen]:min-h-0 in-[:fullscreen]:flex-1"
+		class="sunken relative overflow-hidden bg-black in-[:fullscreen]:flex-1 in-[:fullscreen]:border-0"
 	>
 		{@render children?.()}
 
@@ -170,6 +178,9 @@
 		<media-controls-group
 			class={[
 				'flex flex-col gap-[2px]',
+				'in-[:fullscreen]:raised in-[:fullscreen]:absolute in-[:fullscreen]:inset-x-0 in-[:fullscreen]:bottom-0',
+				'dark:in-[:fullscreen]:bg-gainsboro in-[:fullscreen]:bg-white in-[:fullscreen]:p-[2px]',
+				'in-[:fullscreen]:group-not-data-controls-visible/player:invisible',
 				'[--media-popover-side-offset:calc(--spacing(6)+8px)] [--media-tooltip-side-offset:calc(--spacing(6)+8px)]'
 			]}
 		>
@@ -276,6 +287,7 @@
 		<media-hotkey {keys} {action}></media-hotkey>
 	{/each}
 	<media-gesture type="tap" action="togglePaused" pointer="mouse" region="center"></media-gesture>
+	<media-gesture type="tap" action="toggleControls" pointer="touch"></media-gesture>
 	<media-gesture type="doubletap" action="seekStep" region="left"></media-gesture>
 	<media-gesture type="doubletap" action="toggleFullscreen" region="center"></media-gesture>
 	<media-gesture type="doubletap" action="seekStep" region="right"></media-gesture>

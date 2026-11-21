@@ -26,7 +26,7 @@
 </script>
 
 <Control as="button" type="button" commandfor={id} aria-label="Settings" class="gap-1.5 px-2">
-	<media-icon family="scaffold" name="gear" class="block size-3.5"></media-icon>
+	<media-icon family="scaffold" name="gear" class="block size-3.5 *:size-full"></media-icon>
 	<!-- set a hair low, so the lowercase sits level with the cog -->
 	<span aria-hidden="true" class="relative top-px @max-sm:hidden">Settings&hellip;</span>
 </Control>
