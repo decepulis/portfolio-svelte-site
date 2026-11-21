@@ -14,6 +14,34 @@
 	let scrollY = $state(0);
 	let isSpringing = $state(false);
 
+	// Read scrollY every frame while scrolling, rather than trusting scroll events:
+	// iOS can batch those during momentum scrolling, leaving scrollY stale for
+	// several frames while the page keeps moving, which makes the layers snap.
+	// A scroll event only wakes the loop; it sleeps once scrolling settles.
+	$effect(() => {
+		let frame = 0;
+		let idleFrames = 0;
+		const read = () => {
+			const y = window.scrollY;
+			if (y === scrollY) idleFrames++;
+			else {
+				scrollY = y;
+				idleFrames = 0;
+			}
+			frame = idleFrames < 10 ? requestAnimationFrame(read) : 0;
+		};
+		const wake = () => {
+			idleFrames = 0;
+			if (!frame) frame = requestAnimationFrame(read);
+		};
+		scrollY = window.scrollY;
+		addEventListener('scroll', wake, { passive: true });
+		return () => {
+			removeEventListener('scroll', wake);
+			cancelAnimationFrame(frame);
+		};
+	});
+
 	const scrollSpring0 = spring({ scrollY: 0 }, { stiffness: 0.05, damping: 1 });
 	const scrollSpring1 = spring({ scrollY: 0 }, { stiffness: 0.075, damping: 1 });
 	const scrollSpring2 = spring({ scrollY: 0 }, { stiffness: 0.1, damping: 1 });
@@ -30,8 +58,6 @@
 		scrollSpring4.set({ scrollY });
 	});
 </script>
-
-<svelte:window bind:scrollY />
 
 <span
 	class="wrapper relative block"
