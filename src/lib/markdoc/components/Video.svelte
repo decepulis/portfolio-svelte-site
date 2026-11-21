@@ -9,8 +9,7 @@
 
 	const source: MuxSource = $derived({
 		playbackId,
-		playback: { maxResolution: '1080p' },
-		poster: { time: 0 }
+		playback: { maxResolution: '1080p' }
 	});
 	let mediaReady = $state(false);
 
@@ -33,7 +32,8 @@
 </script>
 
 <figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
-	<video-player>
+	<!-- the poster is set on the player, so it shows while the media is still loading -->
+	<video-player poster="https://image.mux.com/{playbackId}/thumbnail.webp?time=0">
 		<VideoSkin aspectRatio="{width}/{height}">
 			{#if mediaReady}
 				<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
