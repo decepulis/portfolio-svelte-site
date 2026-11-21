@@ -2,7 +2,7 @@
 	import type { Tag } from '@markdoc/markdoc';
 	import type { MuxSource } from '@videojs/html/media/mux-video';
 
-	import '$lib/videojs';
+	import VideoSkin from '$lib/videojs/skin/VideoSkin.svelte';
 
 	const { title, caption, playbackId, width, height, loop, autoplay, muted }: Tag['attributes'] =
 		$props();
@@ -34,17 +34,13 @@
 <figure class="row-span-2 my-8 grid w-full grid-rows-subgrid gap-0 first:mt-0 last:mb-0">
 	<div style:aspect-ratio="{width}/{height}" class="bg-gray relative w-full">
 		<video-player content-title={title}>
-			<video-neutral-skin
-				class="border-silver dark:border-gray absolute inset-0 border"
-				style:--media-accent-color="var(--color-blue)"
-				style:--media-border-radius="0"
-			>
+			<VideoSkin class="absolute inset-0">
 				{#if mediaReady}
 					<mux-video {source} playsinline crossorigin="anonymous" {loop} {autoplay} {muted}
 					></mux-video>
 					<mux-data metadata={{ video_title: title }}></mux-data>
 				{/if}
-			</video-neutral-skin>
+			</VideoSkin>
 		</video-player>
 	</div>
 	{#if caption}

@@ -1,6 +1,8 @@
 // sort-imports-ignore
-// Registers every element the scaffold skin composes, plus its icon family.
+// Registers the player and every element VideoSkin composes, plus the skin's icon family.
 // Ported from the Video.js shadcn registry (html/scaffold, video/skin.ts).
+// The player must upgrade the prerendered parent before the skin's elements upgrade its children.
+import '@videojs/html/video/player';
 import './styles/video/scaffold.css';
 import '@videojs/html/i18n';
 import '@videojs/html/ui/container';
