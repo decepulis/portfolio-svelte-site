@@ -13,7 +13,6 @@ export const frontmatter = z.object({
 	pageUrl: z.string().optional(),
 	githubUrl: z.string().optional(),
 	documentUrl: z.string().optional(),
-	youtubeUrl: z.string().optional(),
 	priority: z.number().optional(),
 	previewTitle: z.string().optional(),
 	previewText: z.string().optional(),
