@@ -101,3 +101,27 @@
 		{@render children()}
 	</span>
 </span>
+
+<style>
+	/*
+	 * iOS throttles page scroll positions to ~10Hz while the URL bar resizes,
+	 * which snaps the layers. A scroll-driven animation of a property the GPU
+	 * can't animate opts the page out of that throttle. It changes nothing
+	 * visible: both keyframes are transparent.
+	 * https://rida.dev/blog/bypassing-ios-safari-60-fps-limit
+	 */
+	@supports (animation-timeline: scroll()) {
+		.wrapper {
+			animation: keep-scroll-fresh linear both;
+			animation-timeline: scroll(root);
+		}
+	}
+	@keyframes keep-scroll-fresh {
+		from {
+			background-color: rgb(0 0 0 / 0);
+		}
+		to {
+			background-color: rgb(255 255 255 / 0);
+		}
+	}
+</style>
