@@ -104,11 +104,26 @@
 
 <style>
 	/*
-	 * iOS throttles page scroll positions to ~10Hz while the URL bar resizes,
-	 * which snaps the layers. A scroll-driven animation of a property the GPU
-	 * can't animate opts the page out of that throttle. It changes nothing
-	 * visible: both keyframes are transparent.
-	 * https://rida.dev/blog/bypassing-ios-safari-60-fps-limit
+	 * Keeps iOS Safari from starving the layers of scroll updates.
+	 *
+	 * The problem: iOS scrolls the page off the main thread and only
+	 * occasionally tells the page where it is. While the URL bar collapses or
+	 * expands (whenever you change scroll direction), it sends scroll positions
+	 * just ~10 times a second. The page keeps moving smoothly, but scrollY,
+	 * and so `scrollY - spring` above, holds still for ~100ms and then jumps.
+	 * The layers ride along with the page, then snap back: a sawtooth judder.
+	 *
+	 * The fix: WebKit skips that throttle when the page has a scroll-driven
+	 * animation on a property the GPU can't animate, since it then needs fresh
+	 * scroll positions on the main thread to paint each frame. So we animate
+	 * background-color against the root scroller. Both keyframes are fully
+	 * transparent, so nothing visible changes; the animation only has to exist.
+	 * It must stay a main-thread property: transform or opacity run on the
+	 * GPU and wouldn't opt out.
+	 *
+	 * This leans on WebKit internals, not a spec, so it could stop working in
+	 * a future iOS. If the judder comes back, check here first.
+	 * Found via https://rida.dev/blog/bypassing-ios-safari-60-fps-limit
 	 */
 	@supports (animation-timeline: scroll()) {
 		.wrapper {
