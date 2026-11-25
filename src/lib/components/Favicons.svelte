@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ui from '$lib/stores/ui.svelte';
+	import ui from '#lib/stores/ui.svelte.ts';
 
 	const theme = $derived(ui.theme);
 

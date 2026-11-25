@@ -1,9 +1,9 @@
-import SimpleGit from 'simple-git';
+import { simpleGit as createSimpleGit } from 'simple-git';
 
-import { getPosts } from '$lib/markdoc/server';
-import baseUrl from '$lib/stores/baseUrl';
+import { getPosts } from '#lib/markdoc/server.ts';
+import baseUrl from '#lib/stores/baseUrl.ts';
 
-const simpleGit = SimpleGit();
+const simpleGit = createSimpleGit();
 
 async function getLastModifiedDate(file: string) {
 	const result = await simpleGit.log({ file, n: 1 });
@@ -28,24 +28,19 @@ export async function GET() {
 		priority: 1
 	});
 
-	// posts
-	const posts = await getPosts();
-	await Promise.all(
-		posts
-			.map(async (post) => {
-				const { frontmatter } = post;
-				const { slug, directUrl } = frontmatter;
-				if (directUrl) return null; // redirect
-
-				const lastmod = await getLastModifiedDate(`src/posts/${slug}.mdoc`);
-				urls.push({
-					loc: `${baseUrl}/posts/${slug}`,
-					lastmod: lastmod.toISOString(),
-					priority: 0.8
-				});
-			})
-			.filter(Boolean)
+	// posts, in the order getPosts() returns them
+	const posts = (await getPosts()).filter((post) => !post.frontmatter.directUrl); // skip redirects
+	const postUrls = await Promise.all(
+		posts.map(async ({ frontmatter: { slug } }) => {
+			const lastmod = await getLastModifiedDate(`src/posts/${slug}.mdoc`);
+			return {
+				loc: `${baseUrl}/posts/${slug}`,
+				lastmod: lastmod.toISOString(),
+				priority: 0.8
+			};
+		})
 	);
+	urls.push(...postUrls);
 
 	const urlXml = urls
 		.map((url) => {

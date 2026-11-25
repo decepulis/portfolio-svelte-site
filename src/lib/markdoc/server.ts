@@ -51,7 +51,7 @@ function getFrontmatter(slug: string, ast: Node): Frontmatter {
 			slug: slug
 		};
 	} catch (e) {
-		throw new Error(`Error parsing frontmatter in ${slug}: ${e}`);
+		throw new Error(`Error parsing frontmatter in ${slug}: ${e}`, { cause: e });
 	}
 }
 

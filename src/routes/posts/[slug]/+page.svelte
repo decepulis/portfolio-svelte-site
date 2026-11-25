@@ -1,7 +1,7 @@
 <script lang="ts">
-	import A from '$lib/components/typography/A.svelte';
-	import P from '$lib/components/typography/P.svelte';
-	import MarkdocRenderer from '$lib/markdoc/MarkdocRenderer.svelte';
+	import A from '#lib/components/typography/A.svelte';
+	import P from '#lib/components/typography/P.svelte';
+	import MarkdocRenderer from '#lib/markdoc/MarkdocRenderer.svelte';
 
 	import { afterNavigate } from '$app/navigation';
 	import { resolve } from '$app/paths';

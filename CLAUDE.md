@@ -13,13 +13,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal portfolio site built with **SvelteKit 2** using **Svelte 5 runes mode**. The site is statically prerendered using `@sveltejs/adapter-static` and deployed to Vercel.
+This is a personal portfolio site built with **SvelteKit 3** (on Vite 8) using **Svelte 5 runes mode**. The site is statically prerendered using `@sveltejs/adapter-static` and deployed to Vercel.
 
 ## Architecture
 
 ### Svelte 5 Runes Mode
 
-The project uses Svelte 5 with runes enabled globally (`compilerOptions.runes: true` in [svelte.config.js](svelte.config.js)). All components should use runes syntax (`$state`, `$derived`, `$effect`, etc.) instead of legacy Svelte reactivity.
+The project uses Svelte 5 with runes enabled globally (`compilerOptions.runes: true` in the `sveltekit()` plugin options in [vite.config.ts](vite.config.ts); SvelteKit 3 has no `svelte.config.js`). All components should use runes syntax (`$state`, `$derived`, `$effect`, etc.) instead of legacy Svelte reactivity.
 
 ### Content System: Markdoc
 
@@ -55,6 +55,10 @@ todo?: boolean
 
 **Image handling**: Images in posts are enhanced using `@sveltejs/enhanced-img`. The glob pattern in [src/routes/posts/[slug]/+page.server.ts:11-20](src/routes/posts/[slug]/+page.server.ts#L11-L20) eagerly loads all post images with the `enhanced` query.
 
+### Imports
+
+`src/lib` is imported as `#lib/...` (a Node subpath import declared in `package.json`), with the file extension included: `import ui from '#lib/stores/ui.svelte.ts'`.
+
 ### Routing Structure
 
 - [src/routes/+page.svelte](src/routes/+page.svelte) - Homepage, composed of sections from [src/routes/+page/](src/routes/+page/)
@@ -63,7 +67,7 @@ todo?: boolean
 
 ### State Management
 
-Global UI state (theme, reduced motion) is managed through Svelte 5 runes in [src/lib/stores/ui.svelte.ts](src/lib/stores/ui.svelte.ts). The `UIManager.svelte` component runs effects to sync with browser APIs.
+Global theme state is managed through Svelte 5 runes in [src/lib/stores/ui.svelte.ts](src/lib/stores/ui.svelte.ts). The `UIManager.svelte` component runs effects to sync with browser APIs. For reduced motion, read `prefersReducedMotion.current` from `svelte/motion`; for window size and scroll, use `svelte/reactivity/window`. Animate with the `Spring`/`Tween` classes (`Spring.of(() => value)` to follow a reactive value), not the deprecated `spring()`/`tweened()` stores.
 
 **Theme system**: Theme is managed via inline script in the `<head>` that runs before page render to prevent flash. The store syncs with `window.__theme`, `window.__systemTheme`, and `window.__themePreference`.
 

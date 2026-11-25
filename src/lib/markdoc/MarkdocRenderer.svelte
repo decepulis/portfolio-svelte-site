@@ -2,15 +2,15 @@
 	import type { RenderableTreeNode } from '@markdoc/markdoc';
 	import type { Picture } from 'vite-imagetools';
 
-	import A from '$lib/components/typography/A.svelte';
-	import H2 from '$lib/components/typography/H2.svelte';
-	import H3 from '$lib/components/typography/H3.svelte';
-	import H4 from '$lib/components/typography/H4.svelte';
-	import H5 from '$lib/components/typography/H5.svelte';
-	import H6 from '$lib/components/typography/H6.svelte';
-	import OL from '$lib/components/typography/OL.svelte';
-	import P from '$lib/components/typography/P.svelte';
-	import UL from '$lib/components/typography/UL.svelte';
+	import A from '#lib/components/typography/A.svelte';
+	import H2 from '#lib/components/typography/H2.svelte';
+	import H3 from '#lib/components/typography/H3.svelte';
+	import H4 from '#lib/components/typography/H4.svelte';
+	import H5 from '#lib/components/typography/H5.svelte';
+	import H6 from '#lib/components/typography/H6.svelte';
+	import OL from '#lib/components/typography/OL.svelte';
+	import P from '#lib/components/typography/P.svelte';
+	import UL from '#lib/components/typography/UL.svelte';
 
 	import MarkdocRenderer from './MarkdocRenderer.svelte';
 	import Color from './components/Color.svelte';
@@ -62,7 +62,7 @@
 	<Image attributes={node.attributes} {enhancedImages} />
 {:else if node.name in components}
 	<!-- known component -->
-	{@const Component = components[node.name as keyof typeof components]}
+	{const Component = components[node.name as keyof typeof components]}
 	<!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
 	<Component {...node.attributes as any}>
 		<MarkdocRenderer node={node.children} {enhancedImages} />

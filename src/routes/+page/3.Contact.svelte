@@ -1,7 +1,7 @@
 <script lang="ts">
-	import ButtonWall from '$lib/components/ButtonWall/ButtonWall.svelte';
-	import H1 from '$lib/components/typography/H1.svelte';
-	import Section from '$lib/components/typography/Section.svelte';
+	import ButtonWall from '#lib/components/ButtonWall/ButtonWall.svelte';
+	import H1 from '#lib/components/typography/H1.svelte';
+	import Section from '#lib/components/typography/Section.svelte';
 
 	const { visits }: { visits: number | null } = $props();
 </script>

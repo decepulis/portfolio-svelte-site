@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Headshot from '$lib/components/Headshot/index.svelte';
-	import Tabs from '$lib/components/Tabs.svelte';
-	import A from '$lib/components/typography/A.svelte';
-	import H1 from '$lib/components/typography/H1.svelte';
-	import P from '$lib/components/typography/P.svelte';
-	import Section from '$lib/components/typography/Section.svelte';
+	import Headshot from '#lib/components/Headshot/index.svelte';
+	import Tabs from '#lib/components/Tabs.svelte';
+	import A from '#lib/components/typography/A.svelte';
+	import H1 from '#lib/components/typography/H1.svelte';
+	import P from '#lib/components/typography/P.svelte';
+	import Section from '#lib/components/typography/Section.svelte';
 </script>
 
 {#snippet short()}
@@ -21,8 +21,9 @@
 		In my time at Mux, I've been helping design and develop a better experience for devs. From
 		<A href="https://www.mux.com/team/darius-cepulis">blog posts</A> and
 		<A href="https://www.youtube.com/watch?v=dExasNlhVKM">talks</A>, to the
-		<A href="https://www.mux.com">marketing site</A> and <A href="https://www.mux.com/docs">docs</A
-		>, through to the
+		<A href="https://www.mux.com">marketing site</A> and <A href="https://www.mux.com/docs">
+			docs
+		</A>, through to the
 		<A href="https://dashboard.mux.com">dashboard</A>, down to OSS SDKs like
 		<A href="https://videojs.org">Video.js v10</A>.
 	</P>

@@ -2,7 +2,7 @@
 	import type { Tag } from '@markdoc/markdoc';
 	import type { MuxSource } from '@videojs/html/media/mux-video';
 
-	import VideoSkin from '$lib/components/VideoSkin/index.svelte';
+	import VideoSkin from '#lib/components/VideoSkin/index.svelte';
 
 	const { title, caption, playbackId, width, height, loop, autoplay, muted }: Tag['attributes'] =
 		$props();

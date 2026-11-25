@@ -1,99 +1,65 @@
 <script lang="ts">
-	import { spring } from 'svelte/motion';
+	import { Spring, prefersReducedMotion } from 'svelte/motion';
+	import { innerHeight, innerWidth, scrollY } from 'svelte/reactivity/window';
 
-	import throttle from 'just-throttle';
+	import A from '#lib/components/typography/A.svelte';
 
-	import A from '$lib/components/typography/A.svelte';
-	import ui from '$lib/stores/ui.svelte';
-
-	// let's set up the window listeners
-	// that will update the underlines under the links
 	const sections = [
 		{ id: 'about', label: 'about', decoration: '👨‍💻' },
 		{ id: 'work', label: 'work', decoration: '💼' },
 		{ id: 'contact', label: 'contact', decoration: '☎️' }
 	];
-	let currentSection: string | null = $state(null);
-	$effect(() => {
-		let sectionOffsets: { [id: string]: number } = {};
-		// update the section offsets when the window resizes
-		const onWindowResize = () => {
-			const newSectionOffsets = { ...sectionOffsets };
-			sections.forEach((section) => {
-				const element = document.querySelector(`#${section.id}`) as HTMLElement;
-				if (typeof element !== 'undefined') {
-					newSectionOffsets[section.id] = element.offsetTop;
-				}
-			});
-			sectionOffsets = newSectionOffsets;
-		};
 
-		// update the current section when the user scrolls
-		const onScroll = () => {
-			const scrollY = window.scrollY;
-			// 18px of wiggle room
-			const atBottom = scrollY + window.innerHeight + 18 >= document.documentElement.scrollHeight;
-			if (atBottom) {
-				currentSection = sections[sections.length - 1].id;
-				return;
-			}
-			const section = sections
-				.slice()
-				.reverse()
-				.find((section) => {
-					const offset = sectionOffsets[section.id];
-					// navBarHeight + marginTop = 119
-					return offset <= scrollY + 119;
-				});
-			currentSection = section?.id ?? null;
-		};
+	// where each section starts, measured again whenever the window resizes
+	const sectionOffsets = $derived.by(() => {
+		void innerWidth.current;
+		void innerHeight.current;
+		const offsets: { [id: string]: number } = {};
+		for (const { id } of sections) {
+			const element = document.getElementById(id);
+			if (element) offsets[id] = element.offsetTop;
+		}
+		return offsets;
+	});
 
-		// attach event listeners and fire them once
-		const throttledOnWindowResize = throttle(onWindowResize, 250);
-		const throttledOnScroll = throttle(onScroll, 250);
-		window.addEventListener('resize', throttledOnWindowResize);
-		window.addEventListener('scroll', throttledOnScroll);
-		onWindowResize();
-		onScroll();
-		return () => {
-			window.removeEventListener('resize', throttledOnWindowResize);
-			window.removeEventListener('scroll', throttledOnScroll);
-		};
+	// the section we've scrolled into gets a 👉 in the nav
+	const currentSection = $derived.by(() => {
+		const y = scrollY.current;
+		const height = innerHeight.current;
+		if (y === undefined || height === undefined) return null;
+		// 18px of wiggle room
+		const atBottom = y + height + 18 >= document.documentElement.scrollHeight;
+		if (atBottom) return sections[sections.length - 1].id;
+		// navBarHeight + marginTop = 119
+		const section = sections.findLast(({ id }) => sectionOffsets[id] <= y + 119);
+		return section?.id ?? null;
 	});
 
 	// Finally, we're going to override the default link behavior
 	// in order to fire a smooth-scroll animation
-	const scrollSpring = spring(-1, { stiffness: 0.1, damping: 1, precision: 1 });
-	const scrollTo = (id: string) => {
-		// We hard-set the spring to the starting point
-		// and then let it run to the target
+	const scrollSpring = new Spring(-1, { stiffness: 0.1, damping: 1, precision: 1 });
+	const scrollTo = async (id: string) => {
+		const scrollElement = document.getElementById(id);
+		if (!scrollElement) return;
+		// we set the target either to the top of the element,
+		// or the bottom of the page, depending on which comes first
+		// navBarHeight + mt-4 = 83
 		const topOfPageBottom = document.documentElement.scrollHeight - window.innerHeight;
-		const scrollStart = window.scrollY;
-		const scrollElement = document.querySelector(`#${id}`) as HTMLElement;
-		if (typeof scrollElement !== 'undefined') {
-			// we set the target either to the top of the element,
-			// or the bottom of the page, depending on which comes first
-			// navBarHeight + mt-4 = 83
-			const topOfElement = scrollElement?.offsetTop - 83;
-			const scrollTarget = Math.min(topOfPageBottom, topOfElement);
-			if (ui.shouldReduceMotion) {
-				scrollSpring.set(scrollTarget, { hard: true });
-			} else {
-				scrollSpring
-					.set(scrollStart, { hard: true })
-					// we fire this twice since once doesn't seem to be enough to interrupt a running spring
-					.then(() => scrollSpring.set(scrollTarget))
-					.then(() => scrollSpring.set(scrollTarget));
-			}
+		const topOfElement = scrollElement.offsetTop - 83;
+		const scrollTarget = Math.min(topOfPageBottom, topOfElement);
+		if (prefersReducedMotion.current) {
+			scrollSpring.set(scrollTarget, { instant: true });
+		} else {
+			// We hard-set the spring to where the page is now
+			// and then let it run to the target
+			await scrollSpring.set(window.scrollY, { instant: true });
+			scrollSpring.set(scrollTarget);
 		}
 	};
 	// And then when the scroll spring updates,
 	// so too does the window position
-	scrollSpring.subscribe((value) => {
-		if (typeof window === 'undefined') return;
-		if (value > 0) {
-			window.scrollTo(0, value);
-		}
+	$effect(() => {
+		if (scrollSpring.current > 0) window.scrollTo(0, scrollSpring.current);
 	});
 </script>
 

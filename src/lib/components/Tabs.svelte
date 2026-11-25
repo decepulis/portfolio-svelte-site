@@ -1,8 +1,7 @@
 <!-- https://www.w3.org/WAI/ARIA/apg/patterns/tabs/ -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-
-	import ui from '$lib/stores/ui.svelte';
+	import { prefersReducedMotion } from 'svelte/motion';
 
 	type Tab = {
 		id: string;
@@ -20,7 +19,7 @@
 	let tabPanelContainer: HTMLDivElement;
 
 	const onTransitionStart = () => {
-		if (ui.shouldReduceMotion) return;
+		if (prefersReducedMotion.current) return;
 		isTransitioning = true;
 		// get some measurements
 		const currentTabPanelOffsetHeight = tabPanelContainer.offsetHeight;
@@ -94,7 +93,7 @@
 
 <div role="tablist" aria-orientation="horizontal" class="relative z-10 inline-flex gap-2">
 	{#each tabs as { id, label }, idx (id)}
-		{@const isActive = activeId === id}
+		{const isActive = activeId === id}
 		<button
 			id={`${id}-tab`}
 			type="button"
@@ -123,8 +122,8 @@
 	bind:this={tabPanelContainer}
 >
 	{#each tabs as { id, panel }, idx (id)}
-		{@const isActive = activeId === id}
-		{@const isNext = idx > activeIndex}
+		{const isActive = activeId === id}
+		{const isNext = idx > activeIndex}
 		<div
 			{id}
 			role="tabpanel"

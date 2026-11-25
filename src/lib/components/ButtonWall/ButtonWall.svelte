@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { cubicOut } from 'svelte/easing';
-	import { Tween } from 'svelte/motion';
+	import { Tween, prefersReducedMotion } from 'svelte/motion';
 
 	import '@fontsource/silkscreen/400.css';
-
-	import ui from '$lib/stores/ui.svelte';
 
 	import BestViewed from './badges/BestViewed.svelte';
 	import Bluesky from './badges/Bluesky.svelte';
@@ -36,7 +34,7 @@
 	$effect(() => {
 		if (visits === null || !inView || rolled) return;
 		rolled = true;
-		const duration = ui.shouldReduceMotion ? 0 : Math.min(3000, 1200 + visits / 4);
+		const duration = prefersReducedMotion.current ? 0 : Math.min(3000, 1200 + visits / 4);
 		odometer.set(visits, { duration });
 	});
 

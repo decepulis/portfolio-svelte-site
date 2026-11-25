@@ -1,7 +1,7 @@
 <script lang="ts">
-	import H1 from '$lib/components/typography/H1.svelte';
-	import Section from '$lib/components/typography/Section.svelte';
-	import type { Frontmatter } from '$lib/markdoc/types';
+	import H1 from '#lib/components/typography/H1.svelte';
+	import Section from '#lib/components/typography/Section.svelte';
+	import type { Frontmatter } from '#lib/markdoc/types.ts';
 
 	import { resolve } from '$app/paths';
 
@@ -28,7 +28,7 @@
 		style:--sm-grid-cols="repeat(auto-fill, minmax(288px, 1fr))"
 	>
 		{#each postsReversed as post (post.frontmatter.slug)}
-			{@const {
+			{const {
 				frontmatter: { type, title, directUrl, slug, priority, previewTitle, previewText }
 			} = post}
 			<li

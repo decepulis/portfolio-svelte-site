@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	import Favicons from '$lib/components/Favicons.svelte';
-	import Metadata from '$lib/components/Metadata.svelte';
-	import UIManager from '$lib/stores/UIManager.svelte';
+	import Favicons from '#lib/components/Favicons.svelte';
+	import Metadata from '#lib/components/Metadata.svelte';
+	import UIManager from '#lib/stores/UIManager.svelte';
 
 	import { onNavigate } from '$app/navigation';
 
