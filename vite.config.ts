@@ -15,7 +15,9 @@ export default defineConfig({
 			},
 			// leave this blank for zero-config on vercel
 			// https://svelte.dev/docs/kit/adapter-static#Zero-config-support
-			adapter: adapter()
+			adapter: adapter(),
+			// nothing here reacts to a new deploy, so don't poll for one
+			version: { pollInterval: 0 }
 		})
 	]
 });
