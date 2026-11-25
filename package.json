@@ -64,11 +64,6 @@
 		"@videojs/mux-video": "10.7.0",
 		"just-throttle": "^4.2.0"
 	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
-	},
 	"lint-staged": {
 		"*.{ts,js,svelte}": [
 			"eslint --fix",
