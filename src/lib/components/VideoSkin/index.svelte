@@ -155,8 +155,9 @@
 					]}
 				>
 					<media-seek-indicator-value class="tabular-nums"></media-seek-indicator-value>
-					<span class="text-[11px] group-data-[direction=backward]/seek:hidden">&#9654;&#9654;</span
-					>
+					<span class="text-[11px] group-data-[direction=backward]/seek:hidden">
+						&#9654;&#9654;
+					</span>
 					<span class="text-[11px] group-data-[direction=forward]/seek:hidden">&#9664;&#9664;</span>
 				</span>
 			</media-seek-indicator>

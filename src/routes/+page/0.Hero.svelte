@@ -1,5 +1,5 @@
 <script lang="ts">
-	import RadText from '$lib/components/RadText.svelte';
+	import RadText from '#lib/components/RadText.svelte';
 </script>
 
 <section

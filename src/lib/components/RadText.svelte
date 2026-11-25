@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import { spring } from 'svelte/motion';
 
-	import ui from '$lib/stores/ui.svelte';
+	import ui from '#lib/stores/ui.svelte.ts';
 
 	type Props = {
 		children: Snippet;

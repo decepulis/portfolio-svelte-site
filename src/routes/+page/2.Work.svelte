@@ -1,7 +1,7 @@
 <script lang="ts">
-	import H1 from '$lib/components/typography/H1.svelte';
-	import Section from '$lib/components/typography/Section.svelte';
-	import type { Frontmatter } from '$lib/markdoc/types';
+	import H1 from '#lib/components/typography/H1.svelte';
+	import Section from '#lib/components/typography/Section.svelte';
+	import type { Frontmatter } from '#lib/markdoc/types.ts';
 
 	import { resolve } from '$app/paths';
 

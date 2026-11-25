@@ -1,6 +1,6 @@
-import { getPosts } from '$lib/markdoc/server';
-import { getVisits } from '$lib/server/visits';
-import type { Metadata } from '$lib/types/metadata';
+import { getPosts } from '#lib/markdoc/server.ts';
+import { getVisits } from '#lib/server/visits.ts';
+import type { Metadata } from '#lib/types/metadata.ts';
 
 import type { PageServerLoad } from './$types';
 

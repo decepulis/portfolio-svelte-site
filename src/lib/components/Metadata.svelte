@@ -3,8 +3,8 @@
 
 	import type { BlogPosting, Person, ProfilePage, WithContext } from 'schema-dts';
 
-	import baseUrl from '$lib/stores/baseUrl';
-	import type { Metadata } from '$lib/types/metadata';
+	import baseUrl from '#lib/stores/baseUrl.ts';
+	import type { Metadata } from '#lib/types/metadata.ts';
 
 	import { page } from '$app/state';
 

@@ -2,7 +2,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	import ui from '$lib/stores/ui.svelte';
+	import ui from '#lib/stores/ui.svelte.ts';
 
 	type Tab = {
 		id: string;

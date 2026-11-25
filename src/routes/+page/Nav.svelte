@@ -3,8 +3,8 @@
 
 	import throttle from 'just-throttle';
 
-	import A from '$lib/components/typography/A.svelte';
-	import ui from '$lib/stores/ui.svelte';
+	import A from '#lib/components/typography/A.svelte';
+	import ui from '#lib/stores/ui.svelte.ts';
 
 	// let's set up the window listeners
 	// that will update the underlines under the links

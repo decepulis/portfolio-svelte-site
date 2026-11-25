@@ -1,4 +1,4 @@
-import baseUrl from '$lib/stores/baseUrl';
+import baseUrl from '#lib/stores/baseUrl.ts';
 
 export const prerender = true;
 export async function GET() {

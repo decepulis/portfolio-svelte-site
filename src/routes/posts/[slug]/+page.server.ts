@@ -2,9 +2,9 @@ import { redirect } from '@sveltejs/kit';
 
 import type { Picture } from 'vite-imagetools';
 
-import { getPost } from '$lib/markdoc/server';
-import baseUrl from '$lib/stores/baseUrl';
-import type { Metadata } from '$lib/types/metadata';
+import { getPost } from '#lib/markdoc/server.ts';
+import baseUrl from '#lib/stores/baseUrl.ts';
+import type { Metadata } from '#lib/types/metadata.ts';
 
 import type { PageServerLoad } from './$types';
 
@@ -32,7 +32,7 @@ export const load = (async ({ params }) => {
 
 	const { content, images, frontmatter } = await getPost(slug);
 	if (frontmatter.directUrl) {
-		throw redirect(307, frontmatter.directUrl);
+		redirect(307, frontmatter.directUrl, { external: true });
 	}
 
 	const enhancedImages = getEnhancedImages(images);

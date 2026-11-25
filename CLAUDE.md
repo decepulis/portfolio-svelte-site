@@ -13,13 +13,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a personal portfolio site built with **SvelteKit 2** using **Svelte 5 runes mode**. The site is statically prerendered using `@sveltejs/adapter-static` and deployed to Vercel.
+This is a personal portfolio site built with **SvelteKit 3** (on Vite 8) using **Svelte 5 runes mode**. The site is statically prerendered using `@sveltejs/adapter-static` and deployed to Vercel.
 
 ## Architecture
 
 ### Svelte 5 Runes Mode
 
-The project uses Svelte 5 with runes enabled globally (`compilerOptions.runes: true` in [svelte.config.js](svelte.config.js)). All components should use runes syntax (`$state`, `$derived`, `$effect`, etc.) instead of legacy Svelte reactivity.
+The project uses Svelte 5 with runes enabled globally (`compilerOptions.runes: true` in the `sveltekit()` plugin options in [vite.config.ts](vite.config.ts); SvelteKit 3 has no `svelte.config.js`). All components should use runes syntax (`$state`, `$derived`, `$effect`, etc.) instead of legacy Svelte reactivity.
 
 ### Content System: Markdoc
 
@@ -54,6 +54,10 @@ todo?: boolean
 **Date parsing**: Post slugs follow the pattern `yyyy-mm-dd-slug`, `yyyy-mm-slug`, or `yyyy-slug`. The date is extracted from the slug in [src/lib/markdoc/server.ts:30-42](src/lib/markdoc/server.ts#L30-L42).
 
 **Image handling**: Images in posts are enhanced using `@sveltejs/enhanced-img`. The glob pattern in [src/routes/posts/[slug]/+page.server.ts:11-20](src/routes/posts/[slug]/+page.server.ts#L11-L20) eagerly loads all post images with the `enhanced` query.
+
+### Imports
+
+`src/lib` is imported as `#lib/...` (a Node subpath import declared in `package.json`), with the file extension included: `import ui from '#lib/stores/ui.svelte.ts'`.
 
 ### Routing Structure
 

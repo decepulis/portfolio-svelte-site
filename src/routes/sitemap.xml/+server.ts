@@ -1,9 +1,9 @@
-import SimpleGit from 'simple-git';
+import { simpleGit as createSimpleGit } from 'simple-git';
 
-import { getPosts } from '$lib/markdoc/server';
-import baseUrl from '$lib/stores/baseUrl';
+import { getPosts } from '#lib/markdoc/server.ts';
+import baseUrl from '#lib/stores/baseUrl.ts';
 
-const simpleGit = SimpleGit();
+const simpleGit = createSimpleGit();
 
 async function getLastModifiedDate(file: string) {
 	const result = await simpleGit.log({ file, n: 1 });

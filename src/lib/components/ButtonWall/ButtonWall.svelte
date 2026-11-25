@@ -4,7 +4,7 @@
 
 	import '@fontsource/silkscreen/400.css';
 
-	import ui from '$lib/stores/ui.svelte';
+	import ui from '#lib/stores/ui.svelte.ts';
 
 	import BestViewed from './badges/BestViewed.svelte';
 	import Bluesky from './badges/Bluesky.svelte';
