@@ -104,7 +104,7 @@
 			tabindex={isActive ? undefined : -1}
 			onclick={() => setIndex(idx)}
 			onkeydown={onTabKeydown}
-			class="hocus:bg-white dark:hocus:bg-gainsboro cursor-pointer border px-4 py-2 font-sans text-sm -outline-offset-4 focus:outline-2"
+			class="hocus:bg-white dark:hocus:bg-gainsboro cursor-pointer border px-4 py-2 font-sans text-sm -outline-offset-4"
 			class:border-[silver_silver_white_silver]={isActive}
 			class:dark:border-[gray_gray_gainsboro_gray]={isActive}
 			class:border-silver={!isActive}
@@ -131,7 +131,7 @@
 			tabindex="0"
 			inert={!isActive}
 			aria-labelledby={`${id}-tab`}
-			class="top-0 transform-gpu px-4 py-6 -outline-offset-4 transition duration-300 focus:outline-2 motion-reduce:duration-0"
+			class="top-0 transform-gpu px-4 py-6 -outline-offset-4 transition duration-300 motion-reduce:duration-0"
 			style:position={isActive && !isTransitioning ? 'relative' : 'absolute'}
 			style:pointer-events={isActive ? 'auto' : 'none'}
 			style:opacity={isActive ? 1 : 0}

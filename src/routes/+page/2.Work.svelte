@@ -40,7 +40,7 @@
 				<!-- eslint-disable svelte/no-navigation-without-resolve -->
 				<a
 					href={directUrl ?? resolve(`/posts/[slug]`, { slug })}
-					class="hocus:bg-(--bg-hocus) flex h-full flex-col gap-4 p-6 md:gap-6"
+					class="hocus:bg-(--bg-hocus) flex h-full flex-col gap-4 p-6 -outline-offset-4 md:gap-6"
 					style:--bg-hocus={type === 'build'
 						? 'var(--color-yellow)'
 						: type === 'post'
@@ -80,12 +80,10 @@
 				<!-- eslint-enable svelte/no-navigation-without-resolve -->
 			</li>
 		{/each}
-		<li
-			class="hocus-within:border-silver dark:hocus-within:border-silver -m-[0.5px] grid border border-transparent"
-		>
+		<li class="hocus-within:border-silver -m-[0.5px] grid border border-transparent">
 			<a
 				href="https://github.com/decepulis"
-				class="hocus:bg-gainsboro dark:hocus:bg-silver flex h-full flex-col gap-4 p-6 md:gap-6"
+				class="hocus:bg-gainsboro dark:hocus:bg-silver flex h-full flex-col gap-4 p-6 -outline-offset-4 md:gap-6"
 			>
 				<h3 class="max-w-96 text-lg leading-snug font-bold text-balance">More&hellip;</h3>
 				<p class="max-w-96 text-sm text-pretty">

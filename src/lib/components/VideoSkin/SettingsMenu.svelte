@@ -4,8 +4,8 @@
 	panels slide straight across while it eases to the next one's height.
 -->
 <script lang="ts">
-	import { raised } from './bevel';
 	import Control from './Control.svelte';
+	import { raised } from './bevel';
 
 	const id = $props.id();
 
@@ -55,7 +55,7 @@
 				>
 					{label}:
 					<span
-						class="border-gray dark:bg-gainsboro ms-auto flex h-5 min-w-28 border bg-white outline-offset-1 group-data-highlighted/item:outline-2"
+						class="border-gray dark:bg-gainsboro group-focus-visible/item:focus-ring ms-auto flex h-5 min-w-28 border bg-white outline-offset-1"
 					>
 						<span data-part="hint" class="flex flex-1 items-center px-1"></span>
 						<span
@@ -78,7 +78,7 @@
 				<media-menu-item class="group/back cursor-pointer justify-self-start outline-none">
 					[
 					<span
-						class="text-link group-active/back:text-red underline outline-offset-1 group-data-highlighted/back:outline-2"
+						class="text-link group-active/back:text-red group-focus-visible/back:focus-ring underline outline-offset-1"
 					>
 						&laquo; Settings
 					</span>
@@ -91,7 +91,7 @@
 				>
 					<template>
 						<media-menu-radio-item
-							class="aria-checked:bg-silver dark:aria-checked:bg-darkgray cursor-pointer px-1 py-0.5 -outline-offset-2 outline-none data-highlighted:outline-2"
+							class="aria-checked:bg-silver dark:aria-checked:bg-darkgray cursor-pointer px-1 py-0.5 -outline-offset-2"
 						>
 							<span data-part="label"></span>
 						</media-menu-radio-item>
