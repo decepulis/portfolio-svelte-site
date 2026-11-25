@@ -54,14 +54,14 @@
 	<meta property="og:site_name" content="Darius Cepulis" />
 	<meta name="twitter:site" content="@darius_cepulis" />
 	{#if metadata}
-		{@const { pathname, fullTitle, title, description, image, article, profile } = metadata}
+		{const { pathname, fullTitle, title, description, image, article, profile } = metadata}
 		{#if pathname}
 			<link rel="canonical" href={`${baseUrl}${metadata.pathname}`} />
 			<meta property="og:url" content={`${baseUrl}${metadata.pathname}`} />
 			<meta name="twitter:url" content={`${baseUrl}${metadata.pathname}`} />
 		{/if}
 		{#if fullTitle || title}
-			{@const displayTitle = metadata.fullTitle || `${metadata.title} | Darius Cepulis`}
+			{const displayTitle = metadata.fullTitle || `${metadata.title} | Darius Cepulis`}
 			<title>{displayTitle}</title>
 			<meta property="og:title" content={displayTitle} />
 			<meta name="twitter:title" content={displayTitle} />
@@ -72,7 +72,7 @@
 			<meta name="twitter:description" content={description} />
 		{/if}
 		{#if image}
-			{@const { url, width, height, alt } = image}
+			{const { url, width, height, alt } = image}
 			<meta property="og:image" content={url} />
 			{#if width}<meta property="og:image:width" content={width.toString()} />{/if}
 			{#if height}<meta property="og:image:height" content={height.toString()} />{/if}
@@ -84,7 +84,7 @@
 			{#if alt}<meta name="twitter:image:alt" content={alt} />{/if}
 		{/if}
 		{#if article}
-			{@const { publishedTime, modifiedTime, section, tags } = article}
+			{const { publishedTime, modifiedTime, section, tags } = article}
 			<meta property="article:author" content={baseUrl} />
 			<meta property="og:type" content="article" />
 			{#if publishedTime}

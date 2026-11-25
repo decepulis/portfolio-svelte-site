@@ -67,7 +67,7 @@ todo?: boolean
 
 ### State Management
 
-Global UI state (theme, reduced motion) is managed through Svelte 5 runes in [src/lib/stores/ui.svelte.ts](src/lib/stores/ui.svelte.ts). The `UIManager.svelte` component runs effects to sync with browser APIs.
+Global theme state is managed through Svelte 5 runes in [src/lib/stores/ui.svelte.ts](src/lib/stores/ui.svelte.ts). The `UIManager.svelte` component runs effects to sync with browser APIs. For reduced motion, read `prefersReducedMotion.current` from `svelte/motion`; for window size and scroll, use `svelte/reactivity/window`. Animate with the `Spring`/`Tween` classes (`Spring.of(() => value)` to follow a reactive value), not the deprecated `spring()`/`tweened()` stores.
 
 **Theme system**: Theme is managed via inline script in the `<head>` that runs before page render to prevent flash. The store syncs with `window.__theme`, `window.__systemTheme`, and `window.__themePreference`.
 

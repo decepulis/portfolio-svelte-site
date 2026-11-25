@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { spring } from 'svelte/motion';
+	import { Spring } from 'svelte/motion';
 
 	import throttle from 'just-throttle';
 
@@ -48,24 +48,23 @@
 	// In practice, we'll be using these percentages
 	// instead of absolute distances in pixels
 	// and we won't want transitions to be instant.
-	// Here, we make that transformation and store it in a pair of springs
+	// Here, we make that transformation and follow it with a pair of springs
 	const mouseSpringOpts = { stiffness: 0.1, damping: 1 };
-	const percentXSpring = spring(0, mouseSpringOpts);
-	const percentYSpring = spring(0, mouseSpringOpts);
-	$effect(() => {
-		$percentXSpring = Math.max(Math.min(distanceX / maxDistanceX, 1), -1);
-		$percentYSpring = Math.max(Math.min(distanceY / maxDistanceY, 1), -1);
-	});
+	const percentXSpring = Spring.of(
+		() => Math.max(Math.min(distanceX / maxDistanceX, 1), -1),
+		mouseSpringOpts
+	);
+	const percentYSpring = Spring.of(
+		() => Math.max(Math.min(distanceY / maxDistanceY, 1), -1),
+		mouseSpringOpts
+	);
 	// clamp the springs to make sure nothing wacky happens
-	const percentX = $derived(Math.max(Math.min($percentXSpring, 1.1), -1.1));
-	const percentY = $derived(Math.max(Math.min($percentYSpring, 1.1), -1.1));
+	const percentX = $derived(Math.max(Math.min(percentXSpring.current, 1.1), -1.1));
+	const percentY = $derived(Math.max(Math.min(percentYSpring.current, 1.1), -1.1));
 
 	// == what happens on mouse click? ==
 	let isPoked = $state(false);
-	const pokeSpring = spring(0, { stiffness: 0.2, damping: 1 });
-	$effect(() => {
-		$pokeSpring = isPoked ? 1 : 0;
-	});
+	const pokeSpring = Spring.of(() => (isPoked ? 1 : 0), { stiffness: 0.2, damping: 1 });
 
 	let pokeTimeout: ReturnType<typeof setTimeout>;
 	$effect(() => () => clearTimeout(pokeTimeout));
@@ -80,10 +79,7 @@
 	// == an option to show reactions ==
 	let isReacting = $state(false);
 	let didReact = $state(false);
-	const reactSpring = spring(0, { stiffness: 0.2, damping: 1 });
-	$effect(() => {
-		$reactSpring = isReacting ? 1 : 0;
-	});
+	const reactSpring = Spring.of(() => (isReacting ? 1 : 0), { stiffness: 0.2, damping: 1 });
 	let changeTimeout: ReturnType<typeof setTimeout>;
 	$effect(() => () => clearTimeout(changeTimeout));
 	export const react = () => {
@@ -123,7 +119,7 @@
 	const eyesY = $derived.by(() => {
 		const eyesYMax = svgHeight / (speed * 1.5);
 		const eyesYMouse = percentY * eyesYMax;
-		const eyesYChanged = $reactSpring * (svgHeight / (speed * 4.5));
+		const eyesYChanged = reactSpring.current * (svgHeight / (speed * 4.5));
 		return eyesYMouse + eyesYChanged;
 	});
 
@@ -131,8 +127,8 @@
 	const browsY = $derived.by(() => {
 		const browsYMax = svgHeight / (speed * 3);
 		const browsYMin = svgHeight / speed;
-		const browsYPoked = $pokeSpring * (-svgHeight / (speed * 3));
-		const browsYChanged = $reactSpring * (-svgHeight / (speed * 4.5));
+		const browsYPoked = pokeSpring.current * (-svgHeight / (speed * 3));
+		const browsYChanged = reactSpring.current * (-svgHeight / (speed * 4.5));
 		const browsYMouse = percentY > 0 ? percentY * browsYMax : percentY * browsYMin;
 		return browsYPoked + browsYMouse + browsYChanged;
 	});
@@ -247,7 +243,7 @@
 		/>
 		<!-- nose -->
 		<path d="M34 38v1h-4v-1h4zm0 0v-1h1v1h-1z" />
-		{#if isReacting || $reactSpring > 0.33}
+		{#if isReacting || reactSpring.current > 0.33}
 			<!-- ooh -->
 			<path d="M29 42h2v2h-2z" style="transform:translate3d({eyesX * 1.5}px,{eyesY / 2}px,0);" />
 		{:else}

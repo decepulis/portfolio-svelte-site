@@ -1,45 +1,33 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { spring } from 'svelte/motion';
-
-	import ui from '#lib/stores/ui.svelte.ts';
+	import { Spring, prefersReducedMotion } from 'svelte/motion';
 
 	type Props = {
 		children: Snippet;
 	};
 	let { children }: Props = $props();
 
-	const { shouldReduceMotion } = $derived(ui);
+	const shouldReduceMotion = $derived(prefersReducedMotion.current);
 
 	let scrollY = $state(0);
-	let isSpringing = $state(false);
 
-	const scrollSpring0 = spring({ scrollY: 0 }, { stiffness: 0.05, damping: 1 });
-	const scrollSpring1 = spring({ scrollY: 0 }, { stiffness: 0.075, damping: 1 });
-	const scrollSpring2 = spring({ scrollY: 0 }, { stiffness: 0.1, damping: 1 });
-	const scrollSpring3 = spring({ scrollY: 0 }, { stiffness: 0.15, damping: 1 });
-	const scrollSpring4 = spring({ scrollY: 0 }, { stiffness: 0.2, damping: 1 });
-
-	$effect(() => {
-		if (shouldReduceMotion) return;
-		isSpringing = true;
-		scrollSpring0.set({ scrollY }).then(() => (isSpringing = false));
-		scrollSpring1.set({ scrollY });
-		scrollSpring2.set({ scrollY });
-		scrollSpring3.set({ scrollY });
-		scrollSpring4.set({ scrollY });
-	});
+	// one spring per layer, each a little stiffer, so the layers fan out as you scroll
+	const [spring0, spring1, spring2, spring3, spring4] = [0.05, 0.075, 0.1, 0.15, 0.2].map(
+		(stiffness) => Spring.of(() => scrollY, { stiffness, damping: 1 })
+	);
+	// the layers show while the slowest one is still catching up
+	const isSpringing = $derived(spring0.current !== scrollY);
 </script>
 
 <svelte:window bind:scrollY />
 
 <span
 	class="wrapper relative block"
-	style:--translate0={scrollY - $scrollSpring0.scrollY}
-	style:--translate1={scrollY - $scrollSpring1.scrollY}
-	style:--translate2={scrollY - $scrollSpring2.scrollY}
-	style:--translate3={scrollY - $scrollSpring3.scrollY}
-	style:--translate4={scrollY - $scrollSpring4.scrollY}
+	style:--translate0={scrollY - spring0.current}
+	style:--translate1={scrollY - spring1.current}
+	style:--translate2={scrollY - spring2.current}
+	style:--translate3={scrollY - spring3.current}
+	style:--translate4={scrollY - spring4.current}
 	style:--opacity={isSpringing || shouldReduceMotion ? 1 : 0}
 >
 	<span
